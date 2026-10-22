@@ -1,0 +1,186 @@
+use crate::error::{ApiError, ApiResult};
+use serde::{Deserialize, Serialize};
+use sqlx::Row;
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ArticleInput {
+    pub title: String,
+    pub slug: String,
+    #[serde(default)]
+    pub description: String,
+    pub content_markdown: String,
+    #[serde(default)]
+    pub tags: Vec<String>,
+    #[serde(default = "default_category")]
+    pub category: String,
+    #[serde(default)]
+    pub published: bool,
+}
+fn default_category() -> String {
+    "tech".into()
+}
+
+impl ArticleInput {
+    pub fn validate(mut self) -> ApiResult<Self> {
+        self.title = self.title.trim().to_owned();
+        self.slug = self.slug.trim().to_owned();
+        self.description = self.description.trim().to_owned();
+        if self.title.is_empty() || self.title.chars().count() > 200 {
+            return Err(ApiError::bad("标题需为 1–200 个字符"));
+        }
+        if self.slug.is_empty()
+            || self.slug.len() > 120
+            || !self
+                .slug
+                .bytes()
+                .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == b'-')
+            || self.slug.starts_with('-')
+            || self.slug.ends_with('-')
+        {
+            return Err(ApiError::bad(
+                "文章地址需为 1–120 位小写字母、数字和连字符，且不能以连字符开头或结尾",
+            ));
+        }
+        if self.description.chars().count() > 1000 {
+            return Err(ApiError::bad("摘要不能超过 1000 个字符"));
+        }
+        if self.content_markdown.trim().is_empty() || self.content_markdown.len() > 1_000_000 {
+            return Err(ApiError::bad("正文不能为空，且不能超过 1 MB"));
+        }
+        if !["tech", "anime", "life"].contains(&self.category.as_str()) {
+            return Err(ApiError::bad("无效的文章分类"));
+        }
+        if self.tags.len() > 20 {
+            return Err(ApiError::bad("最多添加 20 个标签"));
+        }
+        self.tags = self.tags.into_iter().map(|s| s.trim().to_owned()).collect();
+        if self
+            .tags
+            .iter()
+            .any(|s| s.is_empty() || s.chars().count() > 40)
+        {
+            return Err(ApiError::bad("标签需为 1–40 个字符"));
+        }
+        let mut unique = Vec::new();
+        for tag in self.tags {
+            if !unique.contains(&tag) {
+                unique.push(tag);
+            }
+        }
+        self.tags = unique;
+        Ok(self)
+    }
+}
+
+#[derive(Serialize)]
+pub struct ArticleSummary {
+    pub id: String,
+    pub slug: String,
+    pub title: String,
+    pub description: String,
+    pub tags: Vec<String>,
+    pub category: String,
+    pub published: bool,
+    pub created_at: String,
+    pub updated_at: String,
+    pub published_at: Option<String>,
+    pub word_count: usize,
+}
+impl ArticleSummary {
+    pub fn from_row(row: &sqlx::sqlite::SqliteRow) -> ApiResult<Self> {
+        let tags: String = row.try_get("tags")?;
+        Ok(Self {
+            id: row.try_get("id")?,
+            slug: row.try_get("slug")?,
+            title: row.try_get("title")?,
+            description: row.try_get("description")?,
+            tags: serde_json::from_str(&tags).map_err(ApiError::internal)?,
+            category: row.try_get("category")?,
+            published: row.try_get("published")?,
+            created_at: row.try_get("created_at")?,
+            updated_at: row.try_get("updated_at")?,
+            published_at: row.try_get("published_at")?,
+            word_count: count_words(&row.try_get::<String, _>("content_markdown")?),
+        })
+    }
+}
+fn count_words(markdown: &str) -> usize {
+    let mut count = 0;
+    for event in pulldown_cmark::Parser::new(markdown) {
+        if let pulldown_cmark::Event::Text(text) | pulldown_cmark::Event::Code(text) = event {
+            let mut in_word = false;
+            for character in text.chars() {
+                if ('\u{4e00}'..='\u{9fff}').contains(&character) {
+                    count += 1;
+                    in_word = false;
+                } else if character.is_ascii_alphanumeric() {
+                    if !in_word {
+                        count += 1;
+                    }
+                    in_word = true;
+                } else {
+                    in_word = false;
+                }
+            }
+        }
+    }
+    count
+}
+
+#[derive(Serialize)]
+pub struct ArticleDetail {
+    #[serde(flatten)]
+    pub summary: ArticleSummary,
+    pub content_markdown: String,
+    pub content_html: String,
+    pub attachments: Vec<Attachment>,
+}
+#[derive(Serialize)]
+pub struct Attachment {
+    pub id: String,
+    pub article_id: String,
+    pub filename: String,
+    pub size: i64,
+    pub created_at: String,
+    pub download_url: String,
+}
+impl Attachment {
+    pub fn from_row(row: &sqlx::sqlite::SqliteRow) -> ApiResult<Self> {
+        let id: String = row.try_get("id")?;
+        Ok(Self {
+            download_url: format!("/api/attachments/{id}/download"),
+            id,
+            article_id: row.try_get("article_id")?,
+            filename: row.try_get("filename")?,
+            size: row.try_get("size")?,
+            created_at: row.try_get("created_at")?,
+        })
+    }
+}
+#[derive(Deserialize, Default)]
+pub struct ListQuery {
+    pub page: Option<u32>,
+    pub per_page: Option<u32>,
+    pub q: Option<String>,
+    pub category: Option<String>,
+}
+#[derive(Serialize)]
+pub struct ArticleList {
+    pub items: Vec<ArticleSummary>,
+    pub total: i64,
+    pub page: u32,
+    pub per_page: u32,
+}
+
+pub fn markdown_html(markdown: &str) -> String {
+    let parser = pulldown_cmark::Parser::new_ext(
+        markdown,
+        pulldown_cmark::Options::ENABLE_TABLES
+            | pulldown_cmark::Options::ENABLE_STRIKETHROUGH
+            | pulldown_cmark::Options::ENABLE_TASKLISTS,
+    );
+    let mut html = String::new();
+    pulldown_cmark::html::push_html(&mut html, parser);
+    ammonia::clean(&html)
+}

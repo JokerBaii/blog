@@ -1,0 +1,66 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import { categoryLabel } from "@/lib/site";
+import { getThemePath } from "@/core/themes/registry";
+import { Icon } from "astro-icon/components";
+import MangaArt from "../components/MangaArt.astro";
+
+const { frontmatter } = Astro.props;
+const title = `${frontmatter.seoTitle ?? frontmatter.title} | Yuimi Lab`;
+const description = frontmatter.seoDescription ?? frontmatter.description;
+const date = new Intl.DateTimeFormat("zh-CN", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit"
+}).format(frontmatter.pubDate);
+const headings = (Astro.props.headings ?? []).filter((heading) => heading.depth >= 2 && heading.depth <= 3);
+---
+
+<BaseLayout title={title} description={description} isArticlePage article={frontmatter}>
+  <div class="article-shell">
+    {headings.length > 0 && (
+      <details class="article-mobile-toc" data-pagefind-ignore>
+        <summary><Icon name="tabler:book-2" aria-hidden="true" />这篇笔记的目录<Icon name="tabler:chevron-down" aria-hidden="true" /></summary>
+        <nav aria-label="移动端文章导航">
+          {headings.map((heading) => <a class={`toc-depth-${heading.depth}`} href={`#${heading.slug}`}>{heading.text}</a>)}
+        </nav>
+      </details>
+    )}
+    <article class="article" data-pagefind-body>
+      <a class="back-link" href={getThemePath("fuyukawa-kagari", "/blog/")}><Icon name="tabler:arrow-left" aria-hidden="true" />回到笔记存档</a>
+      <header class="article-header">
+        <div class="meta-row">
+          <span>{categoryLabel[frontmatter.category]}</span>
+          <time datetime={frontmatter.pubDate.toISOString()}>{date}</time>
+        </div>
+        <h1>{frontmatter.title}</h1>
+        <p>{frontmatter.description}</p>
+        <div class="tag-row" aria-label="Tags">
+          {frontmatter.tags.map((tag: string) => <span>#{tag}</span>)}
+        </div>
+      </header>
+      <div class="prose">
+        <slot />
+      </div>
+      <footer class="article-colophon" data-pagefind-ignore>
+        <MangaArt image="hand-note" />
+        <div><span class="manga-handwritten">To be continued.</span><p>这一页，先写到这里。</p><a href={getThemePath("fuyukawa-kagari", "/blog/")}>再翻一篇笔记 <Icon name="tabler:arrow-right" aria-hidden="true" /></a></div>
+      </footer>
+    </article>
+    {
+      headings.length > 0 && (
+        <aside class="article-toc" aria-label="文章导航" data-pagefind-ignore>
+          <p>这篇笔记的目录</p>
+          <nav>
+            {headings.map((heading) => (
+              <a class={`toc-depth-${heading.depth}`} href={`#${heading.slug}`}>
+                {heading.text}
+              </a>
+            ))}
+          </nav>
+          <MangaArt image="kagari-thinking" class="article-margin-character" />
+        </aside>
+      )
+    }
+  </div>
+</BaseLayout>

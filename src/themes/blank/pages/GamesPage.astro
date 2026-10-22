@@ -1,0 +1,26 @@
+---
+import { Icon } from "astro-icon/components";
+import BlankLayout from "../layouts/BlankLayout.astro";
+import PageHead from "../components/PageHead.astro";
+import { gamePicks } from "@/core/data/games";
+---
+<BlankLayout title="Play | Yuimi Lab Blank" description="收藏的开源小游戏。暂时放下正事，玩一会儿。">
+  <PageHead index="03" title="Play" label="闲暇收藏" description="不妨留一点无所事事的时间。这里有几款喜欢的开源小游戏。" count={String(gamePicks.length).padStart(2, "0")} unit="款收藏" />
+  <section class="blank-games" aria-label="开源游戏">
+    {gamePicks.map((game, index) => (
+      <article class="blank-game">
+        <div class="blank-game-title"><span class="blank-row-number">GAME / {String(index + 1).padStart(2, "0")}</span><h2>{game.name}</h2><span class="blank-kicker">{game.vibe}</span></div>
+        <div class="blank-game-content">
+          <p class="blank-game-description">{game.summary}</p>
+          <dl class="blank-game-credits"><div><dt>作者</dt><dd>{game.author}</dd></div><div><dt>许可</dt><dd>{game.license}</dd></div></dl>
+          <div class="blank-game-actions">
+            <a class="blank-button" href={game.play} target="_blank" rel="noopener noreferrer"><Icon name="tabler:player-play" size={17} />开始游戏 <Icon name="tabler:external-link" size={15} /></a>
+            <a class="blank-text-link" href={game.repo} target="_blank" rel="noopener noreferrer">源代码 <Icon name="tabler:external-link" size={15} /></a>
+          </div>
+          <details class="blank-game-thanks"><summary>致谢</summary><p>{game.thanks}</p></details>
+        </div>
+      </article>
+    ))}
+  </section>
+  <div class="blank-endnote"><span class="blank-kicker">END OF COLLECTION</span><p>快乐有时很简单，再来一局就好。</p></div>
+</BlankLayout>

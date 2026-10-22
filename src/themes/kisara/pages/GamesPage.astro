@@ -1,0 +1,133 @@
+---
+import KisaraLayout from "../layouts/KisaraLayout.astro";
+import KisaraGameClueScene from "../components/KisaraGameClueScene.astro";
+import gamesStylesheet from "../styles/games.css?url";
+import gameInvestigationStylesheet from "../styles/game-investigation.css?url";
+import { Icon } from "astro-icon/components";
+import { gamePicks } from "@/core/data/games";
+
+const presentation = {
+  "2048": { embed: "/themes/kisara/games/2048/index.html", genre: "NUMBER PUZZLE", time: "02-10 MIN", control: "方向键", color: "#f2ca72" },
+  hextris: { embed: "https://hextris.github.io/hextris/", genre: "HEX REACTOR", time: "03-12 MIN", control: "左右方向键", color: "#83d9c7" },
+  "clumsy-bird": { embed: "https://ellisonleao.github.io/clumsy-bird/", genre: "PIXEL FLIGHT", time: "01-05 MIN", control: "点击 / 空格", color: "#eda0b4" }
+} as const;
+---
+
+<KisaraLayout title="Games | Kisara" description="Yuimi Lab 的小游戏收藏。" stylesheets={[gamesStylesheet, gameInvestigationStylesheet]}>
+  <div class="kisara-games" data-kisara-games data-active-scene="0" data-scene-ready="true">
+    <nav class="kisara-game-scene-nav" aria-label="游戏页面场景">
+      <a href="#kisara-game-investigation" data-game-scene-jump="0" aria-current="true"><Icon name="tabler:user-scan" aria-hidden="true" /><span>影像调查</span></a>
+      <a href="#kisara-arcade-console" data-game-scene-jump="1" aria-current="false"><Icon name="tabler:device-gamepad-2" aria-hidden="true" /><span>街机厅</span></a>
+    </nav>
+    <KisaraGameClueScene />
+    <section id="kisara-arcade-console" class="kisara-game-scene kisara-arcade" data-game-scene data-kisara-arcade data-scene-position="after" data-active-game={gamePicks[0].id} aria-labelledby="kisara-arcade-title" tabindex="-1" hidden>
+      <div class="kisara-arcade-backdrop" aria-hidden="true">
+        <img data-arcade-backdrop-src="/themes/kisara/assets/game-arcade-room.webp" alt="" width="2200" height="1238" decoding="async" />
+      </div>
+      <div class="kisara-game-viewport" data-game-viewport>
+      <div class="kisara-arcade-machine" data-game-machine data-game-fit>
+        <div class="kisara-arcade-machine-body">
+          <header class="kisara-arcade-marquee">
+            <span class="kisara-arcade-brand"><i aria-hidden="true"></i>YUIMI</span>
+            <h2 id="kisara-arcade-title">ARCADE CLUB</h2>
+            <span class="kisara-arcade-power"><i aria-hidden="true"></i>ON</span>
+          </header>
+          <div class="kisara-arcade-bezel">
+            <div class="kisara-arcade-screen" data-game-screen data-screen-state="idle">
+              <div class="kisara-arcade-screen-bar">
+                <span data-game-machine-title>SELECT GAME</span>
+                <output data-game-counter>01 / 03</output>
+                <span class="kisara-arcade-credit">FREE PLAY</span>
+              </div>
+              <div class="kisara-arcade-menu" data-game-menu>
+                <div class="kisara-arcade-select-heading"><span>PLAYER 01</span><strong>今天玩哪一台？</strong><Icon name="tabler:device-gamepad" aria-hidden="true" /></div>
+                <div class="kisara-arcade-cartridges" role="tablist" aria-label="选择游戏">
+                  {gamePicks.map((game, index) => (
+                    <button type="button" class={`kisara-arcade-cartridge is-${game.id}`} style={`--cartridge-color:${presentation[game.id].color}`}
+                      data-game-select={game.id} data-game-src={presentation[game.id].embed} data-game-external-src={game.play} data-game-name={game.name}
+                      id={`kisara-game-tab-${game.id}`} role="tab" aria-selected={index === 0 ? "true" : "false"} aria-controls={`kisara-game-${game.id}`} tabindex={index === 0 ? "0" : "-1"}>
+                      <span class="kisara-arcade-cartridge-number">{String(index + 1).padStart(2, "0")}<Icon name="tabler:arrow-right" aria-hidden="true" /></span>
+                      <span class="kisara-arcade-cartridge-art" aria-hidden="true">
+                        {game.id === "2048" ? <span class="kisara-arcade-tile-art"><i>2</i><i>4</i><i>8</i><i>16</i></span>
+                          : game.id === "hextris" ? <span class="kisara-arcade-hex-art"><i></i><b></b></span>
+                          : <span class="kisara-arcade-flight-art"><i></i><b></b><em></em></span>}
+                      </span>
+                      <strong>{game.name}</strong>
+                      <small>{presentation[game.id].genre}</small>
+                    </button>
+                  ))}
+                </div>
+                <div class="kisara-arcade-selection">
+                  <div class="kisara-arcade-panels" aria-live="polite">
+                    {gamePicks.map((game, index) => (
+                      <article id={`kisara-game-${game.id}`} data-game-panel={game.id} role="tabpanel" aria-labelledby={`kisara-game-tab-${game.id}`} hidden={index !== 0}>
+                        <p>{game.vibe}</p>
+                        <div><span>{presentation[game.id].time}</span><span>{presentation[game.id].control}</span>
+                          <a href={game.repo} target="_blank" rel="noreferrer" aria-label={`${game.name} 源码`} title="查看源码"><Icon name="tabler:brand-github" aria-hidden="true" /></a>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                  <button class="kisara-arcade-play" type="button" data-game-launch><Icon name="tabler:player-play" aria-hidden="true" />开始游戏</button>
+                </div>
+              </div>
+              <div class="kisara-arcade-session" data-game-session hidden>
+                <iframe data-game-frame title="游戏画面" sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups" allow="fullscreen; gamepad" referrerpolicy="strict-origin-when-cross-origin" hidden></iframe>
+                <div class="kisara-arcade-loader" data-game-loader hidden role="status"><i aria-hidden="true"></i><span data-game-load-message>正在连接游戏…</span></div>
+              </div>
+              <footer class="kisara-arcade-screen-footer">
+                <output data-game-status aria-live="polite">READY</output>
+                <div>
+                  <button type="button" data-game-eject hidden title="返回游戏选择"><Icon name="tabler:device-gamepad-2" aria-hidden="true" />选游戏</button>
+                  <button type="button" data-game-restart hidden title="重新开始" aria-label="重新开始"><Icon name="tabler:refresh" aria-hidden="true" /></button>
+                  <a data-game-external href={gamePicks[0].play} target="_blank" rel="noreferrer" title="在新窗口打开"><Icon name="tabler:external-link" aria-hidden="true" /><span>新窗口</span></a>
+                </div>
+              </footer>
+            </div>
+            <span class="kisara-arcade-bezel-label" aria-hidden="true">YUIMI ENTERTAINMENT SYSTEM / MODEL 03</span>
+          </div>
+          <div class="kisara-arcade-control-deck" role="group" aria-label="街机控制台">
+            <div class="kisara-arcade-direction">
+              <button type="button" data-game-previous aria-label="上一个游戏" title="上一个游戏"><Icon name="tabler:chevron-left" aria-hidden="true" /></button>
+              <div class="kisara-arcade-joystick" aria-hidden="true"><span></span><i><b></b></i></div>
+              <button type="button" data-game-next aria-label="下一个游戏" title="下一个游戏"><Icon name="tabler:chevron-right" aria-hidden="true" /></button>
+            </div>
+            <div class="kisara-arcade-deck-mark" aria-hidden="true"><span>01</span><i></i><small>PLAYER</small></div>
+            <div class="kisara-arcade-action-buttons">
+              <button class="is-menu" type="button" data-game-eject title="返回游戏选择" aria-label="返回游戏选择"><Icon name="tabler:device-gamepad-2" aria-hidden="true" /></button>
+              <button class="is-play" type="button" data-game-launch title="开始所选游戏" aria-label="开始所选游戏"><Icon name="tabler:player-play" aria-hidden="true" /></button>
+            </div>
+          </div>
+          <div class="kisara-arcade-machine-base" aria-hidden="true">
+            <div class="kisara-arcade-speaker"></div>
+            <div class="kisara-arcade-coin"><i></i><span>FREE<br />PLAY</span></div>
+            <span class="kisara-arcade-serial">Y / 003</span>
+          </div>
+        </div>
+        <div class="kisara-arcade-feet" aria-hidden="true"><i></i><i></i></div>
+      </div>
+      </div>
+    </section>
+  </div>
+  <noscript>
+    <style is:inline>
+      .kisara-games[data-scene-ready] { display: block; height: auto; overflow: visible; }
+      .kisara-games[data-scene-ready] > [data-game-scene] { height: calc(100svh / var(--kisara-scale, 1)); }
+      .kisara-games #kisara-arcade-console[hidden] { display: grid !important; }
+      .kisara-games .kisara-game-entry { display: none; }
+    </style>
+  </noscript>
+  <script>
+    document.addEventListener("astro:page-load", () => {
+      const root = document.querySelector<HTMLElement>("[data-kisara-games]");
+      if (!root) return;
+      import("../lib/gamesPage.js").then(({ bindGamesPage }) => {
+        if (root.isConnected) bindGamesPage(root);
+      }).catch(error => {
+        if (!root.isConnected) return;
+        window.__yuimiKisaraInnerCleanup?.();
+        console.error("Kisara games interaction failed to load", error);
+      });
+    });
+  </script>
+</KisaraLayout>

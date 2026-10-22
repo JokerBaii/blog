@@ -1,0 +1,23 @@
+---
+interface Props {
+  src: string;
+  rootSelector: string;
+  entry: string;
+}
+const { src, rootSelector, entry } = Astro.props;
+---
+
+<script is:inline data-astro-rerun define:vars={{ src, rootSelector, entry }}>
+  (() => {
+    const root = document.querySelector(rootSelector);
+    if (!root) return;
+    import(src).then(module => {
+      if (root.isConnected) module[entry]();
+    }).catch(error => {
+      if (!root.isConnected) return;
+      root.dataset.introState = "complete";
+      root.dataset.videoState = "fallback";
+      console.error("Kisara page interaction failed to load", error);
+    });
+  })();
+</script>

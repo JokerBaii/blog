@@ -1,0 +1,38 @@
+---
+import { Icon } from "astro-icon/components";
+import BlankLayout from "../layouts/BlankLayout.astro";
+import PageHead from "../components/PageHead.astro";
+import PostRow from "../components/PostRow.astro";
+import { getPublishedPosts } from "@/core/content/blog";
+import { categoryLabel } from "@/lib/site";
+const posts = await getPublishedPosts();
+const categories = Object.entries(categoryLabel).filter(([key]) => posts.some((post) => post.data.category === key));
+---
+<BlankLayout title="Journal | Yuimi Lab Blank" description="开发笔记、二次元与生活记录。">
+  <PageHead index="01" title="Journal" label="文字归档" description="思考的过程，做过的尝试，以及值得记下的小事。" count={String(posts.length).padStart(2, "0")} unit="篇记录" />
+  <section class="blank-archive" data-blank-collection data-unit="篇文章" aria-label="文章归档">
+    <form class="blank-filter-form" data-blank-filter-form role="search" hidden>
+      <div class="blank-archive-tools">
+        <div class="blank-search">
+          <Icon name="tabler:search" size={19} />
+          <label class="blank-sr-only" for="blank-search">搜索文章标题、摘要或标签</label>
+          <input id="blank-search" type="search" name="q" maxlength="300" autocomplete="off" placeholder="搜索文章、关键词…" data-blank-query />
+          <button class="blank-icon-button" type="button" data-blank-clear aria-label="清空搜索" title="清空搜索" hidden><Icon name="tabler:x" size={16} /></button>
+        </div>
+        <div class="blank-sort">
+          <label for="blank-sort">排序</label>
+          <select id="blank-sort" name="sort" data-blank-sort><option value="newest">最新在前</option><option value="oldest">最早在前</option></select>
+        </div>
+      </div>
+      <fieldset class="blank-filters">
+        <legend class="blank-sr-only">文章分类</legend>
+        <button type="button" data-blank-category="all" aria-pressed="true">全部 <span>{posts.length}</span></button>
+        {categories.map(([key, label]) => <button type="button" data-blank-category={key} aria-pressed="false">{label} <span>{posts.filter((post) => post.data.category === key).length}</span></button>)}
+      </fieldset>
+    </form>
+    <div class="blank-list-heading"><span class="blank-kicker">INDEX / 文章目录</span><output data-blank-count aria-live="polite" aria-atomic="true">{posts.length} 篇文章</output></div>
+    <ol class="blank-post-list" data-blank-entries>{posts.map((post, index) => <PostRow post={post} index={index + 1} />)}</ol>
+    {posts.length > 0 && <div class="blank-empty-results" data-blank-empty hidden><p>没有找到匹配的文章。</p><button class="blank-text-link" type="button" data-blank-reset>清除筛选 <Icon name="tabler:arrow-back-up" size={17} /></button></div>}
+    {posts.length === 0 && <p class="blank-empty-message">第一篇记录，正在路上。</p>}
+  </section>
+</BlankLayout>

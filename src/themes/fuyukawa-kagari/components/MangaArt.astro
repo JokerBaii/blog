@@ -1,0 +1,19 @@
+---
+import { mangaArt, type MangaImage } from "../data/mangaArt";
+interface Props {
+  image: MangaImage;
+  class?: string;
+  alt?: string;
+  eager?: boolean;
+}
+const { image, class: className, alt = "", eager = false } = Astro.props;
+const art = mangaArt(image);
+---
+<img
+  {...art}
+  class:list={["manga-art", className]}
+  alt={alt}
+  loading={eager ? "eager" : "lazy"}
+  decoding="async"
+  draggable="false"
+/>

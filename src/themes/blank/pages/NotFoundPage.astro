@@ -1,0 +1,14 @@
+---
+import { Icon } from "astro-icon/components";
+import BlankLayout from "../layouts/BlankLayout.astro";
+import { getThemePath } from "@/core/themes/registry";
+---
+<BlankLayout title="404 | Yuimi Lab Blank" description="这一页暂时空白。回到首页，或继续阅读其他文章。">
+  <section class="blank-not-found">
+    <p class="blank-kicker">ERROR / PAGE NOT FOUND</p>
+    <strong class="blank-404" aria-hidden="true">404<span>.</span></strong>
+    <div class="blank-not-found-bottom"><div><h1>这一页，暂时空白。</h1><p>也许地址有误，也许内容已经搬走。</p><p class="blank-missing-path" data-blank-missing-path hidden></p></div>
+      <div class="blank-not-found-links"><a class="blank-button" href={getThemePath("blank", "/")}><Icon name="tabler:arrow-left" size={17} />返回首页</a><a class="blank-text-link" href={getThemePath("blank", "/blog/")}>去读点别的 <Icon name="tabler:arrow-right" size={17} /></a></div>
+    </div>
+  </section>
+</BlankLayout>

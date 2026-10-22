@@ -1,0 +1,18 @@
+---
+export const prerender = false;
+import { getPublishedPost, renderPost } from "@/core/content/blog";
+import ArticleAttachments from "@/core/content/ArticleAttachments.astro";
+import { ArticlePage, NotFoundPage } from "@/themes/kisara";
+
+const post = await getPublishedPost(Astro.params.slug ?? "");
+if (!post) Astro.response.status = 404;
+Astro.response.headers.set("Cache-Control", "no-store");
+const rendered = post ? await renderPost(post) : null;
+---
+
+{post && rendered ? (
+  <ArticlePage frontmatter={post.data} headings={rendered.metadata.headings}>
+    <Fragment set:html={rendered.code} />
+    <ArticleAttachments attachments={post.attachments} />
+  </ArticlePage>
+) : <NotFoundPage />}

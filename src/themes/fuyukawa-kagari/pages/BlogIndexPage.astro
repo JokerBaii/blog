@@ -1,0 +1,217 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getPublishedPosts } from "@/core/content/blog";
+import { getCoverSources } from "@/core/content/coverSources";
+import { getCoverStyle } from "../data/coverFocus";
+import { categoryLabel } from "@/lib/site";
+import { Icon } from "astro-icon/components";
+import { getThemePath } from "@/core/themes/registry";
+import { kagariAssets } from "../assets";
+import MangaArt from "../components/MangaArt.astro";
+
+const posts = (await getPublishedPosts())
+  .map((post) => {
+    return {
+      ...post,
+      wordCount: post.wordCount,
+      updatedAt: post.data.updatedDate ?? post.data.pubDate,
+      cover: post.data.cover ?? kagariAssets.heroWallpaper
+    };
+  });
+
+const formatter = new Intl.DateTimeFormat("zh-CN", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit"
+});
+
+const themeRoutePrefix = getThemePath("fuyukawa-kagari", "/").replace(/\/$/, "");
+---
+
+<BaseLayout title="Blog | Yuimi Lab" description="技术笔记、二次元随笔与个人记录。">
+  <div class="manga-archive" data-manga-archive>
+  <section class="page-title blog-hero-card">
+    <div class="blog-title-copy">
+      <p class="section-kicker">01 / The notebook</p>
+      <h1>笔记存档<span class="page-title-en">Blog</span></h1>
+      <p>一些认真折腾的记录，<br />一些舍不得忘掉的瞬间。</p>
+      <span class="manga-handwritten">Dear ordinary days.</span>
+    </div>
+    <div class="blog-title-art" aria-hidden="true">
+      <MangaArt image="reading-strip" class="blog-opening-panel" eager />
+      <MangaArt image="kagari-tea" class="blog-opening-character" eager />
+      <span class="manga-page-stamp">NOTE<br />BOOK</span>
+    </div>
+  </section>
+
+  <section class="blog-search-card" data-pagefind-ignore data-theme-route-prefix={themeRoutePrefix}>
+    <div class="blog-search-heading">
+      <Icon name="tabler:search" aria-hidden="true" />
+      <div>
+        <p class="section-kicker">Search</p>
+        <h2>翻找笔记</h2>
+      </div>
+    </div>
+    <label class="blog-search-box">
+      <span>关键词</span>
+      <input type="search" data-blog-search placeholder="输入 AstrBot、插件、部署..." autocomplete="off" />
+    </label>
+    <div class="blog-search-results" data-blog-search-results aria-live="polite"></div>
+  </section>
+
+  <div class="archive-shelf">
+    <aside class="archive-spine">
+      <nav class="archive-tabs" aria-label="笔记分类">
+        <button type="button" data-archive-category="all" aria-pressed="true"><Icon name="tabler:book-2" aria-hidden="true" />全部</button>
+        {Object.entries(categoryLabel).map(([key, label]) => (
+          <button type="button" data-archive-category={key} aria-pressed="false">{label}</button>
+        ))}
+      </nav>
+      <p data-archive-count aria-live="polite">{posts.length} 篇笔记</p>
+      <MangaArt image="kagari-thinking" class="archive-companion" />
+    </aside>
+  <section class="blog-timeline" aria-label="Blog timeline">
+    {posts.length === 0 && <p class="blog-search-empty">暂无文章。</p>}
+    {
+      posts.map((post) => (
+        <article class="blog-timeline-item" data-entry-category={post.data.category}>
+          <div class="timeline-date">
+            <time datetime={post.updatedAt.toISOString()}>{formatter.format(post.updatedAt)}</time>
+            <span>updated</span>
+          </div>
+          <a class="post-row blog-post-row" href={getThemePath("fuyukawa-kagari", `/blog/${post.id}/`)}>
+            <div class="post-cover-frame" style={getCoverStyle(post.cover)}>
+              <img src={post.cover} {...getCoverSources(post.cover, "(max-width: 480px) calc(100vw - 100px), 360px")} alt="" width="700" height="1000" loading="lazy" decoding="async" />
+            </div>
+            <div class="blog-post-copy">
+              <div class="meta-row">
+                <span>{categoryLabel[post.data.category]}</span>
+                <time datetime={post.data.pubDate.toISOString()}>发布 {formatter.format(post.data.pubDate)}</time>
+                <time datetime={post.updatedAt.toISOString()}>更新 {formatter.format(post.updatedAt)}</time>
+                <span>{post.wordCount.toLocaleString("zh-CN")} 字</span>
+              </div>
+              <h2>{post.data.title}</h2>
+              <p>{post.data.description}</p>
+              <div class="tag-row">
+                {post.data.tags.map((tag) => <span>#{tag}</span>)}
+              </div>
+            </div>
+          </a>
+        </article>
+      ))
+    }
+  </section>
+  </div>
+
+  </div>
+
+  <script is:inline data-astro-rerun>
+    (() => {
+    window.__fuyukawaSearchCleanup?.();
+    const searchInput = document.querySelector("[data-blog-search]");
+    const searchResults = document.querySelector("[data-blog-search-results]");
+    const themeRoutePrefix = document.querySelector("[data-theme-route-prefix]")?.dataset.themeRoutePrefix ?? "";
+    const escapeHtml = (value) =>
+      value.replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[char] ?? char);
+
+    const renderSearchState = (message) => {
+      if (!searchResults) return;
+      searchResults.innerHTML = `<p class="blog-search-empty">${message}</p>`;
+    };
+
+    const toThemeHref = (value) => {
+      try {
+        const url = new URL(value, window.location.origin);
+        if (url.origin !== window.location.origin || !themeRoutePrefix) return value;
+        if (!url.pathname.startsWith(`${themeRoutePrefix}/`)) {
+          url.pathname = `${themeRoutePrefix}${url.pathname.startsWith("/") ? "" : "/"}${url.pathname}`;
+        }
+        return `${url.pathname}${url.search}${url.hash}`;
+      } catch {
+        return value;
+      }
+    };
+
+    const fallbackLocalSearch = (query) => {
+      const cards = [...document.querySelectorAll(".blog-post-row")];
+      const lowerQuery = query.toLowerCase();
+      const matches = cards
+        .map((card) => ({
+          href: card.getAttribute("href") ?? "#",
+          title: card.querySelector("h2")?.textContent?.trim() ?? "Untitled",
+          excerpt: card.querySelector("p")?.textContent?.trim() ?? "",
+          text: card.textContent?.toLowerCase() ?? ""
+        }))
+        .filter((item) => item.text.includes(lowerQuery))
+        .slice(0, 5);
+
+      if (!matches.length) {
+        renderSearchState("没有找到相关笔记。");
+        return;
+      }
+
+      if (!searchResults) return;
+      searchResults.innerHTML = matches.map((item) => `
+        <a class="blog-search-result" href="${item.href}">
+          <strong>${escapeHtml(item.title)}</strong>
+          <span>${escapeHtml(item.excerpt)}</span>
+        </a>
+      `).join("");
+    };
+
+    let searchTimer = 0;
+    let searchVersion = 0;
+    const onSearch = () => {
+      const version = ++searchVersion;
+      window.clearTimeout(searchTimer);
+      const query = searchInput.value.trim();
+      if (!query) {
+        if (searchResults) searchResults.innerHTML = "";
+        return;
+      }
+
+      searchTimer = window.setTimeout(async () => {
+        renderSearchState("正在翻页...");
+        try {
+          const response = await fetch(`/api/articles?${new URLSearchParams({ q: query, per_page: "5" })}`, { cache: "no-store" });
+          if (!response.ok) throw new Error("Article search is unavailable");
+          const result = await response.json();
+          const data = result.items.map((article) => ({ url: `/blog/${encodeURIComponent(article.slug)}/`, meta: { title: article.title }, excerpt: escapeHtml(article.description) }));
+          if (version !== searchVersion || !searchInput?.isConnected) return;
+
+          if (!data.length) {
+            renderSearchState("没有找到相关笔记。");
+            return;
+          }
+
+          if (!searchResults) return;
+          searchResults.innerHTML = data.map((item) => `
+            <a class="blog-search-result" href="${escapeHtml(toThemeHref(item.url))}">
+              <strong>${escapeHtml(item.meta.title || "Untitled")}</strong>
+              <span>${item.excerpt || ""}</span>
+            </a>
+          `).join("");
+        } catch {
+          if (version !== searchVersion || !searchInput?.isConnected) return;
+          fallbackLocalSearch(query);
+        }
+      }, 180);
+    };
+    searchInput?.addEventListener("input", onSearch);
+    const cleanup = () => {
+      ++searchVersion;
+      window.clearTimeout(searchTimer);
+      searchInput?.removeEventListener("input", onSearch);
+      document.removeEventListener("astro:before-swap", cleanup);
+    };
+    window.__fuyukawaSearchCleanup = cleanup;
+    document.addEventListener("astro:before-swap", cleanup, { once: true });
+    })();
+  </script>
+</BaseLayout>

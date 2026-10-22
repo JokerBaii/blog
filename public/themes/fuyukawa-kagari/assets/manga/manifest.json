@@ -1,0 +1,511 @@
+{
+  "version": 1,
+  "artist": "葉佐乃",
+  "sourceFiles": [
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p0.jpg",
+      "sha256": "d9413ce359f0cfb3f92b35c020c3dff9d8435472be047db2e830512d8da2f68b"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p1.jpg",
+      "sha256": "24bbed5c710b840c09e8b0bebe4e7f4e230e82076d8e1228a59d5122e117a39d"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p10.jpg",
+      "sha256": "e8283ac34c421441cc4599b27d90392da21a99f4e1a2dcdadcc17dd280f46cad"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p11.jpg",
+      "sha256": "f98b3a7fb6b808df11d52094fd3b39fc11d2ea858ce0c2c0cfbcb31d9eae6769"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p12.jpg",
+      "sha256": "a962ad8ca6b19eb6e9dffad4835062dd576331053100c4089a44c531d7c4bf5b"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p13.jpg",
+      "sha256": "993543064c2e28289c84f5d3048a7a9ddb28c1093130f3c349129e234ed856fd"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p14.jpg",
+      "sha256": "71caa546a87c19e81c408918fff9f938213c99217929638dc214744792c4f7e1"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p15.jpg",
+      "sha256": "6569ab2951d0c0c8c9a8edbcf95977af9a8e25fc57aa27e271baed99edaa5bab"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p16.jpg",
+      "sha256": "739a0e986250b052048d3f84afc3adb83317754023ae142b5b5f6ebd7ff2b943"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p17.jpg",
+      "sha256": "251e5941478900d225ef642a018d395083a8ad3e5d539b2c7266b0c546cfb659"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p18.jpg",
+      "sha256": "3038a03a828ceb4159b28108851b840f9ca531dba39651dfd8315c33515b26a5"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p19.jpg",
+      "sha256": "09f33b03b7ec19d8ac57afa4f565a64d7ee5b18fbd0566895260dac4c6817a26"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p2.jpg",
+      "sha256": "4f1d11977995a5705dc2015d0d3ad4649f8c6a667942db403e3563c756c754ec"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p20.jpg",
+      "sha256": "62194f2a5a21d1e001d250e78c99d945286fa120380fb734163a8ba695a12816"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p21.jpg",
+      "sha256": "ef1880328f15655b6fe67b152b13fc12a891d680566e6292aee997300f5e6a6c"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p22.jpg",
+      "sha256": "95f2aed71211d9e741aa9ae6370ae7367712c07570f316c3e003805a20c0b2db"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p23.jpg",
+      "sha256": "f74da48d0b36ed16450cdcb5fbd5237bb70fc7abd410ce95d99aaf533b8a8742"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p24.jpg",
+      "sha256": "8241e20d40a5832284bc9989e3ea48ef4414a0a9e24c7edc65a10d4f30328b35"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p25.jpg",
+      "sha256": "9b77360b0638c5f26170757a75c9f4611fc58456c044b0191ee12518971699d9"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p26.jpg",
+      "sha256": "f6fd758f37d55edcad3e1d8f99fbd6d7a56ec463e46577d99df34469945522d4"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p27.jpg",
+      "sha256": "d9180f4e5daaa77692319d3c98b65327c1b2928711a6476874f18c6b3c18387a"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p28.jpg",
+      "sha256": "6c80339336f20ead1bc8465aa9c7fea719a936a4eefada9251657e068dd02f2d"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p29.jpg",
+      "sha256": "9171b17956754c4af078ba42cc6e44e71b87c1707543765b84afaa869a2d4e58"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p3.jpg",
+      "sha256": "449a303b16044c3f01ef1e4175eada6b23ecf49402200f5475e0abf4be8e9fd7"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p30.jpg",
+      "sha256": "a8507c018cb01f004d05b4e2b7351d43581c716eb6bdd54cbf6143f6eb332118"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p4.jpg",
+      "sha256": "a33daf0d8db6eb9322be7c3c690b00e79e63b80082f4794779c3dfe70d129ad5"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p5.jpg",
+      "sha256": "6f3611041d343f28fe57dedfd4ba4b5c1f02c43ae2b28d7eeb0d050b9fafcc99"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p6.jpg",
+      "sha256": "4432a41e29b2c5d991f2024b3710f452f394423c4710aba391127b73af84d272"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p7.jpg",
+      "sha256": "13e9983acee6d34fd5487acf036216fd7f49d2f0ecc7fe8722cd21ab43b766c0"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p8.jpg",
+      "sha256": "e9e53a7d797e118bc0b752ce42683d8a3b38d01b2faea4574b5af7116d5b0015"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p9.jpg",
+      "sha256": "55fd7ea908d26f5d111e6402be63e3c086bdc2819df6dfb94f9f3ae8cacbecb0"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p0.jpg",
+      "sha256": "d415d35367c4f70a1075f30243ec6b885ebbfb26666c1f1470fbfe680e0c8755"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p1.jpg",
+      "sha256": "ee9d28473ce2560aa78f4051bc63028f0a97e26b45310fe85ea2e758a0d49e4f"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p10.jpg",
+      "sha256": "d5c0ac3795fa232d0017ce7b088189b2884b46c69cd0e697d583d1c9443023bb"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p11.jpg",
+      "sha256": "a806de8e099ad2c42590379f6efdf0591a748cd4c95ba45ba14722ff10f5becb"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p12.jpg",
+      "sha256": "22d2a1abf75079db2009fa799fcd75be79d557394a7535731b4772394c7348f7"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p13.jpg",
+      "sha256": "7cdc16d2672b58d1513e6c130489047083a3009522b98e02d6d3a41d92d191ab"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p14.jpg",
+      "sha256": "e66212a514904a00c119546bd1a0b8553f3c2ee7b4c6dae20ab81ad6ef879e37"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p15.jpg",
+      "sha256": "aa36e5669f664a4411e5c39b231427520a05ba20b3ab0bbdebea0788b31e9c41"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p16.jpg",
+      "sha256": "a711f44b812a8a01e60a8de50ce049e215fa8d5b70608ba79d0e0e73e4004ce6"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p17.jpg",
+      "sha256": "bd7530de191b3f6808e1cc0c40a92548b8f12e1c48b4c91be41a7d6156357d7c"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p18.jpg",
+      "sha256": "be9ca91a2f17757c7de8e70d5f9280c5bd541a640904d1c4e94f8bdd99cba163"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p19.jpg",
+      "sha256": "e64444c76bea0d10828f0cb82a657f0b7eca68b9b52ae14b5e812876dd70f1f9"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p2.jpg",
+      "sha256": "8db78a507a3eb79a411fad0ab4842a7f6fa6703fa0116d8b89fbd0f5c332e473"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p20.jpg",
+      "sha256": "564ff5c9f2b22360d1a7f6b55e9fc470e96fa49f9ee87963976a88eb537dbba2"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p21.jpg",
+      "sha256": "6178a8440b90b0d4bdd2caf6a9a952085bb378aaff865bde7ac4033d9e308c30"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p22.jpg",
+      "sha256": "224884df6eee559b1fd667458bda7c239a33fef0140793033befa9c2d7667e29"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p23.jpg",
+      "sha256": "9fa3357d12a7ae019a59d640114c0bd22bdb00afd2f6158ad0c27c095e53d351"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p3.jpg",
+      "sha256": "26af3750f359be77817e8bc9a00ff1a413216718f1b012ac34c6c110311d2c0d"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p4.jpg",
+      "sha256": "05f14ce4f1f9b1c6d9cdbd093c0ff32b13c356d33def8f0bec682e95ba66d664"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p5.jpg",
+      "sha256": "54f11a78fea66d719c49afae582aab5c7ce7a91bfa247f2cdb22b6399d85d89b"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p6.jpg",
+      "sha256": "18fc3903a11e096c230f93a4d4a1892337a40e272bc20981559b8ee6d4a7876c"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p7.jpg",
+      "sha256": "48b5a8abda227a843178d7400753e038bfee87d3f134a1a90891ea50a75fedc3"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p8.jpg",
+      "sha256": "8d4240f38278a1eaf6e6a2c0fc349cf7a5f9884d5c4c31335b518bc4174603c2"
+    },
+    {
+      "file": "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p9.jpg",
+      "sha256": "d4770bb024b90e08b9435975d6f0ae885b576679ca8c50968f8cf9d26de100be"
+    }
+  ],
+  "outputs": [
+    {
+      "file": "festival-cover.webp",
+      "width": 750,
+      "height": 1050,
+      "bytes": 240756,
+      "sha256": "7a1885673c6f062d507d57e9e8f1e1b051b4440730a65f12e059eb690f85a499",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p0.jpg"
+      ],
+      "operation": "complete artwork, no crop"
+    },
+    {
+      "file": "afternoon-cover.webp",
+      "width": 800,
+      "height": 1130,
+      "bytes": 95592,
+      "sha256": "82bb5ff2e0a2fe0af581234e1c6841a78cb70435c6733ffb04477377ad3e7015",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p0.jpg"
+      ],
+      "operation": "complete artwork, no crop"
+    },
+    {
+      "file": "together-cover.webp",
+      "width": 800,
+      "height": 1130,
+      "bytes": 101260,
+      "sha256": "5285607b3a3877be398f823e13850ffca4badccebb4167720756d96a50eaaeee",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p22.jpg"
+      ],
+      "operation": "complete artwork, no crop"
+    },
+    {
+      "file": "notebook-page.webp",
+      "width": 700,
+      "height": 1013,
+      "bytes": 116664,
+      "sha256": "7925505582a0b946e69994fdd7eb8125a2d845c53e06293044d11a278a105b22",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p11.jpg"
+      ],
+      "operation": "complete artwork, no crop"
+    },
+    {
+      "file": "workshop-page.webp",
+      "width": 625,
+      "height": 850,
+      "bytes": 109922,
+      "sha256": "23b5b1de1126efead6b43f6f0415852730bd2c6132b3bc975cc1adc4c7e3bfdf",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p7.jpg"
+      ],
+      "operation": "complete artwork, no crop"
+    },
+    {
+      "file": "playroom-page.webp",
+      "width": 700,
+      "height": 1013,
+      "bytes": 131006,
+      "sha256": "c4b88e18e5a8dd39aba3e9cd17f69888dc09ad6072df61014924b86d5fa61978",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p14.jpg"
+      ],
+      "operation": "complete artwork, no crop"
+    },
+    {
+      "file": "letter-page.webp",
+      "width": 625,
+      "height": 850,
+      "bytes": 147096,
+      "sha256": "136d19ea6f135863c42efe8926dc0183f0668fe9df6a01a1e3ee469f4d275b5d",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p29.jpg"
+      ],
+      "operation": "complete artwork, no crop"
+    },
+    {
+      "file": "fireworks-page.webp",
+      "width": 625,
+      "height": 850,
+      "bytes": 187458,
+      "sha256": "c08c0f6cac836d11e6fa8ae7772205b40a0c6c9ef7c7e478b5af4f7c581bb425",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p30.jpg"
+      ],
+      "operation": "complete artwork, no crop"
+    },
+    {
+      "file": "reading-strip.webp",
+      "width": 653,
+      "height": 430,
+      "bytes": 57286,
+      "sha256": "d31a86b82358b925785e38d03492b405ea0e11305c6123ddff4e3900180e4085",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p3.jpg"
+      ],
+      "operation": {
+        "crop": {
+          "left": 25,
+          "top": 14,
+          "width": 653,
+          "height": 430
+        }
+      }
+    },
+    {
+      "file": "workshop-strip.webp",
+      "width": 580,
+      "height": 305,
+      "bytes": 36422,
+      "sha256": "0e7c2d78ac338aa2b51bc93dcc59d9ea7ceaa02e4a45d63bbda79711dc81c03f",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p7.jpg"
+      ],
+      "operation": {
+        "crop": {
+          "left": 22,
+          "top": 12,
+          "width": 580,
+          "height": 305
+        }
+      }
+    },
+    {
+      "file": "playroom-strip.webp",
+      "width": 644,
+      "height": 480,
+      "bytes": 75790,
+      "sha256": "585c3c1bff59f99a72eee9dbc3139731dddb43e90d54a33d3b5aa504bdeb073b",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p14.jpg"
+      ],
+      "operation": {
+        "crop": {
+          "left": 30,
+          "top": 505,
+          "width": 644,
+          "height": 480
+        }
+      }
+    },
+    {
+      "file": "hand-note.webp",
+      "width": 570,
+      "height": 252,
+      "bytes": 51226,
+      "sha256": "3652e2a746f8cac973ee6fef9f268f21fdbd91d8f1ce95a250ebc0f7f351b618",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p30.jpg"
+      ],
+      "operation": {
+        "crop": {
+          "left": 25,
+          "top": 322,
+          "width": 570,
+          "height": 252
+        }
+      }
+    },
+    {
+      "file": "kagari-tea.webp",
+      "width": 280,
+      "height": 510,
+      "bytes": 87862,
+      "sha256": "f184bf5cfaad2ea05beff9cdd50dbcb7e4751cfab90579816555888b1761b997",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p6.jpg"
+      ],
+      "operation": "border-connected paper removal; enclosed white artwork preserved; lossless WebP"
+    },
+    {
+      "file": "haruto-gift.webp",
+      "width": 280,
+      "height": 540,
+      "bytes": 101714,
+      "sha256": "6d3af74858be8222e07bdb8a43ff7d5062d6cbea81f73366fb6de68caf02244d",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p15.jpg"
+      ],
+      "operation": "border-connected paper removal; enclosed white artwork preserved; lossless WebP"
+    },
+    {
+      "file": "festival-pair.webp",
+      "width": 490,
+      "height": 569,
+      "bytes": 196934,
+      "sha256": "cec502b23e5c6ed5a071bf9bdb0a44c97186616f71d767b285296662379e4825",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p22.jpg"
+      ],
+      "operation": "border-connected paper removal; enclosed white artwork preserved; lossless WebP"
+    },
+    {
+      "file": "kagari-thinking.webp",
+      "width": 328,
+      "height": 512,
+      "bytes": 68874,
+      "sha256": "79cbfed4004ab8444cb6fc59d1b0c96db6e66da7ffcc6ee9a636acbacff423cc",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p8.jpg"
+      ],
+      "operation": "border-connected paper removal; enclosed white artwork preserved; lossless WebP"
+    },
+    {
+      "file": "haruto-thinking.webp",
+      "width": 263,
+      "height": 596,
+      "bytes": 54724,
+      "sha256": "e35e6a2934cf430601baad3e8d9a7359462a0e36b673b4210a7a59ca54074f98",
+      "sources": [
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p16.jpg"
+      ],
+      "operation": "border-connected paper removal; enclosed white artwork preserved; lossless WebP"
+    },
+    {
+      "file": "hero-character.webp",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 441500,
+      "sha256": "2cc1aae1bfda53c42f0236fdb55ff4f16f2eb8f93d8fa6a9f0bb4acb090b76d5",
+      "sources": [
+        "public/themes/fuyukawa-kagari/assets/hero-wallpaper.jpg",
+        "src/themes/fuyukawa-kagari/art/hero-subject-mask.svg"
+      ],
+      "operation": "hand-traced alpha; source RGB unchanged at 1920x1080; lossless WebP"
+    },
+    {
+      "file": "hero-manga.webp",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 774634,
+      "sha256": "aa8c4fb784c429b99052282b882b91fd884071147e8809689a5646bb15a18f4f",
+      "sources": [
+        "public/themes/fuyukawa-kagari/assets/hero-wallpaper.jpg",
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p3.jpg",
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p29.jpg",
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p11.jpg",
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p7.jpg",
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p14.jpg",
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p21.jpg",
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる④_93251996_p30.jpg",
+        "fuyukawa/葉佐乃_【創作漫画】儚いキミは猛攻をはじめる⑧_102800687_p23.jpg"
+      ],
+      "operation": "complete original outer panels plus a rebuilt manga center; no invented hidden pixels, stretching or character remnants; lossless WebP"
+    }
+  ],
+  "hero": {
+    "width": 1920,
+    "height": 1080,
+    "preservedRegions": [
+      {
+        "left": 0,
+        "top": 0,
+        "width": 390,
+        "height": 1080
+      },
+      {
+        "left": 393,
+        "top": 0,
+        "width": 372,
+        "height": 522
+      },
+      {
+        "left": 1488,
+        "top": 0,
+        "width": 432,
+        "height": 1080
+      },
+      {
+        "left": 393,
+        "top": 528,
+        "width": 134,
+        "height": 215
+      },
+      {
+        "left": 402,
+        "top": 752,
+        "width": 173,
+        "height": 144
+      }
+    ],
+    "reconstructedCenter": true
+  }
+}

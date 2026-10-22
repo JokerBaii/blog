@@ -1,0 +1,39 @@
+---
+import { Icon } from "astro-icon/components";
+import BlankLayout from "../layouts/BlankLayout.astro";
+import { categoryLabel } from "@/lib/site";
+import { getThemePath } from "@/core/themes/registry";
+const { frontmatter } = Astro.props;
+const headings = (Astro.props.headings ?? []).filter((heading) => heading.depth >= 2 && heading.depth <= 3);
+const title = `${frontmatter.seoTitle ?? frontmatter.title} | Yuimi Lab Blank`;
+const description = frontmatter.seoDescription ?? frontmatter.description;
+const date = frontmatter.updatedDate ?? frontmatter.pubDate;
+const dateLabel = new Intl.DateTimeFormat("zh-CN", { year: "numeric", month: "2-digit", day: "2-digit" }).format(date).replaceAll("/", ".");
+---
+<BlankLayout title={title} description={description} isArticlePage article={frontmatter}>
+  <div class="blank-article-topline"><a class="blank-text-link" href={getThemePath("blank", "/blog/")}><Icon name="tabler:arrow-left" size={17} />全部文章</a><span class="blank-kicker">JOURNAL / 正文</span></div>
+  <header class="blank-article-header">
+    <div class="blank-post-meta"><a href={`${getThemePath("blank", "/blog/")}?category=${frontmatter.category}`}>{categoryLabel[frontmatter.category]}</a><time datetime={date.toISOString()}>{frontmatter.updatedDate ? "更新于 " : ""}{dateLabel}</time></div>
+    <h1>{frontmatter.title}</h1>
+    <p>{frontmatter.description}</p>
+    <div class="blank-tag-line">{frontmatter.tags.map((tag: string) => <a href={`${getThemePath("blank", "/blog/")}?q=${encodeURIComponent(tag)}`}>#{tag}</a>)}</div>
+  </header>
+  <div class="blank-article-shell">
+    {headings.length > 0 && (
+      <aside class="blank-toc">
+        <details open>
+          <summary><span>CONTENTS / 目录</span><Icon class="blank-disclosure-icon" name="tabler:chevron-down" size={16} /></summary>
+          <nav aria-label="文章目录" data-blank-toc>{headings.map((heading) => <a class={`depth-${heading.depth}`} href={`#${heading.slug}`}>{heading.text}</a>)}</nav>
+        </details>
+      </aside>
+    )}
+    <article class="blank-article-body">
+      <div class="blank-prose" data-blank-prose><slot /></div>
+      <footer class="blank-article-end">
+        <span class="blank-end-mark" aria-hidden="true"></span><p class="blank-kicker">END / 写到这里</p>
+        <p>感谢阅读。</p>
+        <a class="blank-text-link" href={getThemePath("blank", "/blog/")}>回到文章目录 <Icon name="tabler:arrow-right" size={17} /></a>
+      </footer>
+    </article>
+  </div>
+</BlankLayout>

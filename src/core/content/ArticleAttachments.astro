@@ -1,0 +1,13 @@
+---
+import type { Attachment } from "./blog";
+const { attachments = [] } = Astro.props as { attachments: Attachment[] };
+const sizeLabel = (size: number) => size < 1024 ? `${size} B` : size < 1024 ** 2 ? `${(size / 1024).toFixed(1)} KB` : `${(size / 1024 ** 2).toFixed(1)} MB`;
+---
+{attachments.length > 0 && (
+  <section aria-label="文章附件" data-article-attachments>
+    <h2 id="article-attachments">附件下载</h2>
+    <ul>{attachments.map((attachment) => (
+      <li><a href={`/api/attachments/${encodeURIComponent(attachment.id)}/download`} download={attachment.filename}>{attachment.filename}</a>（{sizeLabel(attachment.size)}）</li>
+    ))}</ul>
+  </section>
+)}

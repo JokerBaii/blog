@@ -1,0 +1,179 @@
+.kisara-scrollbar {
+  --kisara-scroll-accent: #c67e96;
+  --kisara-scroll-thumb-size: 46px;
+  --kisara-scroll-thumb-y: 0px;
+  position: fixed;
+  z-index: 46;
+  top: 102px;
+  right: 10px;
+  bottom: 28px;
+  width: 10px;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.kisara-scrollbar.is-idle { opacity: 0; }
+
+.kisara-scrollbar::before,
+.kisara-scrollbar-progress {
+  position: absolute;
+  top: 0;
+  left: 4px;
+  width: 2px;
+  border-radius: 1px;
+}
+
+.kisara-scrollbar::before {
+  content: "";
+  bottom: 0;
+  background: rgba(146, 137, 148, .22);
+}
+
+.kisara-scrollbar-progress {
+  height: 100%;
+  background: var(--kisara-scroll-accent);
+  opacity: .5;
+  transform: scaleY(var(--kisara-scroll-progress, 0));
+  transform-origin: center top;
+}
+
+.kisara-scrollbar-thumb {
+  position: absolute;
+  top: 0;
+  left: 2px;
+  width: 6px;
+  height: var(--kisara-scroll-thumb-size);
+  border: 1px solid rgba(255, 244, 248, .5);
+  border-radius: 3px;
+  background: var(--kisara-scroll-accent);
+  box-shadow: 0 1px 3px rgba(14, 12, 16, .16);
+  transform: translate3d(0, var(--kisara-scroll-thumb-y), 0);
+}
+
+.kisara-scrollbar-thumb i {
+  position: absolute;
+  top: 50%;
+  left: 1px;
+  right: 1px;
+  height: 8px;
+  border-block: 1px solid rgba(255, 255, 255, .7);
+  transform: translateY(-50%);
+}
+
+@media (max-width: 600px) {
+  .kisara-scrollbar {
+    top: 82px;
+    right: 3px;
+    bottom: 76px;
+    width: 8px;
+  }
+  .kisara-scrollbar::before,
+  .kisara-scrollbar-progress { left: 3px; }
+  .kisara-scrollbar-thumb { left: 1px; }
+}
+
+.kisara-scrollbar-chapters { display: none; }
+
+/* Keep one layer for every chapter, including scene flights. */
+.kisara-scrollbar.is-home-rail {
+  --kisara-scroll-accent: #c7658b;
+  z-index: 10042;
+  top: 50%;
+  right: 6px;
+  bottom: auto;
+  width: 28px;
+  height: min(260px, calc(100svh / var(--kisara-scale, 1) - 180px));
+  transform: translate3d(0, -50%, 0);
+  isolation: isolate;
+  will-change: transform;
+}
+
+.kisara-scrollbar.is-home-rail:not([data-chapter]),
+.kisara-scrollbar.is-home-rail[data-chapter="0"] { opacity: 0; }
+
+.is-home-rail::before,
+.is-home-rail .kisara-scrollbar-progress {
+  top: 4px;
+  left: 23px;
+  width: 1px;
+  height: calc(100% - 8px);
+}
+
+.is-home-rail::before {
+  bottom: 4px;
+  background: #858b9a80;
+  box-shadow: 1px 0 0 #ffffff60;
+}
+
+.is-home-rail .kisara-scrollbar-progress {
+  opacity: .8;
+  will-change: transform;
+}
+
+.is-home-rail .kisara-scrollbar-thumb {
+  left: 20px;
+  width: 7px;
+  height: 8px;
+  border-radius: 1px;
+  will-change: transform;
+}
+
+.is-home-rail[data-rail-motion="true"] .kisara-scrollbar-progress,
+.is-home-rail[data-rail-motion="true"] .kisara-scrollbar-thumb {
+  transition: transform 220ms cubic-bezier(.77, 0, .175, 1);
+}
+
+.is-home-rail .kisara-scrollbar-thumb i { display: none; }
+
+.is-home-rail .kisara-scrollbar-chapters {
+  position: absolute;
+  inset: -1px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.kisara-scrollbar-chapters > span {
+  position: relative;
+  height: 10px;
+  padding-right: 12px;
+  color: #929db1;
+  font: 10px/1 Consolas, monospace;
+  text-align: right;
+  text-shadow: 0 1px 2px #11162a80;
+  transition: color 160ms ease;
+}
+
+.kisara-scrollbar-chapters > span::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 2px;
+  width: 5px;
+  height: 1px;
+  transform: translateY(-50%);
+  background: #9399a6;
+}
+
+.is-home-rail[data-chapter="1"] .kisara-scrollbar-chapters > :nth-child(1),
+.is-home-rail[data-chapter="2"] .kisara-scrollbar-chapters > :nth-child(2),
+.is-home-rail[data-chapter="3"] .kisara-scrollbar-chapters > :nth-child(3),
+.is-home-rail[data-chapter="4"] .kisara-scrollbar-chapters > :nth-child(4) {
+  color: #df719e;
+}
+
+/* Explicit overlays may hide the rail, but normal chapter flights never restack it. */
+.kisara-theme-panel:not([hidden]) ~ .is-home-rail,
+.kisara-home-page.is-lovebrain-home-active > .is-home-rail,
+.kisara-home-page:has(.kisara-gate.is-found-self-active) > .is-home-rail,
+html.kisara-event-modal-open .is-home-rail { opacity: 0; }
+
+@media (max-width: 600px) {
+  .kisara-scrollbar.is-home-rail { right: 2px; height: min(200px, calc(100svh / var(--kisara-scale, 1) - 180px)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kisara-scrollbar,
+  .is-home-rail[data-rail-motion="true"] .kisara-scrollbar-progress,
+  .is-home-rail[data-rail-motion="true"] .kisara-scrollbar-thumb { transition: none; }
+}

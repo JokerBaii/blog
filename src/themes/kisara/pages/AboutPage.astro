@@ -1,0 +1,787 @@
+---
+import KisaraLayout from "../layouts/KisaraLayout.astro";
+import aboutStylesheet from "../styles/about.css?url";
+import { Icon } from "astro-icon/components";
+import {
+  animeFavorites,
+  currentSignals,
+  favoriteGames,
+  profileIdentity,
+  profileTech,
+  xpFavorites
+} from "@/core/data/profile";
+import { getThemePath } from "@/core/themes/registry";
+
+const techPresentation = {
+  unity: { icon: "simple-icons:unity", code: "U3D" },
+  blender: { icon: "simple-icons:blender", code: "BLD" },
+  ue5: { icon: "simple-icons:unrealengine", code: "UE5" },
+  mmd: { icon: "tabler:movie", code: "MMD" },
+  astrbot: { icon: "tabler:terminal-2", code: "BOT" }
+} as const;
+
+const scenes = [
+  { key: "profile", label: "PROFILE", title: "档案" },
+  { key: "tech", label: "TECH", title: "技术线" },
+  { key: "anime", label: "ANIME", title: "番剧" },
+  { key: "xp", label: "XP", title: "角色属性" },
+  { key: "games", label: "GAMES", title: "游戏" },
+  { key: "pulse", label: "PULSE", title: "当前电波" },
+  { key: "epilogue", label: "END", title: "谢幕" }
+] as const;
+
+const railScenes = scenes.slice(0, -1);
+---
+
+<KisaraLayout title="Me | Kisara" description="关于喝益胃与 Yuimi Lab。" stylesheets={[aboutStylesheet]}>
+  <section class="kisara-me" data-kisara-me data-active-scene="0" aria-label="Yuimi-chaya 个人档案">
+    <div class="kisara-me-ambient" aria-hidden="true">
+      <i></i><i></i><i></i>
+    </div>
+
+    <div class="kisara-me-hud" aria-hidden="true">
+      <span data-me-current-number>01</span>
+      <i></i>
+      <strong data-me-current-label>PROFILE</strong>
+    </div>
+
+    <div class="kisara-me-stage" data-me-stage>
+      <article
+        class="kisara-me-scene kisara-me-profile"
+        data-me-scene
+        data-scene-position="active"
+        data-scene-name="档案"
+        aria-hidden="false"
+      >
+        <div class="kisara-me-profile-aperture" aria-hidden="true">
+          <span></span>
+          <i></i>
+          <p><small>EPISODE 11</small><b>MEMORY 01</b><em>01—05</em></p>
+        </div>
+        <div class="kisara-me-profile-intro">
+          <figure class="kisara-me-profile-portrait">
+            <div class="kisara-me-profile-portrait-media">
+              <img src="/themes/kisara/assets/profile.webp" alt="喝益胃 / Yuimi-chaya 的头像" width="640" height="640" decoding="async" />
+              <span aria-hidden="true"><i></i><i></i></span>
+            </div>
+            <figcaption>
+              <p>@{profileIdentity.handle}</p>
+              <h1>{profileIdentity.displayName}</h1>
+              <small>{profileIdentity.siteName} / PERSONAL SIGNAL</small>
+            </figcaption>
+          </figure>
+
+          <div class="kisara-me-profile-voice">
+            <p class="kisara-me-profile-kicker"><span>00</span> PERSONAL SIGNAL / ME</p>
+            <h2>先有一个想做的东西，<br /><em>再去补齐让它成立的技术。</em></h2>
+            <p class="kisara-me-profile-lead">动画、交互、模型、工具，以及那些没必要但很好玩的点子，最后都会在这里留下痕迹。比起把它们写成技能清单，我更想让页面本身说明我喜欢什么。</p>
+            <nav class="kisara-me-profile-links" aria-label="Yuimi 社交链接">
+              <a href={profileIdentity.github} target="_blank" rel="noreferrer">
+                <Icon name="tabler:brand-github" aria-hidden="true" /><span>GITHUB</span><i>↗</i>
+              </a>
+              <a href={profileIdentity.bilibili} target="_blank" rel="noreferrer">
+                <Icon name="tabler:brand-bilibili" aria-hidden="true" /><span>BILIBILI</span><i>↗</i>
+              </a>
+            </nav>
+            <a class="kisara-me-profile-friends-link" href={getThemePath("kisara", "/friends/")}>
+              <span class="kisara-me-profile-friends-mark" aria-hidden="true"><Icon name="tabler:heart" /></span>
+              <span class="kisara-me-profile-friends-copy"><small>FRIEND LINKS / OPEN ROUTE</small><strong>进入友联页</strong></span>
+              <i aria-hidden="true">↗</i>
+            </a>
+            <div class="kisara-me-profile-signature" aria-hidden="true">
+              <span>YUIMI-CHAYA</span><i></i><small>ANIME / CODE / INTERACTION</small>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article
+        class="kisara-me-scene kisara-me-memory kisara-me-tech"
+        data-me-scene
+        data-me-memory="departure"
+        data-scene-position="after"
+        data-scene-name="技术线"
+        aria-hidden="true"
+        inert
+      >
+        <div class="kisara-me-memory-visual" aria-hidden="true">
+          <img src="/themes/kisara/assets/me/episode11-e1.webp" alt="" width="1920" height="1080" loading="eager" fetchpriority="high" decoding="async" />
+          <span class="kisara-me-memory-grade"></span>
+          <span class="kisara-me-memory-motion"></span>
+        </div>
+        <div class="kisara-me-memory-copy is-departure">
+          <header>
+            <p class="kisara-me-memory-kicker"><span>01</span> DEPARTURE LOG / TECH</p>
+            <h2>Leave the cave.<br /><em>Carry the tools.</em></h2>
+            <p>第一次被带离封闭的地方，世界像一张刚打开的舷窗。技术栈也一样：先带上手边能用的东西，再慢慢飞远。</p>
+          </header>
+          <div class="kisara-me-flight-instrument" data-me-flight-dial>
+            <span class="kisara-me-flight-dial" aria-hidden="true"><i></i><i></i><b></b></span>
+            <ol class="kisara-me-flight-manifest">
+              {profileTech.map((tech, index) => (
+                <li>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <i><Icon name={techPresentation[tech.key].icon} aria-hidden="true" /></i>
+                  <div><strong>{tech.name}</strong><small>{tech.note}</small></div>
+                  <b>{techPresentation[tech.key].code}</b>
+                </li>
+              ))}
+            </ol>
+            <span class="kisara-me-flight-horizon" aria-hidden="true"><i></i></span>
+          </div>
+          <footer><span>BAYRON AIR / FIRST FLIGHT</span><i></i><strong>TOOLS ON BOARD</strong></footer>
+        </div>
+      </article>
+
+      <article
+        class="kisara-me-scene kisara-me-memory kisara-me-anime"
+        data-me-scene
+        data-me-memory="ritual"
+        data-scene-position="after"
+        data-scene-name="番剧"
+        aria-hidden="true"
+        inert
+      >
+        <div class="kisara-me-memory-visual" aria-hidden="true">
+          <img src="/themes/kisara/assets/me/episode11-e2.webp" alt="" width="1920" height="1080" loading="eager" fetchpriority="auto" decoding="async" />
+          <span class="kisara-me-memory-grade"></span>
+          <span class="kisara-me-memory-motion"></span>
+          <span class="kisara-me-contract-bloom"></span>
+        </div>
+        <div class="kisara-me-memory-copy is-ritual">
+          <header>
+            <p class="kisara-me-memory-kicker"><span>02</span> RITUAL NOTES / ANIME</p>
+            <h2>
+              A story becomes<br />
+              <em class="kisara-me-clause-note" aria-label="a clause.">
+                <span class="kisara-me-clause-word" data-ink="clause." aria-hidden="true">clause.</span>
+                <span class="kisara-me-clause-article" aria-hidden="true">a</span>
+                <i aria-hidden="true"></i>
+              </em>
+            </h2>
+            <p>有些作品只是看过，有些作品会悄悄参与塑造你。它们不是排名，更像写在契约边缘、迟迟没有褪色的旁注。</p>
+          </header>
+          <div class="kisara-me-contract-field">
+            <svg class="kisara-me-contract-ink" viewBox="0 0 560 360" fill="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="kisara-kao-main" x1="44" y1="302" x2="526" y2="72" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#687aaa" />
+                  <stop offset="0.28" stop-color="#a94270" />
+                  <stop offset="0.72" stop-color="#e45687" />
+                  <stop offset="1" stop-color="#ff8bb2" />
+                </linearGradient>
+                <linearGradient id="kisara-kao-thread" x1="60" y1="100" x2="532" y2="318" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#91a8e6" />
+                  <stop offset="0.46" stop-color="#b8a8dc" />
+                  <stop offset="1" stop-color="#f176a3" />
+                </linearGradient>
+              </defs>
+
+              <g class="kisara-me-kao-bleed">
+                <path class="is-spine" pathLength="1" d="M74 318C131 275 179 229 218 171C253 119 295 75 357 48" />
+                <path class="is-body" pathLength="1" d="M45 244C109 191 166 188 211 224C252 257 284 278 321 250C355 225 363 181 340 166C317 151 288 165 286 190C284 223 331 240 373 224C419 207 454 168 504 164C525 162 542 169 550 181" />
+                <path class="is-underline" pathLength="1" d="M84 317C175 343 275 330 363 307C431 290 483 301 532 326" />
+                <path class="is-thread" pathLength="1" d="M111 330C170 286 210 240 237 179C265 115 319 74 395 59C451 48 500 68 536 103" />
+              </g>
+
+              <g class="kisara-me-kao-under">
+                <path class="is-blue" pathLength="1" d="M61 95C126 113 178 151 214 207C253 268 306 311 379 320C435 326 486 313 531 280" />
+                <path class="is-pink" pathLength="1" d="M111 330C170 286 210 240 237 179C265 115 319 74 395 59C451 48 500 68 536 103" />
+                <path class="is-lace" pathLength="1" d="M167 252C214 215 257 214 303 240C346 265 393 254 443 218" />
+              </g>
+
+              <g class="kisara-me-kao-main">
+                <path class="is-spine" pathLength="1" d="M74 318C131 275 179 229 218 171C253 119 295 75 357 48" />
+                <path class="is-body" pathLength="1" d="M45 244C109 191 166 188 211 224C252 257 284 278 321 250C355 225 363 181 340 166C317 151 288 165 286 190C284 223 331 240 373 224C419 207 454 168 504 164C525 162 542 169 550 181" />
+                <path class="is-tail" pathLength="1" d="M321 250C365 288 405 316 462 310C493 307 520 291 542 270" />
+                <path class="is-underline" pathLength="1" d="M84 317C175 343 275 330 363 307C431 290 483 301 532 326" />
+                <path class="is-highlight" pathLength="1" d="M77 313C132 270 177 226 214 170C251 114 294 72 352 50" />
+              </g>
+
+              <g class="kisara-me-kao-over">
+                <path class="is-gap is-blue-a" pathLength="1" d="M196 187C211 204 223 223 235 244" />
+                <path class="is-thread is-blue-a" pathLength="1" d="M196 187C211 204 223 223 235 244" />
+                <path class="is-gap is-pink-a" pathLength="1" d="M246 158C262 132 283 111 307 93" />
+                <path class="is-thread is-pink-a" pathLength="1" d="M246 158C262 132 283 111 307 93" />
+                <path class="is-gap is-blue-b" pathLength="1" d="M284 284C311 301 341 311 371 314" />
+                <path class="is-thread is-blue-b" pathLength="1" d="M284 284C311 301 341 311 371 314" />
+                <path class="is-gap is-pink-b" pathLength="1" d="M366 69C395 58 423 56 451 62" />
+                <path class="is-thread is-pink-b" pathLength="1" d="M366 69C395 58 423 56 451 62" />
+              </g>
+
+              <g class="kisara-me-kao-seep">
+                <ellipse cx="74" cy="318" rx="5" ry="11" transform="rotate(-48 74 318)" />
+                <ellipse cx="218" cy="171" rx="4" ry="8" transform="rotate(24 218 171)" />
+                <ellipse cx="357" cy="48" rx="7" ry="3" transform="rotate(-24 357 48)" />
+                <ellipse cx="45" cy="244" rx="4" ry="9" transform="rotate(58 45 244)" />
+                <ellipse cx="321" cy="250" rx="8" ry="4" transform="rotate(-18 321 250)" />
+                <ellipse cx="532" cy="326" rx="9" ry="3" transform="rotate(12 532 326)" />
+                <circle cx="237" cy="179" r="3.6" />
+                <circle cx="379" cy="320" r="4.2" />
+                <circle cx="443" cy="218" r="2.8" />
+              </g>
+            </svg>
+
+            <ol class="kisara-me-contract-margins">
+              {animeFavorites.map((anime, index) => (
+                <li>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <div><strong>{anime.title}</strong><small>{anime.subtitle}</small></div>
+                  <i aria-hidden="true"><b></b></i>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <footer><span>SUBJECT / MEMORY</span><strong>ACCEPTED WITHOUT REVISION</strong></footer>
+        </div>
+      </article>
+
+      <article
+        class="kisara-me-scene kisara-me-memory kisara-me-xp"
+        data-me-scene
+        data-me-memory="amendment"
+        data-scene-position="after"
+        data-scene-name="角色属性"
+        aria-hidden="true"
+        inert
+      >
+        <div class="kisara-me-memory-visual" aria-hidden="true">
+          <img src="/themes/kisara/assets/me/episode11-e3.webp" alt="" width="1920" height="1080" loading="eager" fetchpriority="low" decoding="async" />
+          <span class="kisara-me-memory-grade"></span>
+          <span class="kisara-me-memory-motion"></span>
+          <span class="kisara-me-amendment-cut"></span>
+        </div>
+        <div class="kisara-me-memory-copy is-amendment">
+          <header>
+            <p class="kisara-me-memory-kicker"><span>03</span> PRIVATE AMENDMENT / XP</p>
+            <h2>
+              The terms were<br />
+              <em class="kisara-me-neutral-bond" aria-label="never neutral.">
+                <span class="is-never" aria-hidden="true">never</span>
+                <span class="kisara-me-neutral-link" aria-hidden="true"><i></i></span>
+                <span class="is-neutral" aria-hidden="true">neutral.</span>
+              </em>
+            </h2>
+            <p>偏好不是统计表。它更像一份被偷偷改过的契约，直到真正靠近时，才发现某些条件早就写在里面。</p>
+          </header>
+          <ol class="kisara-me-amended-clauses">
+            {xpFavorites.map((item, index) => (
+              <li>
+                <span>CLAUSE 0{index + 1}</span>
+                <div><strong>{item.title}</strong><small>{item.subtitle}</small></div>
+                <i aria-hidden="true"></i>
+              </li>
+            ))}
+          </ol>
+          <footer><span>ORIGINAL CONDITION</span><del>OBJECTIVE</del><strong>PERSONAL / UNDISCLOSED</strong></footer>
+        </div>
+      </article>
+
+      <article
+        class="kisara-me-scene kisara-me-memory kisara-me-games"
+        data-me-scene
+        data-me-memory="sunrise"
+        data-scene-position="after"
+        data-scene-name="游戏"
+        aria-hidden="true"
+        inert
+      >
+        <div class="kisara-me-memory-visual" aria-hidden="true">
+          <img src="/themes/kisara/assets/me/episode11-e4.webp" alt="" width="1920" height="1080" loading="eager" fetchpriority="low" decoding="async" />
+          <span class="kisara-me-memory-grade"></span>
+          <span class="kisara-me-memory-motion"></span>
+          <span class="kisara-me-sunrise-flare"></span>
+        </div>
+        <div class="kisara-me-memory-copy is-sunrise">
+          <header>
+            <p class="kisara-me-memory-kicker"><span>04</span> SHARED SAVE / GAMES</p>
+            <h2>
+              <span>Time held</span>
+              <span class="kisara-me-sunrise-with">with both</span>
+              <em class="kisara-me-sunrise-bond">
+                <span class="is-kisara">hand</span>
+                <span class="kisara-me-sunrise-to">to</span>
+                <span class="is-shu">hand</span>
+              </em>
+            </h2>
+            <p>真正留下来的往往不是完成率，而是那些愿意认真交出去的夜晚、练习和存档。太阳升起以后，它们仍然算数。</p>
+          </header>
+          <ol class="kisara-me-shared-saves">
+            {favoriteGames.map((game) => (
+              <li>
+                <strong>{game.title}</strong>
+                <small>{game.subtitle}</small>
+              </li>
+            ))}
+          </ol>
+          <footer><span>SESSION CONTINUES</span><i></i><strong>NO AUTO-SAVE FOR FEELINGS</strong></footer>
+        </div>
+      </article>
+
+      <article
+        class="kisara-me-scene kisara-me-memory kisara-me-pulse"
+        data-me-scene
+        data-me-memory="condition"
+        data-scene-position="after"
+        data-scene-name="当前电波"
+        aria-hidden="true"
+        inert
+      >
+        <div class="kisara-me-memory-visual" aria-hidden="true">
+          <img src="/themes/kisara/assets/me/episode11-e5.webp" alt="" width="1920" height="1080" loading="eager" fetchpriority="low" decoding="async" />
+          <span class="kisara-me-memory-grade"></span>
+          <span class="kisara-me-memory-motion"></span>
+          <span class="kisara-me-condition-scan"></span>
+        </div>
+        <div class="kisara-me-memory-copy is-condition">
+          <header>
+            <p class="kisara-me-memory-kicker"><span>05</span> HIDDEN CONDITION / PULSE</p>
+            <h2>The line beneath<br /><em><span>the crossed-</span><span>out words.</span></em></h2>
+            <p>旧条件被划掉以后，真正想留下的东西才露出来。现在没有宏大计划，只有几条仍在持续发亮的兴趣信号。</p>
+          </header>
+          <ol class="kisara-me-rewritten-signals">
+            {currentSignals.map((signal, index) => (
+              <li><span>0{index + 1}</span><small>{signal.label}</small><p>{signal.text}</p><i aria-hidden="true"></i></li>
+            ))}
+          </ol>
+          <button
+            type="button"
+            class="kisara-me-memory-return"
+            data-me-memory-return
+            aria-label="收下未归档的记忆"
+            aria-hidden="true"
+            disabled
+          >
+            <span class="kisara-me-memory-return-mark" aria-hidden="true"><i></i><b>11</b></span>
+            <span class="kisara-me-memory-return-copy">
+              <small data-me-memory-return-kicker>UNFILED TRACE</small>
+              <strong data-me-memory-return-label>MEMORY RETURN</strong>
+            </span>
+          </button>
+          <footer>
+            <span>CONDITION REWRITTEN / CHANNEL 03</span>
+            <p>--- Yuimi-chaya/GPT in Codex</p>
+          </footer>
+        </div>
+      </article>
+
+      <article
+        class="kisara-me-scene kisara-me-epilogue"
+        data-me-scene
+        data-scene-position="after"
+        data-scene-name="谢幕"
+        aria-hidden="true"
+        inert
+      >
+        <figure class="kisara-me-epilogue-frame">
+          <button
+            class="kisara-me-epilogue-image"
+            type="button"
+            data-me-epilogue-audio
+            aria-label="播放谢幕声音"
+          >
+            <img
+              src="/themes/kisara/assets/me-epilogue.webp"
+              alt="木更亲吻镜头并向观众道谢的动画终帧"
+              width="2560"
+              height="1440"
+              loading="lazy"
+              fetchpriority="low"
+              decoding="async"
+            />
+          </button>
+          <figcaption>
+            <span>EPILOGUE / LAST FRAME</span>
+            <strong>ご視聴ありがとうございました。</strong>
+            <small>Thank you for staying until the end.</small>
+          </figcaption>
+        </figure>
+      </article>
+    </div>
+
+    <nav class="kisara-me-rail" data-me-rail aria-label="个人档案章节">
+      <span class="kisara-me-rail-track" aria-hidden="true"><i data-me-rail-progress></i></span>
+      <div>
+        {railScenes.map((scene, index) => (
+          <button
+            type="button"
+            data-me-target={index}
+            aria-label={`切换到${scene.title}`}
+            aria-current={index === 0 ? "step" : undefined}
+          >
+            <span>{scene.label}</span><i aria-hidden="true"></i>
+          </button>
+        ))}
+      </div>
+    </nav>
+
+    <div class="kisara-me-switch-cue" aria-hidden="true">
+      <span>SCROLL / SWIPE</span><i></i><small>切换档案章节</small>
+    </div>
+    <p class="kisara-me-announcer" data-me-announcer aria-live="polite">第 1 章，共 {scenes.length} 章：档案</p>
+  </section>
+
+  <script is:inline data-astro-rerun>
+    (() => {
+      window.__yuimiKisaraInnerCleanup?.();
+      const lifecycle = new AbortController();
+      const signal = lifecycle.signal;
+      const root = document.querySelector("[data-kisara-me]");
+      let transitionTimer = 0;
+      let edgeTimer = 0;
+      let flightFrame = 0;
+      let flightDial = null;
+      let prepareFoundSelfReturn = () => {};
+      let stopEpilogueAudio = () => {};
+
+      const cleanup = (event) => {
+        prepareFoundSelfReturn(event);
+        stopEpilogueAudio();
+        window.clearTimeout(transitionTimer);
+        window.clearTimeout(edgeTimer);
+        window.cancelAnimationFrame(flightFrame);
+        lifecycle.abort();
+        document.documentElement.classList.remove("kisara-me-locked");
+        document.body.classList.remove("kisara-me-page");
+        if (window.__yuimiKisaraInnerCleanup === cleanup) window.__yuimiKisaraInnerCleanup = null;
+      };
+
+      window.__yuimiKisaraInnerCleanup = cleanup;
+      document.addEventListener("astro:before-swap", cleanup, { once: true, signal });
+      if (!(root instanceof HTMLElement)) return;
+
+      const scenes = Array.from(root.querySelectorAll("[data-me-scene]"));
+      const markers = Array.from(root.querySelectorAll("[data-me-target]"));
+      const currentNumber = root.querySelector("[data-me-current-number]");
+      const currentLabel = root.querySelector("[data-me-current-label]");
+      const announcer = root.querySelector("[data-me-announcer]");
+      const memoryReturn = root.querySelector("[data-me-memory-return]");
+      const memoryReturnKicker = root.querySelector("[data-me-memory-return-kicker]");
+      const memoryReturnLabel = root.querySelector("[data-me-memory-return-label]");
+      const epilogueAudioTrigger = root.querySelector("[data-me-epilogue-audio]");
+      flightDial = root.querySelector("[data-me-flight-dial]");
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const visitedMemoryScenes = new Set();
+      const foundSelfVisitedScenes = new Set([0]);
+      let activeIndex = 0;
+      let foundSelfDisqualified = false;
+      let wheelBuffer = 0;
+      let lastWheelAt = 0;
+      let blockedUntil = 0;
+      let touchStartY = null;
+      let touchStartX = null;
+      let memoryReturnConsumed = false;
+
+      const epilogueSceneIndex = scenes.length - 1;
+      const epilogueAudio = new Audio("/themes/kisara/audio/end.mp3");
+      epilogueAudio.preload = "auto";
+      epilogueAudio.playsInline = true;
+      epilogueAudio.volume = 0.82;
+      let epilogueAudioPlayedForEntry = false;
+      let epilogueAudioSuspended = false;
+
+      const setEpilogueAudioSuspension = (active) => {
+        if (epilogueAudioSuspended === active) return;
+        epilogueAudioSuspended = active;
+        window.dispatchEvent(new CustomEvent("yuimi:kisara-audio-suspension", {
+          detail: { id: "me-epilogue-audio", active }
+        }));
+      };
+
+      stopEpilogueAudio = (resetEntry = false) => {
+        epilogueAudio.pause();
+        try { epilogueAudio.currentTime = 0; } catch {}
+        setEpilogueAudioSuspension(false);
+        if (resetEntry) epilogueAudioPlayedForEntry = false;
+      };
+
+      epilogueAudio.addEventListener("ended", () => {
+        setEpilogueAudioSuspension(false);
+      }, { signal });
+      epilogueAudio.addEventListener("error", () => {
+        epilogueAudioPlayedForEntry = false;
+        setEpilogueAudioSuspension(false);
+      }, { signal });
+
+      document.documentElement.classList.add("kisara-me-locked");
+      document.body.classList.add("kisara-me-page");
+      window.scrollTo(0, 0);
+
+      let flightTargetRoll = 0;
+      let flightTargetTilt = 0;
+
+      const commitFlightPose = () => {
+        flightFrame = 0;
+        if (!(flightDial instanceof HTMLElement)) return;
+        flightDial.style.setProperty("--flight-roll", flightTargetRoll.toFixed(3));
+        flightDial.style.setProperty("--flight-tilt", flightTargetTilt.toFixed(3));
+      };
+
+      const queueFlightPose = (roll, tilt) => {
+        if (!(flightDial instanceof HTMLElement) || reduceMotion) return;
+        flightTargetRoll = Math.max(-1, Math.min(1, roll));
+        flightTargetTilt = Math.max(-1, Math.min(1, tilt));
+        if (!flightFrame) flightFrame = window.requestAnimationFrame(commitFlightPose);
+      };
+
+      const resetFlightPose = () => queueFlightPose(0, 0);
+
+      const foundSelfTicketKey = "yuimi-kisara-found-self-ticket-v1";
+      const canTriggerFoundSelf = () => activeIndex === 4
+        && !foundSelfDisqualified
+        && [0, 1, 2, 3, 4].every((index) => foundSelfVisitedScenes.has(index));
+      const setFoundSelfTicket = (enabled) => {
+        try {
+          if (enabled) {
+            sessionStorage.setItem(foundSelfTicketKey, JSON.stringify({
+              source: "me-games",
+              createdAt: Date.now()
+            }));
+          } else {
+            sessionStorage.removeItem(foundSelfTicketKey);
+          }
+        } catch {}
+      };
+      const isKisaraHomePath = (pathname) => {
+        const normalized = pathname.replace(/\/+$/, "") || "/";
+        return normalized === "/" || normalized === "/themes/kisara";
+      };
+      prepareFoundSelfReturn = (event) => {
+        const nextDocument = event?.newDocument;
+        if (!nextDocument) return;
+        const nextIsHome = nextDocument.body?.classList.contains("kisara-home-page");
+        setFoundSelfTicket(Boolean(nextIsHome && canTriggerFoundSelf()));
+      };
+
+      const setMemoryReturnState = (state) => {
+        if (!(memoryReturn instanceof HTMLButtonElement)) return;
+        const archived = state === "archived";
+        root.classList.add("has-memory-return");
+        memoryReturn.dataset.state = archived ? "archived" : "ready";
+        memoryReturn.disabled = archived;
+        memoryReturn.removeAttribute("aria-hidden");
+        memoryReturn.setAttribute(
+          "aria-label",
+          archived ? "《记忆归还》已收进隐藏歌单" : "收下未归档的记忆"
+        );
+        if (memoryReturnKicker) memoryReturnKicker.textContent = archived ? "MEMORY ARCHIVED" : "UNFILED TRACE";
+        if (memoryReturnLabel) memoryReturnLabel.textContent = archived ? "记忆已归还" : "MEMORY RETURN";
+      };
+
+      const clearMemoryReturnState = () => {
+        if (!(memoryReturn instanceof HTMLButtonElement)) return;
+        root.classList.remove("has-memory-return");
+        delete memoryReturn.dataset.state;
+        memoryReturn.disabled = true;
+        memoryReturn.setAttribute("aria-hidden", "true");
+        memoryReturn.setAttribute("aria-label", "收下未归档的记忆");
+        if (memoryReturnKicker) memoryReturnKicker.textContent = "UNFILED TRACE";
+        if (memoryReturnLabel) memoryReturnLabel.textContent = "MEMORY RETURN";
+      };
+
+      const memoryAlreadyUnlocked = Array.isArray(window.__yuimiKisaraSecretAudioSession?.unlockedIds)
+        && window.__yuimiKisaraSecretAudioSession.unlockedIds.includes("kioku-kikan");
+      if (memoryAlreadyUnlocked) setMemoryReturnState("archived");
+
+      const rememberScene = (sceneIndex) => {
+        if (sceneIndex >= 1 && sceneIndex <= 5) visitedMemoryScenes.add(sceneIndex);
+        if (memoryReturnConsumed || memoryAlreadyUnlocked || memoryReturn?.dataset.state === "archived") return;
+        if ([1, 2, 3, 4, 5].every((index) => visitedMemoryScenes.has(index))) {
+          setMemoryReturnState("ready");
+        }
+      };
+
+      const trackFlightPose = (clientX, clientY) => {
+        if (activeIndex !== 1 || reduceMotion) return;
+        const bounds = root.getBoundingClientRect();
+        if (!bounds.width || !bounds.height) return;
+        const roll = ((clientX - bounds.left) / bounds.width - 0.5) * 2;
+        const tilt = ((clientY - bounds.top) / bounds.height - 0.5) * 2;
+        queueFlightPose(roll, tilt);
+      };
+
+      const setActiveScene = (nextIndex, instant = false) => {
+        const boundedIndex = Math.max(0, Math.min(scenes.length - 1, nextIndex));
+        if (boundedIndex === activeIndex && !instant) return false;
+
+        root.scrollTop = 0;
+        const previousIndex = activeIndex;
+        activeIndex = boundedIndex;
+        if (previousIndex === epilogueSceneIndex && boundedIndex !== epilogueSceneIndex) {
+          stopEpilogueAudio(true);
+        } else if (boundedIndex === epilogueSceneIndex && previousIndex !== epilogueSceneIndex) {
+          epilogueAudioPlayedForEntry = false;
+        }
+        if (boundedIndex >= 0 && boundedIndex <= 4) foundSelfVisitedScenes.add(boundedIndex);
+        if (boundedIndex >= 5) foundSelfDisqualified = true;
+        rememberScene(boundedIndex);
+        if (boundedIndex !== 1) resetFlightPose();
+        root.dataset.direction = boundedIndex >= previousIndex ? "next" : "previous";
+        root.dataset.activeScene = String(boundedIndex);
+        root.classList.toggle("is-switching", !instant && !reduceMotion);
+
+        scenes.forEach((scene, index) => {
+          if (!(scene instanceof HTMLElement)) return;
+          const isActive = index === boundedIndex;
+          scene.dataset.scenePosition = isActive ? "active" : index < boundedIndex ? "before" : "after";
+          scene.setAttribute("aria-hidden", String(!isActive));
+          scene.inert = !isActive;
+        });
+
+        markers.forEach((marker, index) => {
+          if (!(marker instanceof HTMLElement)) return;
+          if (index === boundedIndex) marker.setAttribute("aria-current", "step");
+          else marker.removeAttribute("aria-current");
+        });
+
+        const scene = scenes[boundedIndex];
+        const sceneName = scene instanceof HTMLElement ? scene.dataset.sceneName || "档案" : "档案";
+        const label = markers[boundedIndex]?.querySelector("span")?.textContent
+          || (boundedIndex === scenes.length - 1 ? "END" : "PROFILE");
+        if (currentNumber) currentNumber.textContent = String(boundedIndex + 1).padStart(2, "0");
+        if (currentLabel) currentLabel.textContent = label;
+        if (announcer) announcer.textContent = `第 ${boundedIndex + 1} 章，共 ${scenes.length} 章：${sceneName}`;
+        const progress = scenes.length > 1 ? boundedIndex / (scenes.length - 1) : 0;
+        root.style.setProperty("--me-progress", String(progress));
+
+        window.clearTimeout(transitionTimer);
+        if (instant || reduceMotion) root.classList.remove("is-switching");
+        else transitionTimer = window.setTimeout(() => root.classList.remove("is-switching"), 900);
+        return true;
+      };
+
+      const nudgeEdge = (direction) => {
+        root.dataset.edge = direction < 0 ? "start" : "end";
+        window.clearTimeout(edgeTimer);
+        edgeTimer = window.setTimeout(() => delete root.dataset.edge, 320);
+      };
+
+      const stepScene = (direction) => {
+        const nextIndex = activeIndex + direction;
+        if (nextIndex < 0 || nextIndex >= scenes.length) {
+          nudgeEdge(direction);
+          return false;
+        }
+        return setActiveScene(nextIndex);
+      };
+
+      const shouldIgnoreInput = (target) => target instanceof Element && Boolean(target.closest(
+        "[data-kisara-context-menu], [data-kisara-theme-panel], .kisara-audio-player"
+      ));
+
+      window.addEventListener("wheel", (event) => {
+        if (event.ctrlKey || shouldIgnoreInput(event.target)) return;
+        event.preventDefault();
+
+        const now = performance.now();
+        if (now - lastWheelAt > 180) wheelBuffer = 0;
+        lastWheelAt = now;
+        if (now < blockedUntil) return;
+
+        const delta = event.deltaY * (event.deltaMode === 1 ? 18 : event.deltaMode === 2 ? window.innerHeight : 1);
+        if (!delta) return;
+        if (wheelBuffer && Math.sign(wheelBuffer) !== Math.sign(delta)) wheelBuffer = 0;
+        wheelBuffer += delta;
+        if (Math.abs(wheelBuffer) < 38) return;
+
+        const direction = wheelBuffer > 0 ? 1 : -1;
+        wheelBuffer = 0;
+        if (stepScene(direction)) blockedUntil = now + (reduceMotion ? 180 : 840);
+      }, { passive: false, signal });
+
+      window.addEventListener("keydown", (event) => {
+        if (event.defaultPrevented || shouldIgnoreInput(event.target)) return;
+        if (event.target instanceof Element && event.target.closest("a, button, input, textarea, select")) return;
+
+        let nextIndex = null;
+        if (["ArrowDown", "PageDown", " "].includes(event.key)) nextIndex = activeIndex + 1;
+        if (["ArrowUp", "PageUp"].includes(event.key)) nextIndex = activeIndex - 1;
+        if (event.key === "Home") nextIndex = 0;
+        if (event.key === "End") nextIndex = scenes.length - 1;
+        if (nextIndex === null) return;
+        event.preventDefault();
+        setActiveScene(nextIndex);
+      }, { signal });
+
+      root.addEventListener("pointerdown", (event) => {
+        if (event.pointerType !== "touch" || shouldIgnoreInput(event.target)) return;
+        touchStartY = event.clientY;
+        touchStartX = event.clientX;
+      }, { signal });
+
+      root.addEventListener("pointerup", (event) => {
+        if (event.pointerType !== "touch" || touchStartY === null || touchStartX === null) return;
+        const deltaY = event.clientY - touchStartY;
+        const deltaX = event.clientX - touchStartX;
+        touchStartY = null;
+        touchStartX = null;
+        if (Math.abs(deltaY) < 46 || Math.abs(deltaY) <= Math.abs(deltaX)) return;
+        stepScene(deltaY < 0 ? 1 : -1);
+      }, { signal });
+
+      root.addEventListener("pointercancel", () => {
+        touchStartY = null;
+        touchStartX = null;
+      }, { signal });
+
+      root.addEventListener("pointermove", (event) => {
+        if (activeIndex !== 1 || event.pointerType === "touch" || reduceMotion) return;
+        trackFlightPose(event.clientX, event.clientY);
+      }, { signal });
+
+      root.addEventListener("mousemove", (event) => {
+        trackFlightPose(event.clientX, event.clientY);
+      }, { signal });
+
+      root.addEventListener("pointerleave", resetFlightPose, { signal });
+
+      markers.forEach((marker) => marker.addEventListener("click", () => {
+        if (!(marker instanceof HTMLElement)) return;
+        const target = Number(marker.dataset.meTarget);
+        if (Number.isFinite(target)) setActiveScene(target);
+      }, { signal }));
+
+      document.addEventListener("click", (event) => {
+        const target = event.target instanceof Element ? event.target : null;
+        const anchor = target?.closest("a[href]");
+        if (!(anchor instanceof HTMLAnchorElement) || anchor.target === "_blank" || anchor.hasAttribute("download")) return;
+        const destination = new URL(anchor.href, document.baseURI);
+        if (destination.origin !== window.location.origin || !isKisaraHomePath(destination.pathname)) return;
+        setFoundSelfTicket(canTriggerFoundSelf());
+      }, { capture: true, signal });
+
+      epilogueAudioTrigger?.addEventListener("click", () => {
+        if (activeIndex !== epilogueSceneIndex || epilogueAudioPlayedForEntry) return;
+        if (epilogueAudioTrigger instanceof HTMLButtonElement) epilogueAudioTrigger.blur();
+        epilogueAudioPlayedForEntry = true;
+        setEpilogueAudioSuspension(true);
+        try { epilogueAudio.currentTime = 0; } catch {}
+        Promise.resolve(epilogueAudio.play()).catch(() => {
+          epilogueAudioPlayedForEntry = false;
+          setEpilogueAudioSuspension(false);
+        });
+      }, { signal });
+
+      window.addEventListener("yuimi:kisara-secret-audio-consumed", (event) => {
+        const detail = event instanceof CustomEvent && event.detail && typeof event.detail === "object"
+          ? event.detail
+          : {};
+        if (detail.trackId !== "kioku-kikan") return;
+        memoryReturnConsumed = true;
+        clearMemoryReturnState();
+        if (announcer) announcer.textContent = "记忆归还已完成，本次隐藏播放记录已清除。";
+      }, { signal });
+
+      memoryReturn?.addEventListener("click", () => {
+        if (!(memoryReturn instanceof HTMLButtonElement) || memoryReturn.dataset.state !== "ready") return;
+        window.dispatchEvent(new CustomEvent("yuimi:kisara-secret-audio", {
+          detail: { trackId: "kioku-kikan", autoplay: false }
+        }));
+        setMemoryReturnState("archived");
+        if (announcer) announcer.textContent = "一段被归还的记忆已收进本次访问的隐藏歌单。";
+      }, { signal });
+
+      setActiveScene(0, true);
+    })();
+  </script>
+</KisaraLayout>

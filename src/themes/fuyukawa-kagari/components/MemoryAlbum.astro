@@ -1,0 +1,25 @@
+---
+import MangaArt from "./MangaArt.astro";
+const pages = [
+  { image: "festival-cover" as const, title: "把夏夜夹进书里", subtitle: "花火 / Summer night", alt: "葉佐乃绘制的浴衣与花火彩页" },
+  { image: "afternoon-cover" as const, title: "一个不用赶路的午后", subtitle: "日常 / An ordinary afternoon", alt: "葉佐乃绘制的冬川篝彩页" },
+  { image: "together-cover" as const, title: "喜欢，就是想再靠近一点", subtitle: "心动 / A little closer", alt: "葉佐乃绘制的双人彩页" }
+];
+---
+<section class="memory-album" data-manga-album aria-labelledby="memory-album-title">
+  <header class="manga-section-heading">
+    <div><p class="section-kicker">Between the pages</p><h2 id="memory-album-title">夹在书里的片刻</h2></div>
+    <div class="album-tabs" role="group" aria-label="选择彩页">
+      {pages.map((page, i) => <button type="button" data-album-tab={i} aria-pressed={i === 0 ? "true" : "false"} aria-controls={`memory-page-${i}`} title={page.title}>{String(i + 1).padStart(2, "0")}</button>)}
+    </div>
+  </header>
+  <div class="album-pages">
+    {pages.map((page, i) => (
+      <figure class="album-page" id={`memory-page-${i}`} data-album-page hidden={i !== 0}>
+        <MangaArt image={page.image} alt={page.alt} />
+        <figcaption><span>{page.subtitle}</span><h3>{page.title}</h3><small>葉佐乃 · 儚いキミは猛攻をはじめる</small></figcaption>
+      </figure>
+    ))}
+    <MangaArt image="festival-pair" class="album-companion" />
+  </div>
+</section>

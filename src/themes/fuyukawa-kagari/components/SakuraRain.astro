@@ -1,0 +1,17 @@
+---
+const petals = Array.from({ length: 16 }, (_, index) => ({
+  left: `${3 + index * 6.2}%`,
+  size: `${9 + (index * 5) % 6}px`,
+  opacity: (0.86 + (index % 3) * 0.06).toFixed(2),
+  duration: `${18 + (index * 7) % 13}s`,
+  delay: `${-2 - (index * 11) % 29}s`
+}));
+---
+
+<div class="sakura-rain" aria-hidden="true">
+  {petals.map((petal) => (
+    <span style={`--sakura-left:${petal.left};--sakura-size:${petal.size};--sakura-opacity:${petal.opacity};--sakura-duration:${petal.duration};--sakura-delay:${petal.delay}`}>
+      <i></i>
+    </span>
+  ))}
+</div>

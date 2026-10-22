@@ -1,0 +1,37 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+Thumbs.db
+*.log
+__pycache__/
+*.pyc
+
+# Local configuration and credentials; keep documented templates.
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+
+# Backend runtime data and Rust build cache.
+/backend/data/
+/backend/target/
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-wal
+*.sqlite3-shm
+
+# Local source materials already copied/processed into public assets or content.
+/Profile.jpg
+!/public/themes/fuyukawa-kagari/assets/profile.jpg
+fuyukawa_kagari_static_2400x1700.png
+矮脚猪.png
+astrbot_plugin_dev_experience.md
+roleplay_persona_prompt_experience.md
+astrbot教学/
+技能/
+文章封面/

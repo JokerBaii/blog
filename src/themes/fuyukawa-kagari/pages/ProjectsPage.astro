@@ -1,0 +1,391 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { Icon } from "astro-icon/components";
+import { projectEntries, projectTechLines } from "@/core/data/projects";
+import MangaArt from "../components/MangaArt.astro";
+
+const techIcons = {
+  unity: "simple-icons:unity",
+  blender: "simple-icons:blender",
+  ue5: "simple-icons:unrealengine",
+  mmd: "tabler:sparkles",
+  astrbot: "tabler:terminal-2"
+} as const;
+const techLines = projectTechLines.map((item) => ({ ...item, icon: techIcons[item.key] }));
+const projectPresentation = {
+  "astrbot-lab": { icon: "tabler:terminal-2", accent: "mint" },
+  "unity-toys": { icon: "simple-icons:unity", accent: "blue" },
+  "blender-props": { icon: "simple-icons:blender", accent: "orange" },
+  "ue5-room": { icon: "simple-icons:unrealengine", accent: "ink" },
+  "mmd-camera": { icon: "tabler:sparkles", accent: "pink" },
+  "yuimi-web-lab": { icon: "tabler:flower", accent: "lavender" }
+} as const;
+const projectCards = projectEntries.map((project) => ({
+  ...project,
+  ...projectPresentation[project.id]
+}));
+
+---
+
+<BaseLayout title="Projects | Yuimi Lab" description="Yuimi Lab 的项目、技术线和个人实验收藏架。">
+  <section class="works-shell" aria-labelledby="works-title">
+    <div class="works-hero">
+      <div>
+        <p class="section-kicker">02 / The atelier</p>
+        <h1 id="works-title">灵感工坊<span class="page-title-en">Projects</span></h1>
+        <p>
+          从一个小念头开始，让喜欢的技术慢慢长成作品。这里收着正在做的实验，也留着下一次继续的线索。
+        </p>
+      </div>
+      <div class="workshop-scene" aria-hidden="true">
+        <MangaArt image="workshop-strip" class="workshop-panel" eager />
+        <MangaArt image="haruto-gift" class="workshop-character" eager />
+        <span class="manga-handwritten">Made of little ideas.</span>
+      </div>
+    </div>
+
+    <div class="works-filter" data-works-filter aria-label="Project filters">
+      <button type="button" class="is-active" data-filter="all" aria-pressed="true">全部</button>
+      {techLines.map((item) => (
+        <button type="button" data-filter={item.key} aria-pressed="false">
+          <Icon name={item.icon} aria-hidden="true" />
+          {item.label}
+        </button>
+      ))}
+    </div>
+
+    <section class="works-tech-board" aria-label="Tech lines">
+      {techLines.map((item) => (
+        <article data-line-card={item.key}>
+          <Icon name={item.icon} aria-hidden="true" />
+          <strong>{item.label}</strong>
+          <span>{item.note}</span>
+        </article>
+      ))}
+    </section>
+
+    <section class="works-grid" aria-label="Project cards">
+      {projectCards.map((project, index) => (
+        <article class={`works-card works-card--${project.accent}`} data-project-line={project.line}>
+          <span class="works-page-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+          <div class="works-card-head">
+            <span class="works-card-icon" aria-hidden="true">
+              <Icon name={project.icon} />
+            </span>
+            <div>
+              <p>{project.type}</p>
+              <h2>{project.title}</h2>
+            </div>
+          </div>
+          <p class="works-card-summary">{project.summary}</p>
+          <div class="works-card-tags">
+            {project.details.map((detail) => (
+              <span>{detail}</span>
+            ))}
+          </div>
+          <button type="button" class="works-card-toggle" data-card-toggle aria-expanded="false" aria-controls={`project-status-${project.id}`}>
+            <Icon name="tabler:chevron-down" aria-hidden="true" />
+            查看状态
+          </button>
+          <div class="works-card-panel" id={`project-status-${project.id}`} data-card-panel hidden>
+            <strong>{project.status}</strong>
+            <p>下一步会把相关笔记、截图或可玩的 demo 慢慢补到这里。</p>
+          </div>
+          {index === 0 && <MangaArt image="kagari-thinking" class="works-card-companion" />}
+        </article>
+      ))}
+    </section>
+
+  </section>
+
+  <script is:inline data-astro-rerun>
+    (() => {
+    const filterRoot = document.querySelector("[data-works-filter]");
+    const filterButtons = filterRoot ? Array.from(filterRoot.querySelectorAll("button")) : [];
+    const cards = Array.from(document.querySelectorAll("[data-project-line]"));
+    const lineCards = Array.from(document.querySelectorAll("[data-line-card]"));
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const filter = button.dataset.filter || "all";
+
+        filterButtons.forEach((item) => {
+          item.classList.toggle("is-active", item === button);
+          item.setAttribute("aria-pressed", String(item === button));
+        });
+        cards.forEach((card) => {
+          const isMatch = filter === "all" || card.dataset.projectLine === filter;
+          card.classList.toggle("is-dimmed", !isMatch);
+          card.hidden = !isMatch;
+        });
+        lineCards.forEach((card) => {
+          const isMatch = filter === "all" || card.dataset.lineCard === filter;
+          card.classList.toggle("is-highlighted", isMatch && filter !== "all");
+        });
+      });
+    });
+
+    document.querySelectorAll("[data-card-toggle]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const card = button.closest(".works-card");
+        if (!card) return;
+
+        const isOpen = card.classList.toggle("is-open");
+        button.setAttribute("aria-expanded", String(isOpen));
+        const panel = card.querySelector("[data-card-panel]");
+        if (panel) panel.hidden = !isOpen;
+      });
+    });
+    })();
+  </script>
+
+  <style>
+    .works-shell {
+      margin: 0 auto;
+      display: grid;
+    }
+
+    :global(.waifu-local-fallback) {
+      left: 6px !important;
+      width: 112px !important;
+      opacity: 0.72 !important;
+    }
+
+    :global(.waifu-local-bubble) {
+      display: none !important;
+    }
+
+    :global(.waifu-local-character) {
+      width: 92px !important;
+      height: 92px !important;
+      margin-left: 0 !important;
+    }
+
+    :global(.waifu-local-character img) {
+      width: 72px !important;
+      height: 72px !important;
+    }
+
+    .works-hero {
+      position: relative;
+      isolation: isolate;
+      overflow: visible;
+    }
+
+    .works-filter,
+.works-tech-board {
+      position: relative;
+      isolation: isolate;
+      overflow: visible;
+      -webkit-backdrop-filter: blur(2px) saturate(1.03);
+    }
+
+    .works-card,
+.works-card {
+      position: relative;
+      isolation: isolate;
+      overflow: visible;
+      border-radius: 8px;
+      -webkit-backdrop-filter: blur(2px) saturate(1.03);
+    }
+
+    .works-hero {
+      display: grid;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .works-hero h1 {
+      color: var(--ink);
+      letter-spacing: 0;
+    }
+
+    .works-hero p:not(.section-kicker) {
+      line-height: 1.9;
+    }
+
+    .works-hero-orbit {
+      position: relative;
+      justify-self: center;
+    }
+
+    .works-hero-orbit span {
+      display: grid;
+      place-items: center;
+    }
+
+    .works-hero-orbit span:nth-child(1) { top: -4px; left: 68px; }
+    .works-hero-orbit span:nth-child(2) { top: 68px; right: -4px; color: #e2762d; }
+    .works-hero-orbit span:nth-child(3) { bottom: -4px; left: 68px; color: #fffaf1; background: #31425f; }
+    .works-hero-orbit span:nth-child(4) { top: 68px; left: -4px; color: #c85278; }
+
+    .works-hero-orbit svg,
+    .works-card-icon svg,
+    .works-tech-board svg {
+      width: 1.35em;
+      height: 1.35em;
+    }
+
+    .works-filter {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .works-filter button,
+.works-card-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 13px;
+      color: var(--ink);
+      font: inherit;
+      cursor: pointer;
+      transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+    }
+
+    .works-filter button:hover,
+    .works-card-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--paper-shadow);
+    }
+
+    .works-tech-board {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .works-tech-board article {
+      display: grid;
+      gap: 8px;
+      color: var(--ink);
+      transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+    }
+
+    .works-tech-board strong {
+      color: var(--ink);
+    }
+
+    .works-tech-board span {
+      color: var(--ink-soft);
+      line-height: 1.55;
+    }
+
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .works-card {
+      display: grid;
+      align-content: start;
+      transition: transform 180ms ease, opacity 180ms ease, box-shadow 180ms ease;
+    }
+
+    .works-card.is-dimmed {
+      opacity: 0.38;
+      transform: scale(0.98);
+    }
+
+    .works-card-head {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .works-card-icon {
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      color: var(--ink);
+      background: var(--blue-soft);
+      border-radius: 8px;
+    }
+
+    .works-card--orange .works-card-icon { color: #e2762d; background: #ffe8cf; }
+    .works-card--ink .works-card-icon { color: #fffaf1; background: #31425f; }
+    .works-card--pink .works-card-icon { color: #c85278; background: var(--pink-soft); }
+    .works-card--mint .works-card-icon { color: #3c8067; background: rgba(184, 219, 201, 0.58); }
+    .works-card--lavender .works-card-icon { color: #6d63a8; background: rgba(201, 194, 238, 0.52); }
+
+    .works-card-head p {
+      margin: 0;
+      font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+      font-weight: 850;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .works-card h2 {
+      margin: 4px 0 0;
+      color: var(--ink);
+      line-height: 1.32;
+      letter-spacing: 0;
+    }
+
+    .works-card-summary,
+    .works-card-panel p {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.78;
+    }
+
+    .works-card-tags {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .works-card-tags span {
+      font-weight: 800;
+    }
+
+    .works-card-toggle {
+      justify-self: start;
+      margin-top: auto;
+    }
+
+    .works-card-toggle svg {
+      transition: transform 180ms ease;
+    }
+
+    .works-card.is-open .works-card-toggle svg {
+      transform: rotate(180deg);
+    }
+
+    .works-card-panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows 220ms ease, opacity 180ms ease;
+    }
+
+    .works-card-panel > * {
+      overflow: hidden;
+    }
+
+    .works-card.is-open .works-card-panel {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+
+    @media (max-width: 1080px) {
+      .works-tech-board,
+.works-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+
+      .works-tech-board,
+.works-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .works-hero-orbit {
+        justify-self: start;
+      }
+    }
+  </style>
+</BaseLayout>

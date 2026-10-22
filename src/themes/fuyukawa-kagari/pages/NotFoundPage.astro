@@ -1,0 +1,27 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getThemePath } from "@/core/themes/registry";
+import MangaArt from "../components/MangaArt.astro";
+---
+
+<BaseLayout
+  title="404 | Yuimi Lab"
+  description="这个页面迷路了。"
+  honorThemePreference={false}
+  redirectThemedNotFound={true}
+>
+  <section class="not-found">
+    <div class="not-found-copy">
+      <p class="section-kicker">Lost Page</p>
+      <h1>404</h1>
+      <p>这张便签好像被风吹走了。回到首页，我们重新翻开下一页。</p>
+      <a class="back-link" href={getThemePath("fuyukawa-kagari", "/")}>← 回到首页</a>
+      <a class="back-link" href={getThemePath("fuyukawa-kagari", "/blog/")}>去笔记存档看看</a>
+    </div>
+    <figure class="not-found-visual">
+      <MangaArt image="fireworks-page" class="lost-manga-page" eager />
+      <MangaArt image="haruto-thinking" class="lost-page-character" alt="站在散落漫画页旁思考的小角色" eager />
+      <figcaption class="manga-handwritten">A page out of the story.</figcaption>
+    </figure>
+  </section>
+</BaseLayout>

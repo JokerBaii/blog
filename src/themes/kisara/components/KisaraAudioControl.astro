@@ -1,0 +1,958 @@
+---
+import { Icon } from "astro-icon/components";
+import {
+  KISARA_AUDIO_LEGACY_STORAGE_KEY,
+  KISARA_AUDIO_STORAGE_KEY,
+  KISARA_SECRET_AUDIO_CONSUMED_SESSION_KEY,
+  KISARA_SECRET_AUDIO_SESSION_KEY,
+  KISARA_AUDIO_VOLUME,
+  kisaraAudioTracks,
+  kisaraSecretAudioTracks
+} from "../lib/audio";
+
+const audioConfig = {
+  tracks: kisaraAudioTracks,
+  secretTracks: kisaraSecretAudioTracks,
+  secretEventName: "yuimi:kisara-secret-audio",
+  secretConsumedSessionKey: KISARA_SECRET_AUDIO_CONSUMED_SESSION_KEY,
+  secretSessionKey: KISARA_SECRET_AUDIO_SESSION_KEY,
+  storageKey: KISARA_AUDIO_STORAGE_KEY,
+  legacyStorageKey: KISARA_AUDIO_LEGACY_STORAGE_KEY,
+  volume: KISARA_AUDIO_VOLUME
+};
+const initialTrack = kisaraAudioTracks[0];
+const initialTrackTotal = String(kisaraAudioTracks.length).padStart(2, "0");
+---
+
+<div class="kisara-audio-player" data-kisara-audio-player transition:persist="kisara-audio-player">
+  <audio data-kisara-theme-audio preload="none" playsinline></audio>
+
+  <button
+    class="kisara-audio-control"
+    type="button"
+    data-kisara-audio-control
+    data-state="loading"
+    aria-label={`播放主题音乐《${initialTrack.title}》`}
+    aria-pressed="false"
+    title={`播放主题音乐《${initialTrack.title}》`}
+  >
+    <span class="kisara-audio-emblem" aria-hidden="true">
+      <img
+        class="kisara-audio-memory-image"
+        src="/themes/kisara/assets/memory-return-player.webp"
+        alt=""
+        width="480"
+        height="270"
+        loading="eager"
+        decoding="async"
+      />
+      <span class="kisara-audio-icon kisara-audio-icon-play"></span>
+      <span class="kisara-audio-icon kisara-audio-icon-pause"></span>
+      <span class="kisara-audio-bars"><i></i><i></i><i></i><i></i><i></i></span>
+    </span>
+    <span class="kisara-audio-copy">
+      <strong data-kisara-audio-title>{initialTrack.title}</strong>
+      <small data-kisara-audio-status aria-live="polite">01 / {initialTrackTotal} · LINKING</small>
+      <span class="kisara-audio-trace" aria-hidden="true"><i></i></span>
+    </span>
+  </button>
+
+  <div class="kisara-audio-nav" role="group" aria-label="切换歌单曲目">
+    <button type="button" data-kisara-audio-prev aria-label="上一首" title="上一首">
+      <Icon name="tabler:chevron-left" />
+    </button>
+    <button type="button" data-kisara-audio-next aria-label="下一首" title="下一首">
+      <Icon name="tabler:chevron-right" />
+    </button>
+  </div>
+
+  <span class="kisara-audio-secret-hearts" aria-hidden="true">
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+  </span>
+</div>
+
+<script is:inline define:vars={{ audioConfig }}>
+  (() => {
+    const player = document.querySelector("[data-kisara-audio-player]");
+    const placeholderAudio = player?.querySelector("[data-kisara-theme-audio]");
+    const control = player?.querySelector("[data-kisara-audio-control]");
+    const title = player?.querySelector("[data-kisara-audio-title]");
+    const status = player?.querySelector("[data-kisara-audio-status]");
+    const previous = player?.querySelector("[data-kisara-audio-prev]");
+    const next = player?.querySelector("[data-kisara-audio-next]");
+    if (!(placeholderAudio instanceof HTMLAudioElement) || !(control instanceof HTMLButtonElement)) return;
+
+    window.__yuimiKisaraAudioLifecycle?.abort();
+    window.__yuimiKisaraSecretAudioController?.abort();
+    const lifecycle = new AbortController();
+    const { signal } = lifecycle;
+    window.__yuimiKisaraAudioLifecycle = lifecycle;
+
+    const bootstrap = window.__yuimiKisaraAudioBootstrap;
+    const canAdoptBootstrap = bootstrap?.audio instanceof HTMLAudioElement && !bootstrap.claimed;
+    const audio = canAdoptBootstrap ? bootstrap.audio : placeholderAudio;
+    if (canAdoptBootstrap) {
+      bootstrap.claimed = true;
+      placeholderAudio.replaceWith(audio);
+    }
+
+    const baseTracks = audioConfig.tracks;
+    const secretTracks = Array.isArray(audioConfig.secretTracks) ? audioConfig.secretTracks : [];
+    const secretTrackIds = new Set(secretTracks.map((track) => track.id));
+    const singleUseSecretTrackIds = new Set(
+      secretTracks
+        .filter((track) => track.singleUseSession === true)
+        .map((track) => track.id)
+    );
+    const persistentSecretTrackIds = new Set(
+      secretTracks
+        .filter((track) => track.persistAcrossReload !== false)
+        .map((track) => track.id)
+    );
+    const legacySecretTrack = secretTracks[0];
+    const secretSessionKey = audioConfig.secretSessionKey;
+    const secretConsumedSessionKey = audioConfig.secretConsumedSessionKey;
+    const consumedSessionSecretIds = window.__yuimiKisaraConsumedSecretAudioIds instanceof Set
+      ? window.__yuimiKisaraConsumedSecretAudioIds
+      : new Set();
+    try {
+      const storedConsumedIds = JSON.parse(sessionStorage.getItem(secretConsumedSessionKey) ?? "[]");
+      if (Array.isArray(storedConsumedIds)) {
+        storedConsumedIds.forEach((id) => {
+          if (singleUseSecretTrackIds.has(id)) consumedSessionSecretIds.add(id);
+        });
+      }
+    } catch {}
+    window.__yuimiKisaraConsumedSecretAudioIds = consumedSessionSecretIds;
+    let storedSecretSession = null;
+    try {
+      const stored = JSON.parse(sessionStorage.getItem(secretSessionKey) ?? "null");
+      if (stored && typeof stored === "object") {
+        const storedUnlockedIds = Array.isArray(stored.unlockedIds)
+          ? stored.unlockedIds
+          : stored.unlocked && legacySecretTrack
+            ? [legacySecretTrack.id]
+            : [];
+        const unlockedIds = storedUnlockedIds.filter((id) => persistentSecretTrackIds.has(id));
+        const activeTrackId = unlockedIds.includes(stored.activeTrackId) ? stored.activeTrackId : "";
+        if (unlockedIds.length > 0) {
+          storedSecretSession = {
+            ...stored,
+            unlockedIds,
+            unlocked: true,
+            active: Boolean(stored.active && activeTrackId),
+            activeTrackId,
+            playbackMode: activeTrackId && stored.playbackMode === "interrupt" ? "interrupt" : "playlist",
+            secretTime: activeTrackId ? Math.max(0, Number(stored.secretTime) || 0) : 0
+          };
+          sessionStorage.setItem(secretSessionKey, JSON.stringify(storedSecretSession));
+        } else {
+          sessionStorage.removeItem(secretSessionKey);
+        }
+      }
+    } catch {}
+    const secretSession = window.__yuimiKisaraSecretAudioSession ?? {
+      unlockedIds: [],
+      unlocked: false,
+      active: false,
+      activeTrackId: "",
+      playbackMode: "playlist",
+      normalTrackId: "",
+      normalTime: 0,
+      normalEnabled: true,
+      secretEnabled: true,
+      secretTime: 0,
+      ...(storedSecretSession ?? {})
+    };
+    const unlockedIds = new Set(
+      Array.isArray(secretSession.unlockedIds)
+        ? secretSession.unlockedIds.filter((id) => secretTrackIds.has(id))
+        : secretSession.unlocked && legacySecretTrack
+          ? [legacySecretTrack.id]
+          : []
+    );
+    if (!secretSession.activeTrackId && secretSession.active) {
+      const currentSecret = secretTracks.find((track) => (
+        audio.currentSrc.includes(track.src) || audio.src.includes(track.src)
+      ));
+      secretSession.activeTrackId = currentSecret?.id ?? legacySecretTrack?.id ?? "";
+    }
+    secretSession.unlockedIds = [...unlockedIds];
+    secretSession.unlocked = unlockedIds.size > 0;
+    secretSession.playbackMode = secretSession.playbackMode === "interrupt" ? "interrupt" : "playlist";
+    window.__yuimiKisaraSecretAudioSession = secretSession;
+    const acceptedSecretGrantIds = window.__yuimiKisaraAcceptedSecretAudioGrants instanceof Set
+      ? window.__yuimiKisaraAcceptedSecretAudioGrants
+      : new Set();
+    window.__yuimiKisaraAcceptedSecretAudioGrants = acceptedSecretGrantIds;
+    const orderedUnlockedSecretTracks = () => [...unlockedIds]
+      .map((id) => secretTracks.find((track) => track.id === id))
+      .filter(Boolean);
+    const tracks = [
+      ...baseTracks,
+      ...orderedUnlockedSecretTracks()
+    ];
+    const storageKey = audioConfig.storageKey;
+    const legacyStorageKey = audioConfig.legacyStorageKey;
+    const stateLabels = {
+      loading: "LINKING",
+      playing: "PLAYING",
+      paused: "PAUSED",
+      memory: "MEMORY / HOLD",
+      blocked: "READY / PLAY",
+      error: "OFFLINE"
+    };
+    const memoryStateLabels = {
+      loading: "MEMORY ALIGNING",
+      playing: "MEMORY RETURNING",
+      paused: "MEMORY HELD",
+      memory: "MEMORY / HOLD",
+      blocked: "MEMORY READY",
+      error: "MEMORY LOST"
+    };
+    const scrambleStateLabels = {
+      loading: "SIGNAL LINKING",
+      playing: "SCRAMBLE / LIVE",
+      paused: "SIGNAL HELD",
+      memory: "SIGNAL / HOLD",
+      blocked: "SIGNAL READY",
+      error: "SIGNAL LOST"
+    };
+    const lovebrainStateLabels = {
+      loading: "COLOR LINKING",
+      playing: "LOVE BRAIN / LIVE",
+      paused: "LOVE BRAIN / HELD",
+      memory: "LOVE BRAIN / HOLD",
+      blocked: "LOVE BRAIN / READY",
+      error: "LOVE BRAIN / LOST"
+    };
+    let enabled = true;
+    let trackIndex = 0;
+    let restoreTime = 0;
+    let lastStoredTime = -1;
+    let lastSecretStoredTime = -1;
+    let autoplayBlocked = false;
+    let playbackPromise = null;
+    let currentUiState = "loading";
+    let loadToken = 0;
+    let playbackToken = 0;
+    let switchingTrack = false;
+    let persistedResumeIntent = false;
+    let unlockNoticeTimer = 0;
+    const audioSuspension = window.__yuimiKisaraAudioSuspension ?? {
+      active: false,
+      id: "",
+      resumeRequested: false,
+      owners: new Set()
+    };
+    if (!(audioSuspension.owners instanceof Set)) {
+      audioSuspension.owners = audioSuspension.active && audioSuspension.id
+        ? new Set([audioSuspension.id])
+        : new Set();
+    }
+    window.__yuimiKisaraAudioSuspension = audioSuspension;
+    const suspensionOwners = audioSuspension.owners;
+    const isAudioSuspended = () => suspensionOwners.size > 0;
+    const persistInterval = document.documentElement.dataset.yuimiPerformance === "full" ? 5 : 10;
+
+    signal.addEventListener("abort", () => {
+      loadToken += 1;
+      playbackToken += 1;
+      if (unlockNoticeTimer) window.clearTimeout(unlockNoticeTimer);
+      unlockNoticeTimer = 0;
+    }, { once: true });
+
+    let restoredFromStorage = false;
+    if (canAdoptBootstrap) {
+      enabled = bootstrap.enabled !== false;
+      persistedResumeIntent = Boolean(bootstrap.persistedResumeIntent);
+      const bootstrapIndex = tracks.findIndex((track) => track.id === bootstrap.trackId);
+      if (bootstrapIndex >= 0) trackIndex = bootstrapIndex;
+      if (Number.isFinite(bootstrap.restoreTime)) restoreTime = Math.max(0, bootstrap.restoreTime);
+      restoredFromStorage = Boolean(bootstrap.restoredFromStorage);
+    } else {
+      try {
+        const stored = JSON.parse(localStorage.getItem(storageKey) ?? "null");
+        if (stored && typeof stored === "object") {
+          if (typeof stored.enabled === "boolean") {
+            enabled = stored.enabled;
+            persistedResumeIntent = stored.enabled;
+          }
+          if (typeof stored.trackId === "string") {
+            const storedIndex = tracks.findIndex((track) => track.id === stored.trackId);
+            if (storedIndex >= 0) trackIndex = storedIndex;
+          }
+          if (Number.isFinite(stored.currentTime)) restoreTime = Math.max(0, stored.currentTime);
+          restoredFromStorage = true;
+        }
+      } catch {}
+    }
+
+    if (!restoredFromStorage) {
+      try {
+        const legacy = JSON.parse(sessionStorage.getItem(legacyStorageKey) ?? "null");
+        if (legacy && typeof legacy === "object") {
+          if (typeof legacy.enabled === "boolean") {
+            enabled = legacy.enabled;
+            persistedResumeIntent = legacy.enabled;
+          }
+          if (Number.isFinite(legacy.currentTime)) restoreTime = Math.max(0, legacy.currentTime);
+        }
+      } catch {}
+    }
+
+    if (secretSession.activeTrackId && unlockedIds.has(secretSession.activeTrackId)) {
+      const secretIndex = tracks.findIndex((track) => track.id === secretSession.activeTrackId);
+      if (secretIndex >= 0) {
+        const activeSecret = tracks[secretIndex];
+        const sourceMatches = audio.currentSrc.includes(activeSecret.src) || audio.src.includes(activeSecret.src);
+        trackIndex = secretIndex;
+        secretSession.active = true;
+        enabled = secretSession.secretEnabled !== false;
+        restoreTime = sourceMatches && Number.isFinite(audio.currentTime)
+          ? Math.max(0, audio.currentTime)
+          : Math.max(0, Number(secretSession.secretTime) || 0);
+      }
+    }
+
+    audio.volume = audioConfig.volume;
+
+    const activeTrack = () => tracks[trackIndex];
+    const isSecretTrack = (track = activeTrack()) => secretTrackIds.has(track?.id);
+
+    const persistSecretSession = () => {
+      const track = activeTrack();
+      const secretActive = isSecretTrack(track);
+      const secretTime = secretActive && Number.isFinite(audio.currentTime)
+        ? Math.max(0, audio.currentTime)
+        : 0;
+      const persistentUnlockedIds = [...unlockedIds].filter((id) => persistentSecretTrackIds.has(id));
+      const persistentSecretActive = secretActive && persistentSecretTrackIds.has(track.id);
+      secretSession.unlockedIds = [...unlockedIds];
+      secretSession.unlocked = unlockedIds.size > 0;
+      secretSession.active = secretActive;
+      secretSession.activeTrackId = secretActive ? track.id : "";
+      secretSession.secretTime = secretTime;
+      if (secretActive) secretSession.secretEnabled = enabled;
+      try {
+        if (persistentUnlockedIds.length > 0) {
+          sessionStorage.setItem(secretSessionKey, JSON.stringify({
+            unlockedIds: persistentUnlockedIds,
+            active: persistentSecretActive,
+            activeTrackId: persistentSecretActive ? track.id : "",
+            playbackMode: persistentSecretActive ? secretSession.playbackMode : "playlist",
+            normalTrackId: secretSession.normalTrackId,
+            normalTime: secretSession.normalTime,
+            normalEnabled: secretSession.normalEnabled,
+            secretEnabled: secretSession.secretEnabled,
+            secretTime: persistentSecretActive ? secretTime : 0
+          }));
+        } else {
+          sessionStorage.removeItem(secretSessionKey);
+        }
+        lastSecretStoredTime = secretTime;
+      } catch {}
+    };
+
+    const setUiState = (state) => {
+      const playing = state === "playing";
+      const suspended = state === "memory";
+      const track = activeTrack();
+      currentUiState = state;
+      control.dataset.state = state;
+      player?.classList.toggle("is-playing", playing);
+      player?.classList.toggle("is-interlude-suspended", suspended);
+      control.setAttribute("aria-pressed", String(playing));
+      control.setAttribute("aria-disabled", String(suspended));
+      control.setAttribute(
+        "aria-label",
+        suspended
+          ? `记忆回放中，主题音乐《${track.title}》已暂时挂起`
+          : playing
+            ? `暂停主题音乐《${track.title}》`
+            : `播放主题音乐《${track.title}》`
+      );
+      control.title = suspended
+        ? `记忆回放中：《${track.title}》将在退出后恢复`
+        : playing
+          ? `暂停主题音乐《${track.title}》`
+          : `播放主题音乐《${track.title}》`;
+      if (previous instanceof HTMLButtonElement) previous.disabled = suspended;
+      if (next instanceof HTMLButtonElement) next.disabled = suspended;
+      if (status) {
+        const labels = track.variant === "memory"
+          ? memoryStateLabels
+          : track.variant === "scramble"
+            ? scrambleStateLabels
+            : track.variant === "lovebrain"
+              ? lovebrainStateLabels
+              : stateLabels;
+        if (isSecretTrack(track)) {
+          const unlockedSecrets = tracks.slice(baseTracks.length);
+          const secretPosition = unlockedSecrets.findIndex((candidate) => candidate.id === track.id) + 1;
+          const position = String(Math.max(1, secretPosition)).padStart(2, "0");
+          const total = String(Math.max(1, unlockedSecrets.length)).padStart(2, "0");
+          status.textContent = track.variant === "memory"
+            ? labels[state] ?? labels.paused
+            : track.variant === "scramble"
+              ? `EXTRA SIGNAL · ${labels[state] ?? labels.paused}`
+              : track.variant === "lovebrain"
+                ? labels[state] ?? labels.paused
+                : `SECRET ${position} / ${total} · ${labels[state] ?? labels.paused}`;
+        } else {
+          const position = String(trackIndex + 1).padStart(2, "0");
+          const total = String(baseTracks.length).padStart(2, "0");
+          status.textContent = `${position} / ${total} · ${stateLabels[state] ?? stateLabels.paused}`;
+        }
+      }
+    };
+
+    const updateTrackUi = () => {
+      const track = activeTrack();
+      const secretActive = isSecretTrack(track);
+      const previousTrack = tracks[(trackIndex - 1 + tracks.length) % tracks.length];
+      const nextTrack = tracks[(trackIndex + 1) % tracks.length];
+      if (title) title.textContent = track.title;
+      player?.classList.toggle("is-secret-track", secretActive);
+      player?.classList.toggle("is-secret-memory", secretActive && track.variant === "memory");
+      player?.classList.toggle("is-secret-scramble", secretActive && track.variant === "scramble");
+      player?.classList.toggle("is-secret-lovebrain", secretActive && track.variant === "lovebrain");
+      if (player instanceof HTMLElement) {
+        player.dataset.secretVariant = secretActive ? track.variant || "secret" : "";
+        player.dataset.trackId = track.id;
+      }
+      if (previous instanceof HTMLButtonElement) {
+        previous.title = `上一首：${previousTrack.title}`;
+        previous.setAttribute("aria-label", `上一首：${previousTrack.title}`);
+      }
+      if (next instanceof HTMLButtonElement) {
+        next.title = `下一首：${nextTrack.title}`;
+        next.setAttribute("aria-label", `下一首：${nextTrack.title}`);
+      }
+      setUiState(currentUiState);
+    };
+
+    const persistState = () => {
+      const secretActive = isSecretTrack();
+      const currentTime = secretActive
+        ? Math.max(0, Number(secretSession.normalTime) || 0)
+        : Number.isFinite(audio.currentTime) ? audio.currentTime : restoreTime;
+      const persistentEnabled = secretActive ? secretSession.normalEnabled !== false : enabled;
+      const persistentTrack = secretActive
+        ? baseTracks.find((track) => track.id === secretSession.normalTrackId) ?? baseTracks[0]
+        : activeTrack();
+      persistedResumeIntent = persistentEnabled;
+      if (!secretActive) {
+        secretSession.normalTrackId = persistentTrack.id;
+        secretSession.normalTime = currentTime;
+        secretSession.normalEnabled = enabled;
+      }
+      if (bootstrap) {
+        bootstrap.enabled = persistentEnabled;
+        bootstrap.persistedResumeIntent = persistentEnabled;
+        bootstrap.trackId = persistentTrack.id;
+        bootstrap.restoreTime = currentTime;
+      }
+      try {
+        localStorage.setItem(storageKey, JSON.stringify({
+          enabled: persistentEnabled,
+          trackId: persistentTrack.id,
+          currentTime
+        }));
+        sessionStorage.removeItem(legacyStorageKey);
+        lastStoredTime = currentTime;
+      } catch {}
+      persistSecretSession();
+    };
+
+    const restorePosition = (time) => {
+      if (time <= 0) return;
+      try {
+        if (Number.isFinite(audio.duration) && audio.duration > 0) {
+          audio.currentTime = time >= audio.duration - 0.5 ? 0 : Math.min(time, audio.duration - 0.25);
+        } else {
+          audio.currentTime = time;
+        }
+      } catch {}
+    };
+
+    const requestPlayback = () => {
+      if (isAudioSuspended()) {
+        audio.pause();
+        setUiState("memory");
+        return Promise.resolve(false);
+      }
+      if (!enabled) {
+        audio.pause();
+        setUiState("paused");
+        return Promise.resolve(false);
+      }
+      if (!audio.paused) {
+        autoplayBlocked = false;
+        setUiState("playing");
+        return Promise.resolve(true);
+      }
+      if (playbackPromise) return playbackPromise;
+
+      const token = ++playbackToken;
+      setUiState("loading");
+      playbackPromise = Promise.resolve(audio.play())
+        .then(() => {
+          if (signal.aborted || token !== playbackToken) return false;
+          autoplayBlocked = false;
+          setUiState("playing");
+          return true;
+        })
+        .catch(() => {
+          if (signal.aborted || token !== playbackToken) return false;
+          autoplayBlocked = !audio.error;
+          setUiState(audio.error ? "error" : "blocked");
+          return false;
+        })
+        .finally(() => {
+          if (!signal.aborted && token === playbackToken) playbackPromise = null;
+        });
+      return playbackPromise;
+    };
+
+    const handleAudioSuspension = (event) => {
+      const detail = event instanceof CustomEvent && event.detail && typeof event.detail === "object"
+        ? event.detail
+        : {};
+      const id = typeof detail.id === "string" && detail.id ? detail.id : "interlude";
+      if (detail.active === true) {
+        if (suspensionOwners.size === 0) audioSuspension.resumeRequested = enabled;
+        suspensionOwners.add(id);
+        audioSuspension.active = true;
+        audioSuspension.id = [...suspensionOwners][0] ?? id;
+        playbackToken += 1;
+        playbackPromise = null;
+        audio.pause();
+        setUiState("memory");
+        return;
+      }
+      if (!suspensionOwners.has(id)) return;
+      suspensionOwners.delete(id);
+      audioSuspension.active = suspensionOwners.size > 0;
+      audioSuspension.id = [...suspensionOwners][0] ?? "";
+      if (suspensionOwners.size > 0) {
+        audio.pause();
+        setUiState("memory");
+        return;
+      }
+      const shouldResume = audioSuspension.resumeRequested && enabled;
+      audioSuspension.resumeRequested = false;
+      if (shouldResume) requestPlayback();
+      else setUiState("paused");
+    };
+
+    const adoptBootstrapPlayback = () => {
+      if (!bootstrap?.playPromise) return false;
+      const token = ++playbackToken;
+      setUiState("loading");
+      playbackPromise = Promise.resolve(bootstrap.playPromise)
+        .then(() => {
+          if (signal.aborted || token !== playbackToken) return false;
+          const playing = !audio.paused && !audio.ended;
+          autoplayBlocked = !playing && !audio.error && Boolean(bootstrap.blocked);
+          setUiState(playing ? "playing" : audio.error ? "error" : autoplayBlocked ? "blocked" : "loading");
+          return playing;
+        })
+        .catch(() => {
+          if (signal.aborted || token !== playbackToken) return false;
+          autoplayBlocked = !audio.error;
+          setUiState(audio.error ? "error" : "blocked");
+          return false;
+        })
+        .finally(() => {
+          if (!signal.aborted && token === playbackToken) playbackPromise = null;
+        });
+      return true;
+    };
+
+    const selectTrack = (nextIndex, options = {}) => {
+      const normalizedIndex = (nextIndex + tracks.length) % tracks.length;
+      const requestedTime = Number.isFinite(options.time) ? Math.max(0, options.time) : 0;
+      const shouldPlay = typeof options.autoplay === "boolean" ? options.autoplay : enabled;
+      const shouldPersist = options.persist !== false;
+      const playImmediately = options.immediate === true;
+      const token = ++loadToken;
+      const currentWasSecret = isSecretTrack();
+      const nextTrack = tracks[normalizedIndex];
+      const nextIsSecret = isSecretTrack(nextTrack);
+
+      if (!currentWasSecret && nextIsSecret) persistState();
+
+      playbackToken += 1;
+      playbackPromise = null;
+      switchingTrack = true;
+      audio.pause();
+      trackIndex = normalizedIndex;
+      secretSession.active = nextIsSecret;
+      secretSession.activeTrackId = nextIsSecret ? nextTrack.id : "";
+      if (nextIsSecret) {
+        const preserveInterrupt = currentWasSecret
+          && secretSession.playbackMode === "interrupt"
+          && options.secretMode !== "playlist";
+        secretSession.playbackMode = options.secretMode === "interrupt" || preserveInterrupt
+          ? "interrupt"
+          : "playlist";
+        secretSession.secretEnabled = shouldPlay;
+      } else {
+        secretSession.playbackMode = "playlist";
+      }
+      restoreTime = requestedTime;
+      audio.src = activeTrack().src;
+      audio.load();
+      if (bootstrap) {
+        bootstrap.trackId = activeTrack().id;
+        bootstrap.restoreTime = requestedTime;
+        bootstrap.playPromise = null;
+        bootstrap.blocked = false;
+        bootstrap.settled = false;
+      }
+      updateTrackUi();
+      setUiState(shouldPlay ? "loading" : "paused");
+      if (shouldPersist) persistState();
+      else persistSecretSession();
+      if (shouldPlay && playImmediately) requestPlayback();
+
+      const finishLoading = () => {
+        if (signal.aborted || token !== loadToken) return;
+        restorePosition(requestedTime);
+        switchingTrack = false;
+        if (shouldPlay) {
+          if (!playImmediately) requestPlayback();
+          else if (!audio.paused && !audio.ended) setUiState("playing");
+        } else {
+          setUiState("paused");
+          persistState();
+        }
+      };
+
+      if (audio.readyState >= 1) queueMicrotask(finishLoading);
+      else audio.addEventListener("loadedmetadata", finishLoading, { once: true, signal });
+    };
+
+    const stepTrack = (direction) => {
+      autoplayBlocked = false;
+      const currentTrack = activeTrack();
+      const currentIsConsumableSecret = isSecretTrack(currentTrack)
+        && currentTrack?.consumeAfterPlayback === true;
+      const returnToNormal = currentTrack?.returnToNormalAfterPlayback === true;
+      const requestedTrack = returnToNormal
+        ? baseTracks.find((track) => track.id === secretSession.normalTrackId) ?? baseTracks[0]
+        : tracks[(trackIndex + direction + tracks.length) % tracks.length];
+
+      if (currentIsConsumableSecret && requestedTrack?.id) {
+        const shouldPlay = returnToNormal || secretSession.playbackMode === "interrupt"
+          ? secretSession.normalEnabled !== false
+          : enabled;
+        const consumedId = currentTrack.id;
+        consumeSecretTrack(consumedId);
+        secretSession.playbackMode = "playlist";
+        enabled = shouldPlay;
+        const nextIndex = tracks.findIndex((track) => track.id === requestedTrack.id);
+        selectTrack(nextIndex >= 0 ? nextIndex : 0, {
+          time: returnToNormal ? Math.max(0, Number(secretSession.normalTime) || 0) : 0,
+          autoplay: shouldPlay,
+          secretMode: "playlist"
+        });
+        window.dispatchEvent(new CustomEvent("yuimi:kisara-secret-audio-consumed", {
+          detail: { trackId: consumedId, reason: "manual-skip" }
+        }));
+        return;
+      }
+
+      if (isSecretTrack() && secretSession.playbackMode === "interrupt") {
+        enabled = secretSession.normalEnabled !== false;
+      }
+      secretSession.playbackMode = "playlist";
+      const nextIndex = (trackIndex + direction + tracks.length) % tracks.length;
+      selectTrack(nextIndex, { time: 0, autoplay: enabled, secretMode: "playlist" });
+    };
+
+    const syncUnlockedSecretTracks = () => {
+      const activeId = activeTrack()?.id;
+      tracks.splice(
+        baseTracks.length,
+        tracks.length - baseTracks.length,
+        ...orderedUnlockedSecretTracks()
+      );
+      const preservedIndex = tracks.findIndex((track) => track.id === activeId);
+      if (preservedIndex >= 0) trackIndex = preservedIndex;
+    };
+
+    const consumeSecretTrack = (trackId) => {
+      if (!secretTrackIds.has(trackId) || !unlockedIds.has(trackId)) return false;
+      unlockedIds.delete(trackId);
+      secretSession.unlockedIds = [...unlockedIds];
+      secretSession.unlocked = unlockedIds.size > 0;
+      secretSession.active = false;
+      secretSession.activeTrackId = "";
+      secretSession.secretTime = 0;
+      secretSession.playbackMode = "playlist";
+      syncUnlockedSecretTracks();
+      return true;
+    };
+
+    const consumeSingleUseGrant = (trackId) => {
+      if (!singleUseSecretTrackIds.has(trackId)) return true;
+      if (consumedSessionSecretIds.has(trackId)) return false;
+      consumedSessionSecretIds.add(trackId);
+      try {
+        sessionStorage.setItem(secretConsumedSessionKey, JSON.stringify([...consumedSessionSecretIds]));
+      } catch {}
+      return true;
+    };
+
+    const unlockSecretTrack = (event) => {
+      const detail = event instanceof CustomEvent && event.detail && typeof event.detail === "object"
+        ? event.detail
+        : {};
+      const requestedId = typeof detail.trackId === "string" ? detail.trackId : legacySecretTrack?.id;
+      const secretTrack = secretTracks.find((track) => track.id === requestedId);
+      if (!secretTrack) return;
+      if (!consumeSingleUseGrant(secretTrack.id)) return;
+      const grantId = typeof detail.grantId === "string" ? detail.grantId.trim() : "";
+      if (grantId && acceptedSecretGrantIds.has(grantId)) return;
+      if (grantId) {
+        acceptedSecretGrantIds.add(grantId);
+        if (acceptedSecretGrantIds.size > 32) {
+          const oldestGrantId = acceptedSecretGrantIds.values().next().value;
+          if (oldestGrantId) acceptedSecretGrantIds.delete(oldestGrantId);
+        }
+      }
+      const shouldPlayNow = detail.autoplay === true;
+      const requestedPlaybackMode = detail.playbackMode === "playlist" ? "playlist" : "interrupt";
+      if (!unlockedIds.has(secretTrack.id)) {
+        unlockedIds.add(secretTrack.id);
+        secretSession.unlockedIds = [...unlockedIds];
+        secretSession.unlocked = true;
+        syncUnlockedSecretTracks();
+        persistSecretSession();
+      }
+      if (secretTrack.id === "kioku-kikan") {
+        window.__yuimiKisaraEasterLedger?.mark("memory-return");
+      }
+
+      if (!shouldPlayNow) {
+        updateTrackUi();
+        if (status) {
+          if (unlockNoticeTimer) window.clearTimeout(unlockNoticeTimer);
+          status.textContent = secretTrack.variant === "memory"
+            ? "SECRET MEMORY · ARCHIVED"
+            : secretTrack.variant === "scramble"
+              ? "EXTRA SIGNAL · CAPTURED"
+              : secretTrack.variant === "lovebrain"
+                ? "LOVE BRAIN · READY"
+                : "SECRET TRACK · UNLOCKED";
+          unlockNoticeTimer = window.setTimeout(() => {
+            unlockNoticeTimer = 0;
+            setUiState(currentUiState);
+          }, 2200);
+        }
+        return;
+      }
+
+      if (!isSecretTrack()) {
+        persistState();
+        secretSession.normalTrackId = activeTrack().id;
+        secretSession.normalTime = Number.isFinite(audio.currentTime) ? Math.max(0, audio.currentTime) : restoreTime;
+        secretSession.normalEnabled = enabled;
+      }
+      enabled = true;
+      autoplayBlocked = false;
+      const secretIndex = tracks.findIndex((track) => track.id === secretTrack.id);
+      if (secretIndex >= 0) {
+        selectTrack(secretIndex, {
+          time: 0,
+          autoplay: true,
+          persist: false,
+          immediate: true,
+          secretMode: requestedPlaybackMode
+        });
+      }
+    };
+
+    window.addEventListener(audioConfig.secretEventName, unlockSecretTrack, { signal });
+    window.addEventListener("yuimi:kisara-audio-suspension", handleAudioSuspension, { signal });
+
+    control.addEventListener("click", () => {
+      if (isAudioSuspended()) return;
+      if (audio.paused) {
+        enabled = true;
+        if (isSecretTrack()) {
+          secretSession.secretEnabled = true;
+          secretSession.normalEnabled = true;
+        }
+        else persistedResumeIntent = true;
+        autoplayBlocked = false;
+        persistState();
+        requestPlayback();
+        return;
+      }
+
+      enabled = false;
+      if (isSecretTrack()) {
+        secretSession.secretEnabled = false;
+        secretSession.normalEnabled = false;
+      }
+      else persistedResumeIntent = false;
+      autoplayBlocked = false;
+      audio.pause();
+      setUiState("paused");
+      persistState();
+    }, { signal });
+
+    previous?.addEventListener("click", () => {
+      if (!isAudioSuspended()) stepTrack(-1);
+    }, { signal });
+    next?.addEventListener("click", () => {
+      if (!isAudioSuspended()) stepTrack(1);
+    }, { signal });
+
+    const unlockPlayback = (event) => {
+      if (isAudioSuspended() || !enabled || !audio.paused) return;
+      const target = event.target instanceof Element ? event.target : null;
+      if (target?.closest("[data-kisara-audio-control]")) return;
+      if (!autoplayBlocked && currentUiState !== "loading") return;
+      playbackToken += 1;
+      playbackPromise = null;
+      autoplayBlocked = false;
+      if (bootstrap) {
+        bootstrap.playPromise = null;
+        bootstrap.blocked = false;
+        bootstrap.settled = true;
+      }
+      requestPlayback();
+    };
+
+    window.addEventListener("pointerdown", unlockPlayback, { passive: true, signal });
+    window.addEventListener("mousedown", unlockPlayback, { passive: true, signal });
+    window.addEventListener("touchend", unlockPlayback, { passive: true, signal });
+    window.addEventListener("click", unlockPlayback, { passive: true, signal });
+    window.addEventListener("keydown", unlockPlayback, { signal });
+    document.addEventListener("click", (event) => {
+      const target = event.target instanceof Element ? event.target : null;
+      const link = target?.closest("a[href]");
+      if (!(link instanceof HTMLAnchorElement) || link.target === "_blank" || link.hasAttribute("download")) return;
+      const destination = new URL(link.href, document.baseURI);
+      if (destination.origin !== window.location.origin) return;
+      persistState();
+    }, { capture: true, signal });
+    window.addEventListener("pageshow", () => {
+      if (!isAudioSuspended() && enabled && audio.paused && !autoplayBlocked) requestPlayback();
+    }, { signal });
+    window.addEventListener("pagehide", persistState, { signal });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") persistState();
+      else if (!isAudioSuspended() && enabled && audio.paused && !autoplayBlocked) requestPlayback();
+    }, { signal });
+
+    audio.addEventListener("playing", () => {
+      if (isAudioSuspended()) {
+        audio.pause();
+        setUiState("memory");
+        return;
+      }
+      autoplayBlocked = false;
+      setUiState("playing");
+    }, { signal });
+    audio.addEventListener("pause", () => {
+      if (!switchingTrack) setUiState(isAudioSuspended() ? "memory" : enabled ? "loading" : "paused");
+    }, { signal });
+    audio.addEventListener("waiting", () => {
+      if (isAudioSuspended()) setUiState("memory");
+      else if (enabled) setUiState("loading");
+    }, { signal });
+    audio.addEventListener("error", () => setUiState("error"), { signal });
+    audio.addEventListener("ended", () => {
+      restoreTime = 0;
+      const endedTrack = activeTrack();
+      if (
+        isSecretTrack(endedTrack)
+        && endedTrack?.consumeAfterPlayback === true
+      ) {
+        const wasInterrupt = secretSession.playbackMode === "interrupt";
+        const returnToNormal = endedTrack?.returnToNormalAfterPlayback === true || wasInterrupt;
+        const consumedId = endedTrack.id;
+        const nextTrackId = returnToNormal
+          ? secretSession.normalTrackId
+          : tracks[(trackIndex + 1) % tracks.length]?.id ?? baseTracks[0]?.id;
+        const nextTrackTime = returnToNormal
+          ? Math.max(0, Number(secretSession.normalTime) || 0)
+          : 0;
+        const shouldResume = returnToNormal ? secretSession.normalEnabled !== false : true;
+        consumeSecretTrack(consumedId);
+        const nextIndex = tracks.findIndex((track) => track.id === nextTrackId);
+        enabled = shouldResume;
+        selectTrack(nextIndex >= 0 ? nextIndex : 0, {
+          time: nextTrackTime,
+          autoplay: shouldResume,
+          persist: !wasInterrupt || endedTrack?.returnToNormalAfterPlayback === true,
+          secretMode: "playlist"
+        });
+        window.dispatchEvent(new CustomEvent("yuimi:kisara-secret-audio-consumed", {
+          detail: { trackId: consumedId, reason: "ended" }
+        }));
+        return;
+      }
+      if (isSecretTrack() && secretSession.playbackMode === "interrupt") {
+        const normalIndex = baseTracks.findIndex((track) => track.id === secretSession.normalTrackId);
+        enabled = secretSession.normalEnabled !== false;
+        selectTrack(normalIndex >= 0 ? normalIndex : 0, {
+          time: Math.max(0, Number(secretSession.normalTime) || 0),
+          autoplay: enabled,
+          persist: false
+        });
+        return;
+      }
+      secretSession.playbackMode = "playlist";
+      selectTrack((trackIndex + 1) % tracks.length, {
+        time: 0,
+        autoplay: true,
+        secretMode: "playlist"
+      });
+    }, { signal });
+    audio.addEventListener("timeupdate", () => {
+      restoreTime = audio.currentTime;
+      if (isSecretTrack()) {
+        if (Math.abs(audio.currentTime - lastSecretStoredTime) >= persistInterval) persistSecretSession();
+      } else if (Math.abs(audio.currentTime - lastStoredTime) >= persistInterval) {
+        persistState();
+      }
+    }, { signal });
+
+    updateTrackUi();
+    if (isAudioSuspended()) {
+      audio.pause();
+      setUiState("memory");
+      return;
+    }
+    if (isSecretTrack() && audio.currentSrc.includes(activeTrack().src)) {
+      setUiState(!audio.paused && !audio.ended ? "playing" : enabled ? "loading" : "paused");
+      if (enabled && audio.paused) requestPlayback();
+      return;
+    }
+    if (canAdoptBootstrap) {
+      if (!enabled) {
+        setUiState("paused");
+      } else if (!bootstrap.settled && adoptBootstrapPlayback()) {
+        // The head bootstrap already owns the first play request.
+      } else if (!audio.paused && !audio.ended) {
+        setUiState("playing");
+      } else if (audio.error) {
+        setUiState("error");
+      } else if (bootstrap.blocked) {
+        autoplayBlocked = true;
+        setUiState("blocked");
+      } else {
+        requestPlayback();
+      }
+    } else {
+      selectTrack(trackIndex, { time: restoreTime, autoplay: enabled, persist: false });
+    }
+  })();
+</script>

@@ -1,0 +1,10 @@
+<script>
+  import { mountHomeHero } from "../lib/home-hero.mjs";
+  let cleanup: (() => void) | undefined;
+  const dispose = () => { cleanup?.(); cleanup = undefined; };
+  document.addEventListener("astro:before-swap", dispose);
+  document.addEventListener("astro:page-load", () => {
+    dispose();
+    if (document.body.hasAttribute("data-fuyukawa") && document.querySelector("[data-hero-stage]")) cleanup = mountHomeHero();
+  });
+</script>

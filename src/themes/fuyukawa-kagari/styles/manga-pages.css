@@ -1,0 +1,163 @@
+/* Inner-page presentation; intentionally absent from Home. */
+
+body[data-fuyukawa] .blog-hero-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 32px; padding: 24px 0; min-height: 300px; }
+body[data-fuyukawa] .blog-title-art { position: relative; height: 280px; padding: 8px 70px 26px 0; }
+body[data-fuyukawa] .blog-opening-panel { width: 100%; height: 100%; }
+body[data-fuyukawa] .blog-opening-character { position: absolute; bottom: 0; right: 0; width: 112px; height: 205px; }
+body[data-fuyukawa] .manga-page-stamp { position: absolute; right: 6px; top: 8px; color: var(--rose); font: 700 .7rem/1.2 Consolas, monospace; transform: rotate(9deg); }
+body[data-fuyukawa] .archive-shelf { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 32px; width: min(1144px, calc(100% - 80px)); margin: 24px auto 0; align-items: start; }
+body[data-fuyukawa] .archive-spine { position: sticky; top: 106px; padding-top: 20px; }
+body[data-fuyukawa] .archive-tabs { display: flex; flex-direction: column; align-items: stretch; border-left: 2px solid var(--line); }
+body[data-fuyukawa] .archive-tabs button { min-height: 44px; display: flex; align-items: center; gap: 8px; padding: 8px 12px; margin-left: -2px; background: transparent; border: 0; border-left: 2px solid transparent; color: var(--ink-soft); font-size: .8rem; cursor: pointer; text-align: left; }
+body[data-fuyukawa] .archive-tabs svg { width: 16px; height: 16px; }
+body[data-fuyukawa] .archive-tabs button[aria-pressed="true"] { border-left-color: var(--rose); color: var(--rose); background: #f7eaf080; }
+body[data-fuyukawa] .archive-spine > p { font-size: .7rem; color: var(--ink-soft); padding-left: 12px; font-variant-numeric: tabular-nums; }
+body[data-fuyukawa] .archive-companion { width: 100px; height: 160px; margin-top: 24px; }
+body[data-fuyukawa] .archive-shelf .blog-timeline { width: 100%; margin: 0; }
+body[data-fuyukawa] .archive-shelf .blog-timeline-item { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+body[data-fuyukawa] .archive-shelf .timeline-date { display: flex; align-items: center; gap: 12px; padding: 0; }
+body[data-fuyukawa] .archive-shelf .blog-post-row { grid-template-columns: minmax(160px, .65fr) minmax(0, 1.2fr); padding: 22px 26px 22px 22px; border-radius: 4px; box-shadow: 4px 5px 0 #e8edf5; }
+body[data-fuyukawa] .archive-shelf .blog-timeline-item:nth-child(even) .blog-post-row { box-shadow: 4px 5px 0 #f3e6ed; }
+body[data-fuyukawa] .works-shell { gap: 28px; }
+body[data-fuyukawa] .works-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, .85fr); align-items: center; gap: 36px; padding: 16px 0 30px; }
+body[data-fuyukawa] .workshop-scene { position: relative; min-height: 285px; padding: 8px 58px 55px 0; }
+body[data-fuyukawa] .workshop-panel { width: 100%; height: 190px; }
+body[data-fuyukawa] .workshop-character { position: absolute; right: 0; bottom: 20px; width: 115px; height: 215px; }
+body[data-fuyukawa] .works-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 28px; }
+body[data-fuyukawa] .works-card { border: 1px solid var(--line); border-top: 3px solid var(--blue); border-radius: 4px; background: linear-gradient(#e7edf540 1px, transparent 1px) 0 24px / 100% 28px, white; }
+body[data-fuyukawa] .works-card:first-child { grid-column: 1 / -1; padding-right: 215px; min-height: 280px; }
+body[data-fuyukawa] .works-page-number { position: absolute; right: 22px; top: 18px; font: 1.05rem Consolas, monospace; color: #a2b2c6; }
+body[data-fuyukawa] .works-card-head { padding-right: 24px; }
+body[data-fuyukawa] .works-card-companion { position: absolute; bottom: 16px; right: 42px; width: 128px; height: 200px; }
+body[data-fuyukawa] .works-card--pink { border-top-color: var(--pink); }
+body[data-fuyukawa] .works-card--mint { border-top-color: var(--mint); }
+body[data-fuyukawa] .works-card--lavender { border-top-color: var(--lavender); }
+body[data-fuyukawa] .works-card--orange { border-top-color: #dfbc88; }
+body[data-fuyukawa] .game-hero-card { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr) 150px; align-items: center; gap: 32px; padding: 30px 0; }
+body[data-fuyukawa] .playroom-opening-panel { width: 100%; height: 240px; }
+body[data-fuyukawa] .playroom-companions { width: 150px; height: 220px; align-self: end; }
+body[data-fuyukawa] .playroom-heading h1 { font-size: 2.2rem; }
+body[data-fuyukawa] .playroom-heading .page-title-en { display: block; padding: 6px 0 0; }
+body[data-fuyukawa] .playroom-ticket-line { width: min(1144px, calc(100% - 80px)); margin: 26px auto 0; display: flex; align-items: center; gap: 18px; font: .68rem Consolas, monospace; color: var(--rose); }
+body[data-fuyukawa] .playroom-ticket-line i { flex: 1; border-top: 1px dashed #d6c2d1; }
+body[data-fuyukawa] .game-room { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+body[data-fuyukawa] .game-cabinet-card { border: 1px solid var(--manga-rule); border-radius: 6px; box-shadow: 5px 6px 0 var(--game-tint); }
+body[data-fuyukawa] .game-cabinet-card:nth-child(2) { margin-top: 26px; }
+body[data-fuyukawa] .game-machine-label { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; font: .7rem Consolas, monospace; color: var(--game-accent); background: #fff; }
+body[data-fuyukawa] .game-machine-label svg { width: 20px; height: 20px; }
+body[data-fuyukawa] .game-cabinet-screen { border-block: 1px solid var(--line); }
+body[data-fuyukawa] .game-cabinet-copy { padding: 22px; }
+body[data-fuyukawa] .game-note { position: relative; padding-right: 115px; min-height: 160px; }
+body[data-fuyukawa] .game-note-character { position: absolute; right: 12px; top: 0; width: 74px; height: 140px; }
+body[data-fuyukawa] .about-profile-shell { gap: 48px; }
+body[data-fuyukawa] .about-readme-hero { grid-template-columns: minmax(0, 1fr) 180px; align-items: center; gap: 24px; }
+body[data-fuyukawa] .about-letter-art { width: 180px; height: 244px; }
+body[data-fuyukawa] .about-side-character { width: 84px; height: 150px; margin: 0 auto; }
+body[data-fuyukawa] .about-bookmarks { display: flex; flex-wrap: wrap; gap: 12px 24px; border-bottom: 1px solid var(--line); padding: 0 0 16px; }
+body[data-fuyukawa] .about-bookmarks a { display: inline-flex; align-items: center; gap: 7px; color: var(--accent); font-size: .8rem; min-height: 36px; }
+body[data-fuyukawa] .about-bookmarks svg { width: 16px; height: 16px; }
+body[data-fuyukawa] .memory-album { min-width: 0; border-bottom: 1px solid var(--line); padding-bottom: 32px; }
+body[data-fuyukawa] .album-tabs { display: flex; flex-shrink: 0; border-bottom: 1px solid var(--line); gap: 2px; }
+body[data-fuyukawa] .album-tabs button { width: 40px; height: 42px; font: .74rem Consolas, monospace; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--ink-soft); cursor: pointer; }
+body[data-fuyukawa] .album-tabs button[aria-pressed="true"] { color: var(--rose); border-bottom-color: var(--rose); }
+body[data-fuyukawa] .album-pages { position: relative; min-width: 0; }
+body[data-fuyukawa] .album-page { display: grid; grid-template-columns: minmax(0, 1fr) minmax(140px, .65fr); align-items: center; gap: 28px; margin: 0; }
+body[data-fuyukawa] .album-page > img { width: 100%; height: 410px; object-fit: contain; }
+body[data-fuyukawa] .album-page figcaption { padding-bottom: 140px; }
+body[data-fuyukawa] .album-page figcaption span { font: .68rem Consolas, monospace; color: var(--accent); }
+body[data-fuyukawa] .album-page figcaption h3 { font: 1.3rem/1.8 "KaiTi", "Microsoft YaHei", serif; margin: 16px 0; color: var(--manga-ink); }
+body[data-fuyukawa] .album-page figcaption small { font-size: .66rem; color: var(--ink-soft); }
+body[data-fuyukawa] .album-companion { position: absolute; bottom: 12px; right: 24px; width: 125px; height: 145px; pointer-events: none; }
+body[data-fuyukawa] .article-margin-character { width: 90px; height: 138px; margin: 24px auto 0; }
+body[data-fuyukawa] .article-colophon { margin-top: 56px; border-block: 1px solid var(--line); padding: 26px 0; display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1fr); align-items: center; gap: 32px; }
+body[data-fuyukawa] .article-colophon > img { width: 100%; height: 120px; }
+body[data-fuyukawa] .article-colophon p { margin: 4px 0 12px; font-size: .9rem; }
+body[data-fuyukawa] .article-colophon a { display: inline-flex; gap: 8px; align-items: center; color: var(--accent); font-size: .8rem; }
+body[data-fuyukawa] .article-colophon svg { width: 16px; height: 16px; }
+body[data-fuyukawa] .not-found-visual { position: relative; min-height: 430px; background: none; box-shadow: none; border: 0; overflow: visible; }
+body[data-fuyukawa] .not-found-visual .lost-manga-page { width: 74%; height: 360px; object-fit: contain; transform: rotate(-4deg); }
+body[data-fuyukawa] .not-found-visual .lost-page-character { position: absolute; right: 0; bottom: 48px; width: 135px; height: 280px; object-fit: contain; }
+body[data-fuyukawa] .not-found-visual figcaption { margin-top: 24px; text-align: center; }
+@media (max-width: 1100px) {
+  body[data-fuyukawa] .game-hero-card { grid-template-columns: minmax(0, .8fr) minmax(0, 1fr) 100px; gap: 20px; }
+  body[data-fuyukawa] .playroom-companions { width: 100px; }
+  body[data-fuyukawa] .playroom-heading h1 { font-size: 1.9rem; }
+  body[data-fuyukawa] .game-room { gap: 18px; }
+  body[data-fuyukawa] .game-cabinet-copy { padding: 18px; }
+  body[data-fuyukawa] .about-readme-hero { grid-template-columns: minmax(0, 1fr) 130px; }
+  body[data-fuyukawa] .about-letter-art { width: 130px; height: 210px; }
+  body[data-fuyukawa] .album-page { gap: 18px; }
+  body[data-fuyukawa] .album-page > img { height: 350px; }
+}
+@media (max-width: 760px) {
+  body[data-fuyukawa] .blog-hero-card { min-height: 270px; gap: 14px; }
+  body[data-fuyukawa] .blog-title-art { height: 240px; padding: 0 0 55px; }
+  body[data-fuyukawa] .blog-opening-character { width: 75px; height: 125px; bottom: -6px; }
+  body[data-fuyukawa] .blog-title-copy h1 { font-size: 1.8rem; }
+  body[data-fuyukawa] .blog-title-copy .page-title-en { display: block; padding: 4px 0 0; }
+  body[data-fuyukawa] .archive-shelf { width: calc(100% - 48px); grid-template-columns: minmax(0, 1fr); gap: 0; margin-top: 8px; }
+  body[data-fuyukawa] .archive-spine { position: static; padding: 10px 0 0; }
+  body[data-fuyukawa] .archive-tabs { flex-direction: row; flex-wrap: wrap; border-left: 0; border-bottom: 1px solid var(--line); }
+  body[data-fuyukawa] .archive-tabs button { border-left: 0; border-bottom: 2px solid transparent; margin: 0 0 -1px; padding-inline: 10px; font-size: .74rem; }
+  body[data-fuyukawa] .archive-tabs button[aria-pressed="true"] { border-bottom-color: var(--rose); }
+  body[data-fuyukawa] .archive-spine > p { margin: 10px 0 0; padding: 0; }
+  body[data-fuyukawa] .archive-companion { display: none; }
+  body[data-fuyukawa] .archive-shelf .blog-post-row { padding: 18px; gap: 20px; }
+  body[data-fuyukawa] .works-hero { grid-template-columns: minmax(0, 1fr) 170px; gap: 20px; }
+  body[data-fuyukawa] .workshop-scene { min-height: 240px; padding: 0 0 40px; }
+  body[data-fuyukawa] .workshop-panel { height: 150px; }
+  body[data-fuyukawa] .workshop-character { width: 74px; height: 138px; bottom: 10px; }
+  body[data-fuyukawa] .works-hero h1 { font-size: 1.8rem; }
+  body[data-fuyukawa] .works-hero .page-title-en { display: block; padding: 4px 0 0; }
+  body[data-fuyukawa] .works-card:first-child { padding-right: 150px; }
+  body[data-fuyukawa] .works-card-companion { width: 90px; height: 150px; right: 28px; }
+  body[data-fuyukawa] .game-hero-card { grid-template-columns: minmax(0, 1fr) 120px; gap: 20px; }
+  body[data-fuyukawa] .playroom-opening-panel { grid-column: 1 / -1; width: 100%; height: 126px; object-position: left; }
+  body[data-fuyukawa] .playroom-companions { width: 120px; height: 175px; }
+  body[data-fuyukawa] .playroom-heading h1 { font-size: 1.9rem; }
+  body[data-fuyukawa] .playroom-ticket-line { width: calc(100% - 48px); gap: 10px; font-size: .57rem; }
+  body[data-fuyukawa] .game-room { grid-template-columns: minmax(0, 1fr); gap: 26px; }
+  body[data-fuyukawa] .game-cabinet-card { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1fr); }
+  body[data-fuyukawa] .game-cabinet-card:nth-child(2) { margin-top: 0; }
+  body[data-fuyukawa] .game-machine-label { grid-column: 1 / -1; }
+  body[data-fuyukawa] .game-cabinet-screen { height: 100%; min-height: 220px; border-bottom: 0; border-right: 1px solid var(--line); }
+  body[data-fuyukawa] .about-profile-shell { gap: 28px; }
+  body[data-fuyukawa] .about-side-character { display: none; }
+  body[data-fuyukawa] .album-page > img { height: 360px; }
+  body[data-fuyukawa] .article-colophon { gap: 18px; }
+  body[data-fuyukawa] .not-found-visual { min-height: 360px; }
+  body[data-fuyukawa] .not-found-visual .lost-manga-page { height: 300px; }
+  body[data-fuyukawa] .not-found-visual .lost-page-character { width: 100px; height: 220px; }
+}
+@media (max-width: 480px) {
+  body[data-fuyukawa] .blog-hero-card { grid-template-columns: minmax(0, 1fr) 100px; min-height: 245px; }
+  body[data-fuyukawa] .blog-title-art { height: 200px; padding: 0; }
+  body[data-fuyukawa] .blog-opening-panel { display: none; }
+  body[data-fuyukawa] .blog-opening-character { width: 90px; height: 170px; bottom: 0; }
+  body[data-fuyukawa] .manga-page-stamp { top: 0; right: 6px; }
+  body[data-fuyukawa] .archive-shelf .blog-post-row { grid-template-columns: minmax(0, 1fr); }
+  body[data-fuyukawa] .works-hero { grid-template-columns: minmax(0, 1fr) 95px; gap: 12px; }
+  body[data-fuyukawa] .workshop-scene { min-height: 230px; }
+  body[data-fuyukawa] .workshop-panel { display: none; }
+  body[data-fuyukawa] .workshop-character { width: 90px; height: 180px; bottom: 22px; }
+  body[data-fuyukawa] .works-grid { grid-template-columns: minmax(0, 1fr); }
+  body[data-fuyukawa] .works-card:first-child { padding-right: 20px; padding-bottom: 150px; }
+  body[data-fuyukawa] .works-card-companion { height: 120px; bottom: 12px; right: 20px; }
+  body[data-fuyukawa] .game-hero-card { grid-template-columns: minmax(0, 1fr) 94px; }
+  body[data-fuyukawa] .playroom-companions { width: 94px; height: 150px; }
+  body[data-fuyukawa] .playroom-heading h1 { font-size: 1.65rem; }
+  body[data-fuyukawa] .game-cabinet-card { grid-template-columns: minmax(0, 1fr); }
+  body[data-fuyukawa] .game-cabinet-screen { height: 190px; min-height: 190px; border-right: 0; border-bottom: 1px solid var(--line); }
+  body[data-fuyukawa] .game-note { padding-right: 78px; }
+  body[data-fuyukawa] .game-note-character { width: 60px; height: 120px; right: 0; }
+  body[data-fuyukawa] .about-readme-hero { grid-template-columns: minmax(0, 1fr) 90px; gap: 16px; }
+  body[data-fuyukawa] .about-readme-hero h2 { font-size: 1.5rem; }
+  body[data-fuyukawa] .about-letter-art { width: 90px; height: 180px; }
+  body[data-fuyukawa] .album-page { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  body[data-fuyukawa] .album-page > img { width: 100%; height: 360px; }
+  body[data-fuyukawa] .album-page figcaption { padding: 0 90px 0 0; min-height: 145px; }
+  body[data-fuyukawa] .album-page figcaption h3 { font-size: 1.2rem; }
+  body[data-fuyukawa] .album-companion { width: 84px; height: 105px; right: 0; bottom: 24px; }
+  body[data-fuyukawa] .article-colophon { grid-template-columns: minmax(0, 1fr); }
+  body[data-fuyukawa] .article-colophon > img { height: 105px; object-position: left; }
+}

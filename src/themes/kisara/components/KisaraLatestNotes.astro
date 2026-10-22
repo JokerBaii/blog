@@ -1,0 +1,180 @@
+---
+import { getPublishedPosts } from "@/core/content/blog";
+import { getCoverSources } from "@/core/content/coverSources";
+import { getThemePath } from "@/core/themes/registry";
+import { categoryLabel } from "@/lib/site";
+import { getKisaraCoverPresentation } from "../lib/coverPresentation";
+import KisaraFooterMeta from "./KisaraFooterMeta.astro";
+
+const posts = (await getPublishedPosts()).slice(0, 3);
+const covers = await getKisaraCoverPresentation(posts);
+const dateFormatter = new Intl.DateTimeFormat("zh-CN", { year: "numeric", month: "2-digit", day: "2-digit" });
+---
+
+<section class="kisara-latest" data-kisara-home-stop="004" aria-labelledby="kisara-latest-title">
+  <div class="kisara-latest-content">
+  <header class="kisara-home-band-heading is-transmission-heading">
+    <div>
+      <p class="kisara-section-index">RECENT TRANSMISSIONS / 004</p>
+      <h2 id="kisara-latest-title">Latest notes.</h2>
+    </div>
+    <a class="kisara-section-link" href={getThemePath("kisara", "/blog/")}>OPEN ARCHIVE <span aria-hidden="true">↗</span></a>
+  </header>
+  <div class="kisara-transmission-shelf">
+    {posts.map((post, index) => {
+      const cover = covers.get(post.id);
+      const date = post.data.updatedDate ?? post.data.pubDate;
+      return (
+        <a href={getThemePath("kisara", `/blog/${post.id}/`)}
+          style={`--transmission-order: ${index}; --transmission-cover-position: ${cover?.position ?? "50% 32%"};`}>
+          <figure data-cover-fit={cover?.fit ?? "portrait"}>
+            {post.data.cover
+              ? <img src={post.data.cover} {...getCoverSources(post.data.cover, "(max-width: 600px) 104px, (max-width: 980px) 126px, 380px")} alt="" width={cover?.width ?? 700} height={cover?.height ?? 990} loading="lazy" decoding="async" fetchpriority="low" />
+              : <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>}
+          </figure>
+          <div class="kisara-transmission-copy">
+            <small>{categoryLabel[post.data.category]} / <time datetime={date.toISOString()}>{dateFormatter.format(date)}</time></small>
+            <h3>{post.data.title}</h3>
+            <p>{post.data.description}</p>
+            <span>READ SIGNAL <i aria-hidden="true">↗</i></span>
+          </div>
+        </a>
+      );
+    })}
+    {posts.length === 0 && <p class="kisara-latest-empty">下一页，还在写。</p>}
+  </div>
+  </div>
+  <footer class="kisara-latest-footer"><KisaraFooterMeta /></footer>
+</section>
+
+<style>
+  .kisara-latest-footer {
+    position: absolute;
+    right: 24px;
+    bottom: 20px;
+    left: 24px;
+  }
+  .kisara-latest-footer :global(.kisara-footer-meta) { margin-top: 0; border-color: #aeb8c8; }
+  @media (max-width: 980px) {
+    .kisara-latest-footer { position: static; margin: 56px 24px -60px; }
+  }
+  @media (max-width: 600px) {
+    .kisara-latest-footer { margin: 40px 16px -64px; }
+  }
+  .is-transmission-heading h2 { font-size: 72px; }
+  .kisara-latest-content {
+    width: calc(100% / 1.1);
+    margin-inline: auto;
+    zoom: 1.1;
+  }
+  .kisara-transmission-shelf {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: min(1180px, calc(100% - 48px));
+    margin-inline: auto;
+    border-block: 1px solid rgba(25, 31, 57, 0.26);
+  }
+  .kisara-transmission-shelf > a {
+    position: relative;
+    display: grid;
+    grid-template-columns: clamp(92px, calc(7vw / var(--kisara-scale, 1)), 118px) minmax(0, 1fr);
+    gap: clamp(18px, calc(2.2vw / var(--kisara-scale, 1)), 30px);
+    align-items: center;
+    min-height: 270px;
+    padding: 34px clamp(22px, calc(2.5vw / var(--kisara-scale, 1)), 34px);
+    border-right: 1px solid rgba(25, 31, 57, 0.2);
+  }
+  .kisara-transmission-shelf > a:last-child { border-right: 0; }
+  .kisara-transmission-shelf figure {
+    --poster-lift: 0px;
+    position: relative;
+    aspect-ratio: 7 / 10;
+    margin: 0;
+    overflow: hidden;
+    background: #171a32;
+    box-shadow: 9px 12px 0 rgba(34, 39, 68, 0.12);
+    transform: translateY(var(--poster-lift)) rotate(calc((var(--transmission-order) - 1) * 1.3deg));
+    transition: transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 320ms ease;
+  }
+  .kisara-transmission-shelf figure::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: inset 0 0 0 1px rgba(10, 14, 38, 0.28);
+  }
+  .kisara-transmission-shelf figure img {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--transmission-cover-position, 50% 32%);
+  }
+  .kisara-transmission-shelf figure > span {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    color: #ff7891;
+    font: 800 2.4rem/1 "Courier New", Courier, monospace;
+  }
+  .kisara-transmission-copy { min-width: 0; overflow-wrap: anywhere; }
+  .kisara-transmission-copy small { color: #9d2447; font: 800 0.62rem/1.5 "Courier New", Courier, monospace; }
+  .kisara-transmission-copy h3 {
+    margin: 13px 0 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 24px;
+    line-height: 1.16;
+    letter-spacing: 0;
+  }
+  .kisara-transmission-copy p {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 13px 0 0;
+    color: #596078;
+    line-height: 1.62;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+  .kisara-transmission-copy > span {
+    display: inline-flex;
+    gap: 9px;
+    margin-top: 20px;
+    color: #262b45;
+    font: 800 0.62rem/1 "Courier New", Courier, monospace;
+  }
+  .kisara-transmission-copy > span i { color: #b91845; font-style: normal; transition: transform 180ms ease; }
+  .kisara-transmission-shelf > a:focus-visible { outline: 2px solid #b91845; outline-offset: 4px; }
+  .kisara-transmission-shelf > a:focus-visible figure { --poster-lift: -9px; box-shadow: 13px 18px 0 rgba(185, 24, 69, 0.13); }
+  .kisara-latest-empty { grid-column: 1 / -1; padding: 48px 0; }
+  @media (hover: hover) and (pointer: fine) {
+    .kisara-transmission-shelf > a:hover figure { --poster-lift: -9px; box-shadow: 13px 18px 0 rgba(185, 24, 69, 0.13); }
+    .kisara-transmission-shelf > a:hover .kisara-transmission-copy > span i { transform: translate(4px, -3px); }
+  }
+  @media (min-width: 1680px) {
+    .is-transmission-heading h2 { font-size: 83px; }
+    .kisara-transmission-copy h3 { font-size: 28px; }
+  }
+  @media (min-width: 981px) and (max-width: 1200px) {
+    .kisara-transmission-copy h3 { font-size: 20px; }
+  }
+  @media (max-width: 980px) {
+    .is-transmission-heading h2 { font-size: 64px; }
+    .kisara-transmission-shelf { grid-template-columns: 1fr; }
+    .kisara-transmission-shelf > a { grid-template-columns: 126px minmax(0, 1fr); min-height: 230px; border-right: 0; border-bottom: 1px solid rgba(25, 31, 57, 0.2); }
+    .kisara-transmission-shelf > a:last-child { border-bottom: 0; }
+  }
+  @media (max-width: 600px) {
+    .is-transmission-heading h2 { font-size: 48px; }
+    .kisara-transmission-shelf { width: min(100% - 32px, 1180px); }
+    .kisara-transmission-shelf > a { grid-template-columns: 104px minmax(0, 1fr); gap: 18px; padding: 26px 4px; }
+    .kisara-transmission-copy h3 { font-size: 20px; }
+    .kisara-transmission-copy p { -webkit-line-clamp: 2; font-size: 0.86rem; }
+    .kisara-transmission-copy > span { margin-top: 15px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .kisara-transmission-shelf figure, .kisara-transmission-copy > span i { transition: none; }
+    .kisara-transmission-shelf > a:is(:hover, :focus-visible) figure { --poster-lift: 0px; }
+    .kisara-transmission-shelf > a:hover .kisara-transmission-copy > span i { transform: none; }
+  }
+</style>

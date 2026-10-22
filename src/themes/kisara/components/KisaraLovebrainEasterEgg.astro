@@ -1,0 +1,1592 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<div
+  class="kisara-lovebrain"
+  data-kisara-lovebrain-root
+  data-state="locked"
+  data-stage="orbit"
+>
+  <button
+    class="kisara-lovebrain-entry"
+    type="button"
+    data-lovebrain-entry
+    aria-label="进入《恋爱脑》隐藏舞台"
+    title="进入《恋爱脑》隐藏舞台"
+    hidden
+  >
+    <Icon name="tabler:heart" aria-hidden="true" />
+  </button>
+
+  <section class="kisara-lovebrain-scene" data-lovebrain-scene aria-hidden="true">
+    <div class="kisara-lovebrain-panel kisara-lovebrain-orbit" data-lovebrain-panel="orbit" aria-hidden="true">
+      <video
+        data-lovebrain-scrub="orbit"
+        data-src="/themes/kisara/assets/lovebrain/stage1-scrub.mp4"
+        data-load-at="0"
+        poster="/themes/kisara/assets/lovebrain/route.webp"
+        width="1920"
+        height="1080"
+        preload="metadata"
+        muted
+        playsinline
+      ></video>
+      <div class="kisara-lovebrain-orbit-wash"></div>
+      <svg class="kisara-lovebrain-routes" viewBox="0 0 1200 760" preserveAspectRatio="none" aria-hidden="true">
+        <path class="is-pink" d="M-80 610 C180 520 162 118 430 184 S758 642 1280 92" />
+        <path class="is-green" d="M-70 154 C228 206 194 676 548 462 S890 90 1280 560" />
+        <path class="is-cyan" d="M-90 382 C154 246 390 58 564 256 S870 688 1270 302" />
+      </svg>
+      <p class="kisara-lovebrain-orbit-copy">SCROLL = FRAME / STOP = HOLD</p>
+    </div>
+
+    <div class="kisara-lovebrain-panel kisara-lovebrain-portraits" data-lovebrain-panel="portraits">
+      <div class="kisara-lovebrain-portrait-field" aria-hidden="true"></div>
+      <div class="kisara-lovebrain-portrait-lineup" data-lovebrain-portraits>
+        <button
+          type="button"
+          class="is-kisara"
+          data-lovebrain-focus="kisara"
+          aria-label="聚焦木更"
+          aria-pressed="false"
+        >
+          <span class="kisara-lovebrain-portrait-card">
+            <span class="kisara-lovebrain-portrait-frame">
+              <img
+                data-src="/themes/kisara/assets/lovebrain/kisara-avatar.webp"
+                data-load-at="0.14"
+                alt="木更"
+                width="740"
+                height="900"
+              />
+            </span>
+            <span class="kisara-lovebrain-portrait-copy"><b>KISARA</b><small>全部都要</small></span>
+          </span>
+        </button>
+        <button
+          type="button"
+          class="is-shu"
+          data-lovebrain-focus="shu"
+          aria-label="聚焦修"
+          aria-pressed="false"
+        >
+          <span class="kisara-lovebrain-portrait-card">
+            <span class="kisara-lovebrain-portrait-frame">
+              <img
+                data-src="/themes/kisara/assets/lovebrain/shu-avatar.webp"
+                data-load-at="0.14"
+                alt="修"
+                width="740"
+                height="900"
+              />
+            </span>
+            <span class="kisara-lovebrain-portrait-copy"><b>SHU</b><small>正在被追</small></span>
+          </span>
+        </button>
+        <button
+          type="button"
+          class="is-ayano"
+          data-lovebrain-focus="ayano"
+          aria-label="聚焦绫乃"
+          aria-pressed="false"
+        >
+          <span class="kisara-lovebrain-portrait-card">
+            <span class="kisara-lovebrain-portrait-frame">
+              <img
+                data-src="/themes/kisara/assets/lovebrain/ayano-avatar.webp"
+                data-load-at="0.14"
+                alt="绫乃"
+                width="740"
+                height="900"
+              />
+            </span>
+            <span class="kisara-lovebrain-portrait-copy"><b>AYANO</b><small>绝不让路</small></span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <div class="kisara-lovebrain-panel kisara-lovebrain-race" data-lovebrain-panel="race" aria-hidden="true">
+      <video
+        data-lovebrain-scrub="race"
+        data-src="/themes/kisara/assets/lovebrain/race-scrub.mp4"
+        data-load-at="0.31"
+        poster="/themes/kisara/assets/lovebrain/chase.webp"
+        width="1600"
+        height="900"
+        preload="metadata"
+        muted
+        playsinline
+      ></video>
+      <div class="kisara-lovebrain-speed-lines" aria-hidden="true"></div>
+      <p>FORWARD / BACKWARD</p>
+    </div>
+
+    <div class="kisara-lovebrain-panel kisara-lovebrain-pinch" data-lovebrain-panel="pinch" aria-hidden="true">
+      <video
+        data-lovebrain-loop="pinch"
+        data-src="/themes/kisara/assets/lovebrain/pinch-pingpong.mp4"
+        data-load-at="0.54"
+        poster="/themes/kisara/assets/lovebrain/pressure.webp"
+        width="1600"
+        height="900"
+        preload="metadata"
+        muted
+        playsinline
+      ></video>
+      <video
+        data-lovebrain-loop="pinch-buffer"
+        data-src="/themes/kisara/assets/lovebrain/pinch-pingpong.mp4"
+        data-load-at="0.54"
+        poster="/themes/kisara/assets/lovebrain/pressure.webp"
+        width="1600"
+        height="900"
+        preload="metadata"
+        muted
+        aria-hidden="true"
+        playsinline
+      ></video>
+      <div class="kisara-lovebrain-loop-caption">
+        <span>NO WINNER</span>
+        <b>still arguing</b>
+      </div>
+    </div>
+
+    <div class="kisara-lovebrain-panel kisara-lovebrain-embrace" data-lovebrain-panel="embrace" aria-hidden="true">
+      <video
+        data-lovebrain-loop="embrace"
+        data-src="/themes/kisara/assets/lovebrain/stage2-loop.mp4"
+        data-load-at="0.68"
+        poster="/themes/kisara/assets/lovebrain/messages.webp"
+        width="1600"
+        height="900"
+        preload="metadata"
+        muted
+        loop
+        playsinline
+      ></video>
+      <div class="kisara-lovebrain-embrace-ring" aria-hidden="true"></div>
+      <p>ONE MORE ROUND</p>
+    </div>
+
+    <div class="kisara-lovebrain-panel kisara-lovebrain-final" data-lovebrain-panel="final" aria-hidden="true">
+      <img
+        data-src="/themes/kisara/assets/lovebrain/final.webp"
+        data-load-at="0.76"
+        alt=""
+        width="1600"
+        height="900"
+      />
+      <div class="kisara-lovebrain-final-copy">
+        <span>THE ROUTES DID NOT MERGE</span>
+        <b>they simply kept walking</b>
+      </div>
+    </div>
+
+    <header class="kisara-lovebrain-header">
+      <span>恋愛脳 / SECRET ED</span>
+      <span data-lovebrain-stage>COLOR ROUTE</span>
+      <span data-lovebrain-counter>00%</span>
+    </header>
+
+    <nav class="kisara-lovebrain-rail" aria-label="隐藏舞台进度">
+      <i data-lovebrain-rail-progress></i>
+      <span>COLOR</span>
+      <span>FACES</span>
+      <span>RACE</span>
+      <span>PINCH</span>
+      <span>ORBIT</span>
+      <span>END</span>
+    </nav>
+
+    <button
+      class="kisara-lovebrain-next"
+      type="button"
+      data-lovebrain-next
+      aria-label="进入 001"
+      title="进入 001"
+      disabled
+    >
+      <Icon name="tabler:arrow-down" aria-hidden="true" />
+    </button>
+    <p class="kisara-lovebrain-sr-status" data-lovebrain-status aria-live="polite"></p>
+  </section>
+</div>
+
+<script is:inline data-astro-rerun>
+  (() => {
+    window.__yuimiKisaraLovebrainCleanup?.();
+    const root = document.querySelector("[data-kisara-lovebrain-root]");
+    if (!(root instanceof HTMLElement)) return;
+
+    const entry = root.querySelector("[data-lovebrain-entry]");
+    const scene = root.querySelector("[data-lovebrain-scene]");
+    const stageLabel = root.querySelector("[data-lovebrain-stage]");
+    const counter = root.querySelector("[data-lovebrain-counter]");
+    const status = root.querySelector("[data-lovebrain-status]");
+    const nextButton = root.querySelector("[data-lovebrain-next]");
+    const railProgress = root.querySelector("[data-lovebrain-rail-progress]");
+    const orbitVideo = root.querySelector('[data-lovebrain-scrub="orbit"]');
+    const raceVideo = root.querySelector('[data-lovebrain-scrub="race"]');
+    const pinchVideo = root.querySelector('[data-lovebrain-loop="pinch"]');
+    const pinchBufferVideo = root.querySelector('[data-lovebrain-loop="pinch-buffer"]');
+    const embraceVideo = root.querySelector('[data-lovebrain-loop="embrace"]');
+    const progressApi = window.__yuimiKisaraLovebrainProgress;
+    const homeApi = () => window.__yuimiKisaraHomeLovebrain;
+    const lifecycle = new AbortController();
+    const { signal } = lifecycle;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+    const smoothstep = (start, end, value) => {
+      const ratio = clamp((value - start) / Math.max(0.0001, end - start), 0, 1);
+      return ratio * ratio * (3 - 2 * ratio);
+    };
+    const springPop = (value) => {
+      const ratio = clamp(value, 0, 1);
+      if (ratio <= 0 || ratio >= 1) return ratio;
+      return 1 - Math.exp(-5.2 * ratio) * Math.cos(ratio * Math.PI * 2.25);
+    };
+    const raceProgressSpan = 0.37;
+    const raceDurationFallback = 5.7;
+    const raceMaxPlaybackRate = 1.12;
+    const racePacingWeight = (value) => smoothstep(0.34, 0.44, value)
+      * (1 - smoothstep(0.75, 0.84, value));
+    const stages = [
+      { name: "COLOR ROUTE", key: "orbit", threshold: 0 },
+      { name: "THREE FACES", key: "portraits", threshold: 0.24 },
+      { name: "KEEP RUNNING", key: "race", threshold: 0.43 },
+      { name: "NO WINNER", key: "pinch", threshold: 0.76 },
+      { name: "ONE MORE ROUND", key: "embrace", threshold: 0.85 },
+      { name: "TOGETHER", key: "final", threshold: 0.94 }
+    ];
+
+    let disposed = false;
+    let active = false;
+    let leaving = false;
+    let completed = false;
+    let progress = 0;
+    let targetProgress = 0;
+    let progressFrame = 0;
+    let progressTimestamp = 0;
+    let sceneConsumed = false;
+    let touchY = null;
+    let touchId = null;
+    let entryEnterFrame = 0;
+    let entryExitTimer = 0;
+    const hydratedMedia = new WeakSet();
+    const queuedMedia = new WeakSet();
+    const mediaRetryCounts = new WeakMap();
+    const mediaWarmupTimers = new Set();
+    const mediaRetryTimers = new Set();
+    const scrubStates = new WeakMap();
+    const pinchLoopVideos = [pinchVideo, pinchBufferVideo].filter((video) => video instanceof HTMLVideoElement);
+    const pinchLoopState = {
+      activeIndex: 0,
+      requested: false,
+      swapping: false,
+      swapStartedAt: 0,
+      frame: 0
+    };
+    const portraitButtons = Array.from(root.querySelectorAll("[data-lovebrain-focus]"));
+
+    const foundSelfBlocking = () => document.documentElement.dataset.kisaraFoundSelfEntry === "pending"
+      || document.querySelector("[data-kisara-gate].is-found-self-active, [data-kisara-gate].is-found-self-leaving") !== null;
+    const isHomeGate = () => document.body?.dataset.kisaraPage === "home" && window.scrollY <= 2;
+    const isEligible = () => Boolean(progressApi?.isEligible?.()) && !foundSelfBlocking();
+    const setStatus = (value) => {
+      if (status) status.textContent = value;
+    };
+    const resetOpeningExitPresentation = () => {
+      root.style.removeProperty("--lovebrain-exit-opacity");
+      root.style.removeProperty("--lovebrain-exit-shift");
+      root.style.removeProperty("--lovebrain-exit-scale");
+    };
+    const updateOpeningExitPresentation = (value) => {
+      const progress = clamp(value, 0, 1);
+      const exit = reducedMotion ? progress : smoothstep(0.22, 0.99, progress);
+      root.style.setProperty("--lovebrain-exit-opacity", (1 - exit).toFixed(5));
+      root.style.setProperty("--lovebrain-exit-shift", (-2.5 * exit).toFixed(3) + "%");
+      root.style.setProperty("--lovebrain-exit-scale", (1 + exit * 0.012).toFixed(5));
+    };
+    const currentStage = (value) => {
+      let selected = stages[0];
+      stages.forEach((stage) => {
+        if (value >= stage.threshold) selected = stage;
+      });
+      return selected;
+    };
+    const requestLovebrainTrack = () => {
+      const audioPlayer = document.querySelector("[data-kisara-audio-player]");
+      const themeAudio = audioPlayer?.querySelector("[data-kisara-theme-audio]");
+      const audioControl = audioPlayer?.querySelector("[data-kisara-audio-control]");
+      const alreadySelected = audioPlayer instanceof HTMLElement
+        && audioPlayer.dataset.trackId === "lovebrain-ed";
+      if (alreadySelected) {
+        if (
+          themeAudio instanceof HTMLAudioElement
+          && themeAudio.paused
+          && audioControl instanceof HTMLButtonElement
+        ) {
+          audioControl.click();
+        }
+        return;
+      }
+      window.dispatchEvent(new CustomEvent("yuimi:kisara-secret-audio", {
+        detail: {
+          trackId: "lovebrain-ed",
+          autoplay: true,
+          playbackMode: "playlist",
+          grantId: "lovebrain-stage-" + Date.now() + "-" + Math.round(performance.now())
+        }
+      }));
+    };
+    const hydrateElement = (element, force = false) => {
+      if (
+        !(element instanceof HTMLImageElement || element instanceof HTMLVideoElement)
+        || (!force && hydratedMedia.has(element))
+      ) return;
+      const source = element.dataset.src;
+      if (!source) return;
+      hydratedMedia.add(element);
+      if (force) element.removeAttribute("src");
+      if (element instanceof HTMLImageElement) {
+        element.decoding = "async";
+        element.src = source;
+      } else {
+        element.preload = "auto";
+        element.src = source;
+        element.load();
+      }
+    };
+    const hydrateMediaTo = (value) => {
+      root.querySelectorAll("[data-src]").forEach((element) => {
+        const loadAt = Number.parseFloat(element.dataset.loadAt ?? "0");
+        if (value + 0.001 < loadAt) return;
+        hydrateElement(element);
+      });
+    };
+    const warmMediaTo = (value, interval = 0) => {
+      const pending = Array.from(root.querySelectorAll("[data-src]"))
+        .filter((element) => {
+          const loadAt = Number.parseFloat(element.dataset.loadAt ?? "0");
+          return loadAt <= value + 0.001 && !hydratedMedia.has(element) && !queuedMedia.has(element);
+        })
+        .sort((first, second) => Number.parseFloat(first.dataset.loadAt ?? "0") - Number.parseFloat(second.dataset.loadAt ?? "0"));
+      pending.forEach((element, index) => {
+        queuedMedia.add(element);
+        const hydrate = () => {
+          mediaWarmupTimers.delete(timer);
+          queuedMedia.delete(element);
+          if (!disposed) hydrateElement(element);
+        };
+        const delay = interval * index;
+        const timer = delay > 0 ? window.setTimeout(hydrate, delay) : 0;
+        if (timer) mediaWarmupTimers.add(timer);
+        else hydrate();
+      });
+    };
+    const scheduleMediaRetry = (element) => {
+      if (disposed || !(element instanceof HTMLImageElement || element instanceof HTMLVideoElement)) return;
+      const retries = mediaRetryCounts.get(element) ?? 0;
+      if (retries >= 1) return;
+      mediaRetryCounts.set(element, retries + 1);
+      const timer = window.setTimeout(() => {
+        mediaRetryTimers.delete(timer);
+        if (!disposed) hydrateElement(element, true);
+      }, 360);
+      mediaRetryTimers.add(timer);
+    };
+    const flushQueuedSeek = (video, state) => {
+      if (state.busy || state.pendingTime === null || video.seeking) return;
+      const target = state.pendingTime;
+      state.pendingTime = null;
+      if (Math.abs(video.currentTime - target) < state.frameStep * 0.42) return;
+      state.busy = true;
+      try {
+        video.currentTime = target;
+      } catch {
+        state.busy = false;
+      }
+    };
+    const seekPausedVideo = (video, ratio) => {
+      if (!(video instanceof HTMLVideoElement)) return;
+      let state = scrubStates.get(video);
+      if (!state) {
+        state = {
+          busy: false,
+          paused: false,
+          pendingTime: null,
+          frameStep: 1 / 60
+        };
+        scrubStates.set(video, state);
+        video.addEventListener("seeked", () => {
+          state.busy = false;
+          flushQueuedSeek(video, state);
+        }, { signal });
+      }
+      if (!state.paused) {
+        video.pause();
+        state.paused = true;
+      }
+      if (video.readyState < HTMLMediaElement.HAVE_METADATA || !Number.isFinite(video.duration)) return;
+      const frameTail = state.frameStep;
+      state.pendingTime = clamp(ratio, 0, 1) * Math.max(0, video.duration - frameTail);
+      flushQueuedSeek(video, state);
+    };
+    const syncLoopVideo = (video, shouldPlay) => {
+      if (!(video instanceof HTMLVideoElement)) return;
+      if (shouldPlay && active && !leaving && document.visibilityState === "visible") {
+        const promise = video.play();
+        if (promise?.catch) promise.catch(() => undefined);
+      } else {
+        video.pause();
+      }
+    };
+    const setPinchOpacity = (activeIndex, activeOpacity = 1, bufferOpacity = 0) => {
+      pinchLoopVideos.forEach((video, index) => {
+        video.style.opacity = index === activeIndex ? String(activeOpacity) : String(bufferOpacity);
+      });
+    };
+    const pausePinchLoop = () => {
+      if (pinchLoopState.frame) window.cancelAnimationFrame(pinchLoopState.frame);
+      pinchLoopState.frame = 0;
+      pinchLoopVideos.forEach((video) => video.pause());
+    };
+    const stopPinchLoop = () => {
+      pausePinchLoop();
+      pinchLoopState.requested = false;
+      pinchLoopState.swapping = false;
+      pinchLoopState.swapStartedAt = 0;
+      pinchLoopState.activeIndex = 0;
+      pinchLoopVideos.forEach((video) => {
+        try { video.currentTime = 0; } catch {}
+      });
+      setPinchOpacity(0, 1, 0);
+    };
+    const animatePinchLoop = (timestamp) => {
+      pinchLoopState.frame = 0;
+      if (
+        disposed
+        || !active
+        || leaving
+        || !pinchLoopState.requested
+        || document.visibilityState !== "visible"
+        || pinchLoopVideos.length < 2
+      ) return;
+      const current = pinchLoopVideos[pinchLoopState.activeIndex];
+      const nextIndex = pinchLoopState.activeIndex === 0 ? 1 : 0;
+      const next = pinchLoopVideos[nextIndex];
+      if (!(current instanceof HTMLVideoElement) || !(next instanceof HTMLVideoElement)) return;
+
+      if (!pinchLoopState.swapping) {
+        const remaining = Number.isFinite(current.duration)
+          ? current.duration - current.currentTime
+          : Number.POSITIVE_INFINITY;
+        if (remaining <= 0.16 && next.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+          try { next.currentTime = 0; } catch {}
+          const playPromise = next.play();
+          if (playPromise?.catch) playPromise.catch(() => undefined);
+          pinchLoopState.swapping = true;
+          pinchLoopState.swapStartedAt = timestamp;
+        }
+      }
+
+      if (pinchLoopState.swapping) {
+        const ratio = clamp((timestamp - pinchLoopState.swapStartedAt) / 150, 0, 1);
+        setPinchOpacity(pinchLoopState.activeIndex, 1 - ratio, ratio);
+        if (ratio >= 1) {
+          current.pause();
+          try { current.currentTime = 0; } catch {}
+          pinchLoopState.activeIndex = nextIndex;
+          pinchLoopState.swapping = false;
+          pinchLoopState.swapStartedAt = 0;
+          setPinchOpacity(nextIndex, 1, 0);
+        }
+      }
+      pinchLoopState.frame = window.requestAnimationFrame(animatePinchLoop);
+    };
+    const syncPinchVideo = (shouldPlay) => {
+      if (pinchLoopVideos.length < 2) {
+        syncLoopVideo(pinchVideo, shouldPlay);
+        return;
+      }
+      if (!shouldPlay || !active || leaving || document.visibilityState !== "visible") {
+        if (pinchLoopState.requested) stopPinchLoop();
+        return;
+      }
+      pinchLoopState.requested = true;
+      const current = pinchLoopVideos[pinchLoopState.activeIndex];
+      if (current.ended || (Number.isFinite(current.duration) && current.currentTime >= current.duration - 0.01)) {
+        try { current.currentTime = 0; } catch {}
+      }
+      if (!pinchLoopState.swapping) setPinchOpacity(pinchLoopState.activeIndex, 1, 0);
+      if (current.paused && !current.ended) {
+        const playPromise = current.play();
+        if (playPromise?.catch) playPromise.catch(() => undefined);
+      }
+      if (!pinchLoopState.frame) {
+        pinchLoopState.frame = window.requestAnimationFrame(animatePinchLoop);
+      }
+    };
+    const render = () => {
+      const value = clamp(progress, 0, 1);
+      const stage = currentStage(value);
+      const orbitOut = smoothstep(0.19, 0.29, value);
+      const portraitIn = smoothstep(0.18, 0.28, value);
+      const portraitOut = smoothstep(0.37, 0.46, value);
+      const raceIn = smoothstep(0.38, 0.47, value);
+      const raceOut = smoothstep(0.73, 0.8, value);
+      const pinchIn = smoothstep(0.74, 0.81, value);
+      const pinchOut = smoothstep(0.82, 0.87, value);
+      const embraceIn = smoothstep(0.83, 0.88, value);
+      const embraceOut = smoothstep(0.9, 0.95, value);
+      const finalIn = smoothstep(0.92, 0.985, value);
+      const orbitOpacity = 1 - orbitOut;
+      const portraitOpacity = portraitIn * (1 - portraitOut);
+      const raceOpacity = raceIn * (1 - raceOut);
+      const pinchOpacity = pinchIn * (1 - pinchOut);
+      const embraceOpacity = embraceIn * (1 - embraceOut);
+      const portraitProgress = clamp((value - 0.18) / 0.28, 0, 1);
+      const raceProgress = clamp((value - 0.39) / raceProgressSpan, 0, 1);
+
+      root.dataset.stage = stage.key;
+      root.dataset.portraitsVisible = String(active && portraitOpacity > 0.02);
+      root.style.setProperty("--lovebrain-progress", value.toFixed(5));
+      root.style.setProperty("--lovebrain-orbit-progress", clamp(value / 0.26, 0, 1).toFixed(5));
+      root.style.setProperty("--lovebrain-orbit-opacity", orbitOpacity.toFixed(5));
+      root.style.setProperty("--lovebrain-portrait-progress", portraitProgress.toFixed(5));
+      root.style.setProperty("--lovebrain-portrait-opacity", portraitOpacity.toFixed(5));
+      root.style.setProperty("--lovebrain-race-progress", raceProgress.toFixed(5));
+      root.style.setProperty("--lovebrain-race-opacity", raceOpacity.toFixed(5));
+      root.style.setProperty("--lovebrain-pinch-opacity", pinchOpacity.toFixed(5));
+      root.style.setProperty("--lovebrain-embrace-opacity", embraceOpacity.toFixed(5));
+      root.style.setProperty("--lovebrain-final-opacity", finalIn.toFixed(5));
+      root.style.setProperty("--lovebrain-scene-shift", ((value - 0.5) * 12).toFixed(2) + "px");
+      portraitButtons.forEach((button, index) => {
+        if (!(button instanceof HTMLElement)) return;
+        const localProgress = clamp((value - (0.19 + index * 0.032)) / 0.095, 0, 1);
+        const pop = reducedMotion ? localProgress : springPop(localProgress);
+        button.style.setProperty("--portrait-enter-opacity", smoothstep(0, 0.24, localProgress).toFixed(5));
+        button.style.setProperty("--portrait-enter-y", ((1 - pop) * 76).toFixed(2) + "px");
+        button.style.setProperty("--portrait-enter-scale", (0.68 + pop * 0.32).toFixed(5));
+      });
+      if (railProgress instanceof HTMLElement) railProgress.style.transform = "scaleX(" + value.toFixed(5) + ")";
+      if (stageLabel) stageLabel.textContent = stage.name;
+      if (counter) counter.textContent = String(Math.round(value * 100)).padStart(2, "0") + "%";
+
+      hydrateMediaTo(value + 0.12);
+      seekPausedVideo(orbitVideo, clamp(value / 0.255, 0, 1));
+      seekPausedVideo(raceVideo, raceProgress);
+      syncPinchVideo(pinchOpacity > 0.12);
+      syncLoopVideo(embraceVideo, embraceOpacity > 0.12);
+
+      completed = value >= 0.995;
+      if (active) root.dataset.state = completed ? "complete" : "active";
+      if (nextButton instanceof HTMLButtonElement) nextButton.disabled = !completed;
+      setStatus(completed ? "LOVE BRAIN / COMPLETE" : stage.name + " / " + Math.round(value * 100) + "%");
+    };
+    const animateProgress = (timestamp) => {
+      progressFrame = 0;
+      if (disposed || !active || leaving) return;
+      const elapsed = progressTimestamp > 0
+        ? clamp(timestamp - progressTimestamp, 8, 34)
+        : 16.67;
+      progressTimestamp = timestamp;
+      const distance = targetProgress - progress;
+      if (Math.abs(distance) < 0.00025) {
+        progress = targetProgress;
+        render();
+        return;
+      }
+      const raceWeight = racePacingWeight(progress);
+      const response = 1 - Math.exp(-elapsed / (68 + raceWeight * 28));
+      const normalMaxStep = elapsed * 0.000115;
+      const raceDuration = raceVideo instanceof HTMLVideoElement
+        && Number.isFinite(raceVideo.duration)
+        && raceVideo.duration > 0
+          ? raceVideo.duration
+          : raceDurationFallback;
+      // Keep the chase close to natural playback speed while retaining smooth queued seeking.
+      const raceMaxStep = elapsed
+        * (raceProgressSpan / raceDuration / 1000)
+        * raceMaxPlaybackRate;
+      const maxStep = normalMaxStep + (raceMaxStep - normalMaxStep) * raceWeight;
+      progress += clamp(distance * response, -maxStep, maxStep);
+      render();
+      progressFrame = window.requestAnimationFrame(animateProgress);
+    };
+    const scheduleProgress = () => {
+      if (reducedMotion) {
+        progress = targetProgress;
+        render();
+        return;
+      }
+      if (!progressFrame) {
+        progressTimestamp = 0;
+        progressFrame = window.requestAnimationFrame(animateProgress);
+      }
+    };
+    const setEntryVisible = (visible) => {
+      if (!(entry instanceof HTMLButtonElement)) return;
+      if (entryExitTimer) window.clearTimeout(entryExitTimer);
+      entryExitTimer = 0;
+      if (entryEnterFrame) window.cancelAnimationFrame(entryEnterFrame);
+      entryEnterFrame = 0;
+
+      if (visible) {
+        entry.hidden = false;
+        entry.setAttribute("aria-hidden", "false");
+        entryEnterFrame = window.requestAnimationFrame(() => {
+          entryEnterFrame = 0;
+          if (!disposed && !entry.hidden) entry.classList.add("is-entry-visible");
+        });
+        return;
+      }
+
+      entry.classList.remove("is-entry-visible");
+      entry.setAttribute("aria-hidden", "true");
+      entryExitTimer = window.setTimeout(() => {
+        entryExitTimer = 0;
+        if (!entry.classList.contains("is-entry-visible")) entry.hidden = true;
+      }, reducedMotion ? 0 : 360);
+    };
+    const updateEligibility = () => {
+      const visible = isEligible() && isHomeGate() && !active && !leaving;
+      setEntryVisible(visible);
+      root.dataset.qualified = String(isEligible());
+    };
+    const pushProgress = (delta, event, inputType) => {
+      if (!active || leaving || root.dataset.state === "locked") return;
+      event.preventDefault();
+      if (completed && delta > 0) {
+        leaveToOpening();
+        return;
+      }
+      const shapedDelta = inputType === "wheel" ? clamp(delta, -120, 120) : delta;
+      const baseGain = inputType === "touch" ? 1500 : inputType === "keyboard" ? 1280 : 2800;
+      const raceWeight = racePacingWeight(targetProgress);
+      const gain = baseGain * (1 + raceWeight * 0.85);
+      targetProgress = clamp(targetProgress + shapedDelta / gain, 0, 1);
+      scheduleProgress();
+    };
+    const activate = () => {
+      if (disposed || active || leaving || foundSelfBlocking() || !isEligible()) return false;
+      if (!homeApi()?.activate?.()) return false;
+      active = true;
+      leaving = false;
+      completed = false;
+      sceneConsumed = false;
+      progress = 0;
+      targetProgress = 0;
+      progressTimestamp = 0;
+      if (progressFrame) window.cancelAnimationFrame(progressFrame);
+      progressFrame = 0;
+      resetOpeningExitPresentation();
+      warmMediaTo(1, 260);
+      hydrateMediaTo(0.16);
+      root.classList.add("is-active");
+      root.classList.remove("is-transporting", "is-returning");
+      document.body.classList.add("is-lovebrain-scene-visible");
+      scene?.setAttribute("aria-hidden", "false");
+      requestLovebrainTrack();
+      render();
+      updateEligibility();
+      return true;
+    };
+    const leaveToOpening = () => {
+      if (!active || leaving || !completed) return false;
+      leaving = true;
+      targetProgress = progress;
+      if (progressFrame) window.cancelAnimationFrame(progressFrame);
+      progressFrame = 0;
+      updateOpeningExitPresentation(0);
+      root.classList.add("is-transporting");
+      setStatus("DISSOLVE / 001");
+      syncPinchVideo(false);
+      syncLoopVideo(embraceVideo, false);
+      const started = homeApi()?.leaveToOpening?.();
+      if (!started) {
+        leaving = false;
+        root.classList.remove("is-transporting");
+        setStatus("LOVE BRAIN / COMPLETE");
+      }
+      return Boolean(started);
+    };
+    const finishOpening = () => {
+      if (!leaving && !active) return false;
+      leaving = false;
+      active = false;
+      completed = false;
+      sceneConsumed = true;
+      progress = 0;
+      targetProgress = 0;
+      progressTimestamp = 0;
+      if (progressFrame) window.cancelAnimationFrame(progressFrame);
+      progressFrame = 0;
+      root.classList.remove("is-active", "is-transporting", "is-returning");
+      document.body.classList.remove("is-lovebrain-scene-visible");
+      root.dataset.state = "consumed";
+      scene?.setAttribute("aria-hidden", "true");
+      resetOpeningExitPresentation();
+      render();
+      updateEligibility();
+      return true;
+    };
+    const startReturnToGate = () => {
+      if (!active || disposed) return;
+      leaving = true;
+      root.classList.remove("is-transporting");
+      root.classList.add("is-active", "is-returning");
+      document.body.classList.add("is-lovebrain-scene-visible");
+      scene?.setAttribute("aria-hidden", "false");
+      setStatus("RETURN / LOVE BRAIN");
+    };
+    const returnToGate = () => {
+      if (disposed || sceneConsumed) return;
+      active = true;
+      leaving = false;
+      root.classList.add("is-active");
+      root.classList.remove("is-transporting", "is-returning");
+      document.body.classList.add("is-lovebrain-scene-visible");
+      scene?.setAttribute("aria-hidden", "false");
+      render();
+      updateEligibility();
+    };
+
+    entry?.addEventListener("pointerenter", () => warmMediaTo(0.32, 120), { passive: true, signal });
+    entry?.addEventListener("focus", () => warmMediaTo(0.32, 120), { signal });
+    entry?.addEventListener("click", activate, { signal });
+    nextButton?.addEventListener("click", leaveToOpening, { signal });
+    root.querySelectorAll("[data-lovebrain-focus]").forEach((button) => {
+      button.addEventListener("click", () => {
+        if (!active || leaving) return;
+        const focus = button.dataset.lovebrainFocus ?? "";
+        root.dataset.focus = root.dataset.focus === focus ? "" : focus;
+        root.querySelectorAll("[data-lovebrain-focus]").forEach((candidate) => {
+          candidate.setAttribute("aria-pressed", String(root.dataset.focus === candidate.dataset.lovebrainFocus));
+        });
+      }, { signal });
+    });
+    window.addEventListener("wheel", (event) => {
+      if (event.ctrlKey || event.metaKey) return;
+      pushProgress(event.deltaY, event, "wheel");
+    }, { passive: false, signal });
+    window.addEventListener("keydown", (event) => {
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+      if (event.target instanceof Element && event.target.closest("a, button, input, select, textarea, [contenteditable='true']")) return;
+      const amount = ["ArrowDown", "PageDown", "End", " "].includes(event.key)
+        ? 140
+        : ["ArrowUp", "PageUp", "Home"].includes(event.key)
+          ? -140
+          : 0;
+      if (amount) pushProgress(amount, event, "keyboard");
+    }, { signal });
+    window.addEventListener("touchstart", (event) => {
+      if (event.touches.length !== 1) {
+        touchId = null;
+        touchY = null;
+        return;
+      }
+      touchId = event.touches[0]?.identifier ?? null;
+      touchY = event.touches[0]?.clientY ?? null;
+    }, { passive: true, signal });
+    window.addEventListener("touchmove", (event) => {
+      if (!active || leaving || event.touches.length !== 1 || touchId === null || touchY === null) return;
+      const touch = Array.from(event.touches).find((item) => item.identifier === touchId);
+      if (!touch) return;
+      const delta = touchY - touch.clientY;
+      touchY = touch.clientY;
+      pushProgress(delta * 2.15, event, "touch");
+    }, { passive: false, signal });
+    window.addEventListener("touchend", () => {
+      touchId = null;
+      touchY = null;
+    }, { passive: true, signal });
+    window.addEventListener("pointermove", (event) => {
+      if (!active || leaving || reducedMotion || coarsePointer || !(scene instanceof HTMLElement)) return;
+      const rect = scene.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
+      const x = clamp((event.clientX - rect.left) / rect.width, 0, 1) - 0.5;
+      const y = clamp((event.clientY - rect.top) / rect.height, 0, 1) - 0.5;
+      root.style.setProperty("--lovebrain-pointer-x", (x * 14).toFixed(2) + "px");
+      root.style.setProperty("--lovebrain-pointer-y", (y * 10).toFixed(2) + "px");
+    }, { passive: true, signal });
+    window.addEventListener("yuimi:kisara-lovebrain-progress", updateEligibility, { signal });
+    window.addEventListener("yuimi:kisara-lovebrain-opening-progress", (event) => {
+      if (!leaving) return;
+      const detail = event instanceof CustomEvent && event.detail && typeof event.detail === "object"
+        ? event.detail
+        : {};
+      const progress = typeof detail.progress === "number" ? detail.progress : 0;
+      updateOpeningExitPresentation(progress);
+    }, { signal });
+    window.addEventListener("yuimi:kisara-found-self-state", updateEligibility, { signal });
+    window.addEventListener("scroll", updateEligibility, { passive: true, signal });
+    window.addEventListener("yuimi:kisara-lovebrain-opening-covered", finishOpening, { signal });
+    window.addEventListener("yuimi:kisara-lovebrain-return-start", startReturnToGate, { signal });
+    window.addEventListener("yuimi:kisara-lovebrain-return-gate", returnToGate, { signal });
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") render();
+      else {
+        pausePinchLoop();
+        syncLoopVideo(embraceVideo, false);
+      }
+    }, { signal });
+    [orbitVideo, raceVideo].forEach((video) => {
+      video?.addEventListener("loadedmetadata", render, { signal });
+    });
+    root.querySelectorAll("[data-src]").forEach((element) => {
+      element.addEventListener("error", () => scheduleMediaRetry(element), { signal });
+    });
+
+    const cleanup = () => {
+      if (disposed) return;
+      disposed = true;
+      lifecycle.abort();
+      if (progressFrame) window.cancelAnimationFrame(progressFrame);
+      progressFrame = 0;
+      if (entryEnterFrame) window.cancelAnimationFrame(entryEnterFrame);
+      entryEnterFrame = 0;
+      if (entryExitTimer) window.clearTimeout(entryExitTimer);
+      entryExitTimer = 0;
+      mediaWarmupTimers.forEach((timer) => window.clearTimeout(timer));
+      mediaWarmupTimers.clear();
+      mediaRetryTimers.forEach((timer) => window.clearTimeout(timer));
+      mediaRetryTimers.clear();
+      [orbitVideo, raceVideo, pinchVideo, pinchBufferVideo, embraceVideo].forEach((video) => {
+        if (video instanceof HTMLVideoElement) video.pause();
+      });
+      if (pinchLoopState.frame) window.cancelAnimationFrame(pinchLoopState.frame);
+      pinchLoopState.frame = 0;
+      root.classList.remove("is-active", "is-transporting", "is-returning");
+      document.body.classList.remove("is-lovebrain-scene-visible");
+      scene?.setAttribute("aria-hidden", "true");
+      if (window.__yuimiKisaraLovebrainCleanup === cleanup) {
+        window.__yuimiKisaraLovebrainCleanup = null;
+      }
+      if (window.__yuimiKisaraLovebrainFinishOpening === finishOpening) {
+        window.__yuimiKisaraLovebrainFinishOpening = null;
+      }
+    };
+    window.__yuimiKisaraLovebrainCleanup = cleanup;
+    window.__yuimiKisaraLovebrainFinishOpening = finishOpening;
+    updateEligibility();
+  })();
+</script>
+
+<style>
+  .kisara-lovebrain {
+    --lovebrain-progress: 0;
+    --lovebrain-orbit-progress: 0;
+    --lovebrain-orbit-opacity: 1;
+    --lovebrain-portrait-progress: 0;
+    --lovebrain-portrait-opacity: 0;
+    --lovebrain-race-progress: 0;
+    --lovebrain-race-opacity: 0;
+    --lovebrain-pinch-opacity: 0;
+    --lovebrain-embrace-opacity: 0;
+    --lovebrain-final-opacity: 0;
+    --lovebrain-pointer-x: 0px;
+    --lovebrain-pointer-y: 0px;
+    --lovebrain-scene-shift: 0px;
+    --lovebrain-exit-opacity: 1;
+    --lovebrain-exit-shift: 0%;
+    --lovebrain-exit-scale: 1;
+    position: static;
+    z-index: 60;
+    filter: none !important;
+  }
+
+  .kisara-lovebrain button {
+    appearance: none;
+    border: 0;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .kisara-lovebrain-entry {
+    position: fixed;
+    right: 198px;
+    bottom: 28px;
+    z-index: 76;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    padding: 0;
+    color: #f05c97;
+    background: rgba(248, 250, 247, 0.94);
+    box-shadow: 0 7px 22px rgba(45, 62, 58, 0.16), 0 0 0 1px rgba(240, 92, 151, 0.28);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(0, 16px, 0) scale(0.82) rotate(-8deg);
+    transform-origin: center;
+    transition:
+      opacity 260ms ease,
+      transform 360ms cubic-bezier(0.18, 0.82, 0.22, 1),
+      color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .kisara-lovebrain-entry.is-entry-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+
+  .kisara-lovebrain-entry::after {
+    position: absolute;
+    inset: -7px;
+    border: 1px solid rgba(240, 92, 151, 0.2);
+    border-radius: inherit;
+    content: "";
+    animation: lovebrain-entry-pulse 2.2s ease-out infinite;
+  }
+
+  .kisara-lovebrain-entry:hover,
+  .kisara-lovebrain-entry:focus-visible {
+    color: #c92f72;
+    transform: translate3d(0, -3px, 0) scale(1.08) rotate(0deg);
+    box-shadow: 0 12px 28px rgba(45, 62, 58, 0.2), 0 0 0 2px rgba(240, 92, 151, 0.3);
+  }
+
+  .kisara-lovebrain-entry svg,
+  .kisara-lovebrain-next svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .kisara-lovebrain-scene {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    overflow: hidden;
+    color: #fff;
+    background: #161d1d;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0) saturate(1);
+    transition:
+      opacity 360ms ease,
+      filter 620ms cubic-bezier(0.22, 0.74, 0.25, 1),
+      transform 620ms cubic-bezier(0.22, 0.74, 0.25, 1);
+  }
+
+  .kisara-lovebrain.is-active .kisara-lovebrain-scene {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .kisara-lovebrain.is-transporting .kisara-lovebrain-scene {
+    opacity: var(--lovebrain-exit-opacity);
+    pointer-events: none;
+    filter: none;
+    transform: translate3d(0, var(--lovebrain-exit-shift), 0) scale(var(--lovebrain-exit-scale));
+    transition:
+      opacity 90ms linear,
+      transform 140ms cubic-bezier(0.32, 0.02, 0.18, 1);
+  }
+
+  .kisara-lovebrain.is-returning .kisara-lovebrain-scene {
+    opacity: 1;
+    pointer-events: none;
+    filter: blur(0) saturate(1);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  .kisara-lovebrain-panel {
+    position: absolute;
+    inset: -2%;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(var(--lovebrain-pointer-x), var(--lovebrain-pointer-y), 0) scale(1.035);
+    transition: opacity 80ms linear;
+    will-change: opacity, transform;
+  }
+
+  .kisara-lovebrain-panel::after {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(10, 20, 20, 0.36) 0, transparent 23%, transparent 73%, rgba(8, 15, 16, 0.5) 100%),
+      linear-gradient(90deg, rgba(7, 15, 16, 0.12), transparent 22%, transparent 78%, rgba(7, 15, 16, 0.12));
+    content: "";
+  }
+
+  .kisara-lovebrain-panel > video,
+  .kisara-lovebrain-panel > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translate3d(calc(var(--lovebrain-pointer-x) * -0.24), calc(var(--lovebrain-pointer-y) * -0.2), 0) scale(1.035);
+  }
+
+  .kisara-lovebrain-orbit {
+    opacity: var(--lovebrain-orbit-opacity);
+  }
+
+  .kisara-lovebrain-orbit > video {
+    filter: saturate(1.12) contrast(1.03);
+  }
+
+  .kisara-lovebrain-orbit-wash {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      linear-gradient(112deg, rgba(241, 72, 142, 0.14), transparent 32%, rgba(50, 204, 176, 0.12) 67%, rgba(70, 194, 224, 0.12)),
+      repeating-linear-gradient(126deg, transparent 0 84px, rgba(255, 255, 255, 0.04) 85px 87px);
+    mix-blend-mode: screen;
+  }
+
+  .kisara-lovebrain-routes {
+    position: absolute;
+    inset: -8%;
+    z-index: 3;
+    width: 116%;
+    height: 116%;
+    overflow: visible;
+    pointer-events: none;
+    transform: rotate(calc((var(--lovebrain-orbit-progress) - 0.5) * 10deg)) scale(calc(0.9 + var(--lovebrain-orbit-progress) * 0.18));
+    transform-origin: 50% 52%;
+  }
+
+  .kisara-lovebrain-routes path {
+    fill: none;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 13 19;
+    stroke-dashoffset: calc((1 - var(--lovebrain-orbit-progress)) * 760);
+    opacity: calc(0.15 + var(--lovebrain-orbit-progress) * 0.55);
+    filter: drop-shadow(0 0 7px currentColor);
+  }
+
+  .kisara-lovebrain-routes .is-pink { color: #ff4f9a; stroke: currentColor; }
+  .kisara-lovebrain-routes .is-green { color: #63d391; stroke: currentColor; }
+  .kisara-lovebrain-routes .is-cyan { color: #54cfe4; stroke: currentColor; }
+
+  .kisara-lovebrain-orbit-copy,
+  .kisara-lovebrain-race > p,
+  .kisara-lovebrain-embrace > p {
+    position: absolute;
+    right: 4.5%;
+    bottom: 8%;
+    z-index: 6;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.82);
+    font: 800 0.66rem/1.2 "Courier New", Courier, monospace;
+    text-shadow: 0 2px 12px rgba(7, 15, 16, 0.68);
+  }
+
+  .kisara-lovebrain-portraits {
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    opacity: var(--lovebrain-portrait-opacity);
+    background: #e9e5d9;
+  }
+
+  .kisara-lovebrain-portrait-field {
+    position: absolute;
+    inset: -8%;
+    overflow: hidden;
+    background:
+      linear-gradient(112deg, rgba(240, 70, 143, 0.88) 0 22%, rgba(255, 246, 232, 0.14) 22% 39%, rgba(53, 202, 178, 0.82) 39% 62%, rgba(255, 248, 232, 0.12) 62% 76%, rgba(64, 193, 226, 0.84) 76%),
+      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.32) 0 2px, transparent 2px 36px);
+    background-position: 50% 50%, 0 0;
+    background-size: 124% 100%, 100% 100%;
+    transform: translate3d(calc(var(--lovebrain-pointer-x) * -0.45), calc(var(--lovebrain-pointer-y) * -0.35), 0) scale(1.08);
+    animation: lovebrain-portrait-pan 6.8s ease-in-out infinite alternate paused;
+    will-change: background-position;
+  }
+
+  .kisara-lovebrain-portrait-field::before {
+    position: absolute;
+    inset: -18%;
+    background:
+      repeating-linear-gradient(104deg, transparent 0 50px, rgba(255, 255, 255, 0.2) 51px 55px, transparent 56px 106px),
+      linear-gradient(96deg, transparent 0 16%, rgba(255, 244, 250, 0.2) 16% 21%, transparent 21% 44%, rgba(231, 255, 247, 0.18) 44% 50%, transparent 50% 74%, rgba(233, 249, 255, 0.2) 74% 80%, transparent 80%);
+    mix-blend-mode: screen;
+    opacity: calc(0.32 + var(--lovebrain-portrait-progress) * 0.28);
+    content: "";
+    animation: lovebrain-portrait-ribbons 5.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate paused;
+  }
+
+  .kisara-lovebrain-portrait-field::after {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(247, 242, 226, 0.72), transparent 24%, transparent 76%, rgba(30, 34, 34, 0.34)),
+      repeating-linear-gradient(118deg, transparent 0 88px, rgba(255, 255, 255, 0.16) 89px 92px);
+    background-position: 0 0, calc(var(--lovebrain-portrait-progress) * -90px) 0;
+    content: "";
+  }
+
+  .kisara-lovebrain.is-active[data-portraits-visible="true"] .kisara-lovebrain-portrait-field,
+  .kisara-lovebrain.is-active[data-portraits-visible="true"] .kisara-lovebrain-portrait-field::before {
+    animation-play-state: running;
+  }
+
+  .kisara-lovebrain-portrait-lineup {
+    position: relative;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(12px, calc(2.1vw / var(--kisara-scale, 1)), 34px);
+    width: min(1040px, calc(84vw / var(--kisara-scale, 1)));
+    align-items: center;
+  }
+
+  .kisara-lovebrain-portrait-lineup button {
+    --portrait-enter-opacity: 0;
+    --portrait-enter-y: 76px;
+    --portrait-enter-scale: 0.68;
+    position: relative;
+    display: block;
+    padding: 0;
+    color: #fff;
+    background: transparent;
+    opacity: var(--portrait-enter-opacity);
+    transform: translate3d(0, calc(var(--portrait-y) + var(--portrait-enter-y)), 0) rotate(var(--portrait-r)) scale(var(--portrait-enter-scale));
+    transform-origin: 50% 78%;
+    transition:
+      filter 360ms ease,
+      opacity 90ms linear;
+  }
+
+  .kisara-lovebrain-portrait-lineup .is-kisara { --portrait-y: calc(-1.5vh / var(--kisara-scale, 1)); --portrait-r: -4deg; --portrait-counter-r: 4deg; }
+  .kisara-lovebrain-portrait-lineup .is-shu { --portrait-y: calc(3vh / var(--kisara-scale, 1)); --portrait-r: 2deg; --portrait-counter-r: -2deg; }
+  .kisara-lovebrain-portrait-lineup .is-ayano { --portrait-y: calc(-2.5vh / var(--kisara-scale, 1)); --portrait-r: 4deg; --portrait-counter-r: -4deg; }
+
+  .kisara-lovebrain-portrait-card {
+    display: block;
+    width: 100%;
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+    transform-origin: 50% 58%;
+    transition:
+      transform 680ms cubic-bezier(0.18, 0.82, 0.18, 1),
+      filter 420ms ease,
+      opacity 420ms ease;
+  }
+
+  .kisara-lovebrain-portrait-frame {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 0.82;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.14);
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 22px 45px rgba(25, 31, 31, 0.24), 0 0 0 1px rgba(26, 36, 35, 0.18);
+  }
+
+  .kisara-lovebrain-portrait-frame::after {
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.44), inset 0 -42px 50px rgba(14, 22, 22, 0.13);
+    content: "";
+  }
+
+  .kisara-lovebrain-portrait-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.01);
+    transition: transform 460ms cubic-bezier(0.2, 0.78, 0.2, 1), filter 360ms ease;
+  }
+
+  .kisara-lovebrain-portrait-lineup .is-kisara img { object-position: 51% 27%; }
+  .kisara-lovebrain-portrait-lineup .is-shu img { object-position: 53% 28%; }
+  .kisara-lovebrain-portrait-lineup .is-ayano img { object-position: 50% 27%; }
+
+  .kisara-lovebrain-portrait-copy {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: baseline;
+    margin-top: 8px;
+    color: #fff;
+    text-shadow: 0 2px 9px rgba(12, 21, 20, 0.54);
+  }
+
+  .kisara-lovebrain-portrait-copy b {
+    font: 900 clamp(0.72rem, calc(1vw / var(--kisara-scale, 1)), 0.94rem)/1 "Arial Narrow", Arial, sans-serif;
+  }
+
+  .kisara-lovebrain-portrait-copy small {
+    font-size: clamp(0.58rem, calc(0.78vw / var(--kisara-scale, 1)), 0.72rem);
+    font-weight: 800;
+  }
+
+  .kisara-lovebrain-portrait-lineup button:hover,
+  .kisara-lovebrain-portrait-lineup button:focus-visible,
+  .kisara-lovebrain[data-focus="kisara"] .is-kisara,
+  .kisara-lovebrain[data-focus="shu"] .is-shu,
+  .kisara-lovebrain[data-focus="ayano"] .is-ayano {
+    z-index: 4;
+  }
+
+  .kisara-lovebrain-portrait-lineup button:hover .kisara-lovebrain-portrait-card,
+  .kisara-lovebrain-portrait-lineup button:focus-visible .kisara-lovebrain-portrait-card,
+  .kisara-lovebrain[data-focus="kisara"] .is-kisara .kisara-lovebrain-portrait-card,
+  .kisara-lovebrain[data-focus="shu"] .is-shu .kisara-lovebrain-portrait-card,
+  .kisara-lovebrain[data-focus="ayano"] .is-ayano .kisara-lovebrain-portrait-card {
+    transform: translate3d(0, -12px, 0) rotate(var(--portrait-counter-r)) scale(1.085);
+  }
+
+  .kisara-lovebrain[data-focus="kisara"] .kisara-lovebrain-portrait-lineup button:not(.is-kisara) .kisara-lovebrain-portrait-card,
+  .kisara-lovebrain[data-focus="shu"] .kisara-lovebrain-portrait-lineup button:not(.is-shu) .kisara-lovebrain-portrait-card,
+  .kisara-lovebrain[data-focus="ayano"] .kisara-lovebrain-portrait-lineup button:not(.is-ayano) .kisara-lovebrain-portrait-card {
+    opacity: 0.34;
+    filter: grayscale(0.86) brightness(0.7);
+  }
+
+  .kisara-lovebrain-race {
+    z-index: 3;
+    opacity: var(--lovebrain-race-opacity);
+    background: #d8f5f1;
+  }
+
+  .kisara-lovebrain-race > video {
+    filter: saturate(1.12) contrast(1.04);
+  }
+
+  .kisara-lovebrain-speed-lines {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    opacity: calc(0.18 + var(--lovebrain-race-opacity) * 0.38);
+    background: repeating-linear-gradient(166deg, transparent 0 40px, rgba(255, 255, 255, 0.34) 41px 44px, transparent 45px 76px);
+    transform: translateX(calc((var(--lovebrain-race-progress) - 0.5) * -220px));
+    mix-blend-mode: screen;
+  }
+
+  @keyframes lovebrain-portrait-pan {
+    from { background-position: 43% 50%, 0 0; }
+    to { background-position: 57% 50%, 72px 0; }
+  }
+
+  @keyframes lovebrain-portrait-ribbons {
+    from { transform: translate3d(-4.5%, -1.5%, 0) skewX(-5deg); }
+    to { transform: translate3d(4.5%, 1.5%, 0) skewX(3deg); }
+  }
+
+  .kisara-lovebrain-pinch {
+    z-index: 4;
+    opacity: var(--lovebrain-pinch-opacity);
+    background: #f4d9e5;
+  }
+
+  .kisara-lovebrain-pinch > video {
+    filter: saturate(1.08) contrast(1.04);
+    pointer-events: none;
+    will-change: opacity;
+  }
+
+  .kisara-lovebrain-loop-caption {
+    position: absolute;
+    right: 6%;
+    bottom: 9%;
+    z-index: 6;
+    display: grid;
+    gap: 4px;
+    text-align: right;
+    text-shadow: 0 2px 12px rgba(22, 24, 25, 0.52);
+  }
+
+  .kisara-lovebrain-loop-caption span {
+    font: 900 clamp(1.2rem, calc(4vw / var(--kisara-scale, 1)), 4.2rem)/0.86 "Arial Narrow", Arial, sans-serif;
+  }
+
+  .kisara-lovebrain-loop-caption b {
+    font: 800 0.72rem/1.2 "Courier New", Courier, monospace;
+  }
+
+  .kisara-lovebrain-embrace {
+    z-index: 5;
+    opacity: var(--lovebrain-embrace-opacity);
+    background: #f4e6db;
+  }
+
+  .kisara-lovebrain-embrace > video {
+    filter: saturate(1.12) contrast(1.03);
+  }
+
+  .kisara-lovebrain-embrace-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 3;
+    width: min(calc(74vw / var(--kisara-scale, 1)), 880px);
+    aspect-ratio: 1;
+    border: 4px dashed rgba(255, 255, 255, 0.34);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) rotate(calc(var(--lovebrain-progress) * 220deg));
+    box-shadow: 0 0 0 34px rgba(237, 88, 143, 0.08), 0 0 0 72px rgba(79, 201, 176, 0.06);
+  }
+
+  .kisara-lovebrain-final {
+    z-index: 6;
+    opacity: var(--lovebrain-final-opacity);
+    background: #bfe8e7;
+  }
+
+  .kisara-lovebrain-final > img {
+    filter: saturate(1.08) contrast(1.02);
+    transform: scale(calc(1.065 - var(--lovebrain-final-opacity) * 0.035));
+  }
+
+  .kisara-lovebrain-final-copy {
+    position: absolute;
+    right: 5%;
+    bottom: 8%;
+    z-index: 6;
+    display: grid;
+    gap: 5px;
+    color: #fff;
+    text-align: right;
+    text-shadow: 0 2px 12px rgba(32, 52, 49, 0.58);
+  }
+
+  .kisara-lovebrain-final-copy span {
+    font: 900 clamp(0.92rem, calc(2vw / var(--kisara-scale, 1)), 1.65rem)/1 "Arial Narrow", Arial, sans-serif;
+  }
+
+  .kisara-lovebrain-final-copy b {
+    font: 700 0.72rem/1.2 "Courier New", Courier, monospace;
+  }
+
+  .kisara-lovebrain-header {
+    position: absolute;
+    top: 22px;
+    left: 28px;
+    right: 28px;
+    z-index: 20;
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    color: rgba(255, 255, 255, 0.84);
+    font: 800 0.64rem/1.2 "Courier New", Courier, monospace;
+    text-shadow: 0 2px 9px rgba(14, 22, 22, 0.54);
+  }
+
+  .kisara-lovebrain-rail {
+    position: absolute;
+    right: 29px;
+    bottom: 25px;
+    left: 29px;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 14px;
+    padding-top: 11px;
+    color: rgba(255, 255, 255, 0.7);
+    font: 800 0.56rem/1 "Courier New", Courier, monospace;
+    text-shadow: 0 2px 8px rgba(13, 21, 21, 0.58);
+  }
+
+  .kisara-lovebrain-rail::before,
+  .kisara-lovebrain-rail > i {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2px;
+    content: "";
+    transform-origin: left center;
+  }
+
+  .kisara-lovebrain-rail::before {
+    right: 0;
+    background: rgba(255, 255, 255, 0.26);
+  }
+
+  .kisara-lovebrain-rail > i {
+    width: 100%;
+    background: linear-gradient(90deg, #ff5d9c, #64d092 50%, #52cce0);
+    transform: scaleX(0);
+  }
+
+  .kisara-lovebrain-rail span:nth-of-type(n + 2) {
+    text-align: center;
+  }
+
+  .kisara-lovebrain-rail span:last-child {
+    text-align: right;
+  }
+
+  .kisara-lovebrain-next {
+    position: absolute;
+    right: 25px;
+    bottom: 58px;
+    z-index: 22;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    padding: 0;
+    color: #254d46;
+    background: rgba(249, 252, 248, 0.9);
+    box-shadow: 0 8px 22px rgba(22, 35, 33, 0.2);
+    border-radius: 50%;
+    opacity: 1;
+    transition: opacity 180ms ease, transform 180ms ease, background 180ms ease;
+  }
+
+  .kisara-lovebrain-next:hover,
+  .kisara-lovebrain-next:focus-visible {
+    color: #c92f72;
+    background: #fff4f8;
+    transform: translateY(-3px);
+  }
+
+  .kisara-lovebrain-next:disabled {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+  }
+
+  .kisara-lovebrain-sr-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  :global([data-kisara-gate].is-lovebrain-active) {
+    overflow: visible;
+    background: transparent !important;
+  }
+
+  :global([data-kisara-gate].is-lovebrain-active :is(.kisara-gate-visual-shell, .kisara-ambient-particles, .kisara-burst-canvas, .kisara-screen-impact, .kisara-title-stage, .kisara-contract-meter, .kisara-contract-state, .kisara-scroll-cue, .kisara-motion-toggle, .kisara-gate-auto, .kisara-gate-skip)) {
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  :global(body.is-lovebrain-home-active .kisara-opening-edge),
+  :global(body.is-lovebrain-home-active .kisara-opening-edge-backdrop),
+  :global(body.is-lovebrain-home-active .kisara-opening-edge-scene),
+  :global(body.is-lovebrain-home-active .kisara-opening-edge-flare),
+  :global(body.is-lovebrain-home-active .kisara-home-transition) {
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    opacity: 0 !important;
+  }
+
+  :global(body.is-lovebrain-home-active .kisara-opening-edge-live-surface),
+  :global(body.is-lovebrain-home-active .kisara-opening-edge-flare-surface) {
+    opacity: 0 !important;
+    background-image: none !important;
+  }
+
+  @keyframes lovebrain-entry-pulse {
+    0% { opacity: 0.64; transform: scale(0.78); }
+    75%, 100% { opacity: 0; transform: scale(1.35); }
+  }
+
+  @media (max-width: 700px) {
+    .kisara-lovebrain-entry {
+      right: 16px;
+      bottom: calc(76px + env(safe-area-inset-bottom));
+      width: 38px;
+      height: 38px;
+    }
+
+    .kisara-lovebrain-header {
+      top: 15px;
+      left: 16px;
+      right: 16px;
+    }
+
+    .kisara-lovebrain-header span:first-child {
+      display: none;
+    }
+
+    .kisara-lovebrain-orbit-copy,
+    .kisara-lovebrain-race > p,
+    .kisara-lovebrain-embrace > p {
+      right: 18px;
+      bottom: 72px;
+    }
+
+    .kisara-lovebrain-portrait-lineup {
+      gap: 7px;
+      width: calc(110vw / var(--kisara-scale, 1));
+      transform: translateX(calc(-5vw / var(--kisara-scale, 1)));
+    }
+
+    .kisara-lovebrain-portrait-frame {
+      aspect-ratio: 0.7;
+      border-width: 2px;
+    }
+
+    .kisara-lovebrain-portrait-copy {
+      display: grid;
+      justify-content: center;
+      gap: 3px;
+      text-align: center;
+    }
+
+    .kisara-lovebrain-portrait-copy small {
+      display: none;
+    }
+
+    .kisara-lovebrain-rail {
+      right: 17px;
+      bottom: calc(18px + env(safe-area-inset-bottom));
+      left: 17px;
+      gap: 5px;
+    }
+
+    .kisara-lovebrain-rail span {
+      overflow: hidden;
+      font-size: 0;
+    }
+
+    .kisara-lovebrain-rail span::after {
+      font-size: 0.5rem;
+      content: "•";
+    }
+
+    .kisara-lovebrain-next {
+      right: 16px;
+      bottom: calc(48px + env(safe-area-inset-bottom));
+      width: 38px;
+      height: 38px;
+    }
+
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kisara-lovebrain-entry::after,
+    .kisara-lovebrain-portrait-field,
+    .kisara-lovebrain-portrait-field::before {
+      animation: none !important;
+    }
+
+    .kisara-lovebrain-scene,
+    .kisara-lovebrain-entry,
+    .kisara-lovebrain-panel,
+    .kisara-lovebrain-portrait-lineup button,
+    .kisara-lovebrain-portrait-card {
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>

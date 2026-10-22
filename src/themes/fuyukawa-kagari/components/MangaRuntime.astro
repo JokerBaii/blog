@@ -1,0 +1,23 @@
+<script>
+  import { mountMangaScene, mountChapterRail, mountAlbum, mountArchive } from "../lib/manga-runtime.mjs";
+  let cleanup: (() => void)[] = [];
+  const dispose = () => { cleanup.splice(0).forEach((stop) => stop()); };
+  const start = () => {
+    dispose();
+    if (!document.body.hasAttribute("data-fuyukawa")) return;
+    for (const [selector, mount] of [
+      ["[data-manga-scene]", mountMangaScene],
+      ["[data-manga-rail]", mountChapterRail],
+      ["[data-manga-album]", mountAlbum],
+      ["[data-manga-archive]", mountArchive]
+    ] as const) {
+      document.querySelectorAll<HTMLElement>(selector).forEach((root) => cleanup.push(mount(root)));
+    }
+  };
+  document.addEventListener("astro:page-load", start);
+  document.addEventListener("astro:before-swap", () => {
+    dispose();
+    window.__yuimiNoticeCleanup?.();
+    window.__yuimiHomeRainCleanup?.();
+  });
+</script>

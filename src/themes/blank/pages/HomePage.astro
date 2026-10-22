@@ -1,0 +1,64 @@
+---
+import { Icon } from "astro-icon/components";
+import BlankLayout from "../layouts/BlankLayout.astro";
+import PostRow from "../components/PostRow.astro";
+import { getPublishedPosts } from "@/core/content/blog";
+import { profileIdentity, profileTech, currentSignals } from "@/core/data/profile";
+import { projectEntries } from "@/core/data/projects";
+import { getThemePath } from "@/core/themes/registry";
+import { categoryLabel } from "@/lib/site";
+
+const posts = await getPublishedPosts();
+const [featured, ...remaining] = posts;
+const date = featured && (featured.data.updatedDate ?? featured.data.pubDate);
+---
+
+<BlankLayout title="Yuimi Lab | Blank" description="喝益胃的个人记录。关于开发、创作，和日常里的有趣之事。">
+  <section class="blank-home-hero" aria-labelledby="blank-home-title">
+    <div class="blank-home-topline"><p class="blank-kicker">PERSONAL JOURNAL / 个人记录</p><span class="blank-kicker">BY YUIMI-CHAYA</span></div>
+    <h1 id="blank-home-title">Yuimi Lab<span aria-hidden="true">.</span></h1>
+    <div class="blank-home-bottom">
+      <p class="blank-home-statement">把想法写下来。<br />把喜欢的事做出来。</p>
+      <div class="blank-home-intro">
+        <p>我是{profileIdentity.displayName}。在代码、游戏与日常之间，<br class="blank-desktop-break" />留下一些尝试，也保留一点好奇心。</p>
+        <a class="blank-text-link" href={getThemePath("blank", "/about/")}>关于我 <Icon name="tabler:arrow-right" size={17} /></a>
+      </div>
+      <a class="blank-home-down blank-icon-button" href="#blank-latest" aria-label="阅读最新文章" title="阅读最新文章"><Icon name="tabler:arrow-down" size={24} /></a>
+    </div>
+    <div class="blank-home-index">
+      <a href={getThemePath("blank", "/blog/")}><span>01 / 文字</span><strong>{String(posts.length).padStart(2, "0")} 篇记录</strong></a>
+      <a href={getThemePath("blank", "/projects/")}><span>02 / 实践</span><strong>{String(projectEntries.length).padStart(2, "0")} 个项目</strong></a>
+      <a href={getThemePath("blank", "/games/")}><span>03 / 闲暇</span><strong>留一点时间玩耍</strong></a>
+    </div>
+  </section>
+
+  <section id="blank-latest" class="blank-section">
+    <div class="blank-section-heading"><div><p class="blank-kicker">01 / WRITING</p><h2>最近写下的事</h2></div><a class="blank-text-link" href={getThemePath("blank", "/blog/")}>全部文章 <Icon name="tabler:arrow-right" size={18} /></a></div>
+    {featured && (
+      <a class="blank-featured" href={getThemePath("blank", `/blog/${featured.id}/`)}>
+        <div class="blank-featured-margin"><span class="blank-kicker">LATEST ENTRY</span><span class="blank-featured-number" aria-hidden="true">01</span></div>
+        <div class="blank-featured-content">
+          <div class="blank-post-meta"><span>{categoryLabel[featured.data.category]}</span><time datetime={date.toISOString()}>{date.toISOString().slice(0, 10).replaceAll("-", ".")}</time></div>
+          <h2>{featured.data.title}</h2>
+          <p>{featured.data.description}</p>
+          <span class="blank-text-link">继续阅读 <Icon name="tabler:arrow-right" size={19} /></span>
+        </div>
+      </a>
+    )}
+    <ol class="blank-post-list">{remaining.slice(0, 3).map((post, index) => <PostRow post={post} index={index + 2} />)}</ol>
+    {posts.length === 0 && <p class="blank-empty-message">第一篇记录，正在路上。</p>}
+  </section>
+
+  <section class="blank-section blank-workbench">
+    <div class="blank-section-heading"><div><p class="blank-kicker">02 / IN PRACTICE</p><h2>持续练习</h2></div><a class="blank-text-link" href={getThemePath("blank", "/projects/")}>项目记录 <Icon name="tabler:arrow-right" size={18} /></a></div>
+    <div class="blank-workbench-body">
+      <p class="blank-section-intro">想法不必一次成形。<br />从一个小实验开始。</p>
+      <dl class="blank-tech-list">{profileTech.map((item, index) => <div><dt><span class="blank-row-number">{String(index + 1).padStart(2, "0")}</span>{item.name}</dt><dd>{item.note}</dd></div>)}</dl>
+    </div>
+  </section>
+  <section class="blank-now">
+    <p class="blank-kicker">CURRENTLY / 近况</p>
+    <p>{currentSignals[0].text}</p>
+    <a class="blank-text-link" href={getThemePath("blank", "/about/")}>更多近况 <Icon name="tabler:arrow-right" size={17} /></a>
+  </section>
+</BlankLayout>

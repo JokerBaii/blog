@@ -1,0 +1,106 @@
+---
+import { profileIdentity, xpFavorites } from "@/core/data/profile";
+import KisaraChibiStage from "./KisaraChibiStage.astro";
+
+const accusations = ["猫娘控", "二次元死宅", "蒸鹅心"];
+const reactions = ["😋", "🤤", "😍", "😚"];
+---
+
+<section class="kisara-home-video-event" data-kisara-home-stop="003" aria-label="木更与我的兴趣白板">
+  <kisara-home-event-video class="kisara-home-video-stage" data-state="idle">
+    <div class="kisara-home-video-media">
+      <img class="kisara-home-board-first" src="/themes/kisara/assets/home-event-003-new-first.webp"
+        width="1920" height="1080" alt="" loading="lazy" decoding="async" />
+      <img class="kisara-home-board-still" src="/themes/kisara/assets/home-event-003-new-last.webp"
+        width="1920" height="1080" alt="" loading="lazy" decoding="async" />
+      <video
+        data-home-event-video
+        width="1920"
+        height="1080"
+        preload="none"
+        muted
+        playsinline
+        aria-label="木更在白板前用刀指出答案的短片"
+      >
+        <source data-src="/themes/kisara/assets/home-event-003-new.mp4" type="video/mp4" />
+      </video>
+    </div>
+
+    <header class="kisara-home-board-caption">
+      <span class="kisara-home-board-folio" aria-hidden="true">003 <span>兴趣取向 / 本人供述</span></span>
+      <h2><span class="kisara-home-board-title">人类<em>公敌</em></span><span class="kisara-home-board-aside">BE LIKE:</span></h2>
+      <p><span aria-hidden="true">＊</span> 未必是人类</p>
+    </header>
+
+    <div class="kisara-home-portrait" data-home-portrait>
+      <div class="kisara-home-portrait-rig" data-portrait-rig data-impact="0">
+        <div class="kisara-home-portrait-photo">
+          <img src="/themes/kisara/assets/profile.webp" alt={`${profileIdentity.displayName}的头像`}
+            width="1080" height="1080" loading="lazy" decoding="async" />
+        </div>
+        {accusations.map((label, index) => (
+          <span class={`kisara-home-knife is-knife-${index + 1}`} data-portrait-knife>
+            <span class="kisara-home-knife-flight">
+              <svg class="kisara-home-knife-art" viewBox="0 0 64 224" fill="none" aria-hidden="true">
+                <path d="M31 7Q31 3 36 3H47Q52 3 52 8L50 65H30Z" fill="#34363c" stroke="#27292e" stroke-width="2.5" />
+                <path d="M35 9H39L37 58H33Z" fill="#565a63" />
+                <circle cx="43" cy="19" r="2.2" fill="#bdc4ca" />
+                <circle cx="42" cy="48" r="2.2" fill="#bdc4ca" />
+                <path d="M28 63H53V71H27Z" fill="#777f88" stroke="#303238" stroke-width="2" />
+                <path d="M27 71H51L45 169Q43 198 30 220Q12 191 13 160L17 89Q18 78 27 71Z" fill="#e4e9eb" stroke="#424a52" stroke-width="2" stroke-linejoin="round" />
+                <path d="M22 81L18 160Q17 189 30 214Q22 188 24 160L29 76Z" fill="#fafcfc" />
+                <path d="M45 75H49L43 169Q41 195 30 215L36 170Z" fill="#a8b4bd" />
+                <path d="M29 77L24 159" stroke="#c2ccd1" stroke-width="1.5" />
+              </svg>
+              <b class="kisara-home-knife-label">{label}</b>
+            </span>
+          </span>
+        ))}
+      </div>
+      <button class="kisara-home-reaction" type="button" data-portrait-bubble
+        aria-label="切换下一张兴趣图片" aria-live="off">
+        {xpFavorites.map((item, index) => (
+          <span class="kisara-home-reaction-frame" data-portrait-reaction hidden={index !== 0}>
+            <span class="kisara-home-reaction-emoji" aria-hidden="true">{reactions[index]}</span>
+            <img src={`/themes/fuyukawa-kagari/assets/about/xp-${item.key}.webp`} alt={item.title}
+              width="900" height="675" loading="lazy" decoding="async" />
+            <span class="kisara-home-reaction-meta">
+              <span>{item.title}</span>
+              <span class="kisara-home-reaction-index" aria-hidden="true">0{index + 1}<i> / 04</i></span>
+            </span>
+          </span>
+        ))}
+      </button>
+    </div>
+    <KisaraChibiStage embedded />
+  </kisara-home-event-video>
+</section>
+
+<script>
+  import { bindHomeEvent } from "../lib/homeEvent";
+  if (!customElements.get("kisara-home-event-video")) {
+    class KisaraHomeEventVideo extends HTMLElement {
+      runtime: ReturnType<typeof bindHomeEvent> | null = null;
+      connectionGeneration = 0;
+      resetPresentation() { this.runtime?.reset(); }
+      preloadPresentation() { this.runtime?.preload(); }
+      prepareCoveredEntry() { return this.runtime?.prepareCoveredEntry(); }
+      refreshPresentationAfterVisibility() { this.runtime?.refresh(); }
+      connectedCallback() {
+        const generation = ++this.connectionGeneration;
+        // Astro replaces parsed media after connecting the new page's elements.
+        queueMicrotask(() => {
+          if (!this.isConnected || generation !== this.connectionGeneration) return;
+          this.runtime?.destroy();
+          this.runtime = bindHomeEvent(this);
+        });
+      }
+      disconnectedCallback() {
+        this.connectionGeneration += 1;
+        this.runtime?.destroy();
+        this.runtime = null;
+      }
+    }
+    customElements.define("kisara-home-event-video", KisaraHomeEventVideo);
+  }
+</script>
