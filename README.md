@@ -96,9 +96,9 @@ cargo clippy --all-targets -- -D warnings
 
 ## 本机内网部署
 
-当前内网地址：`http://10.17.17.84:4321/`。前端仅绑定这张内网网卡，Rust 仅监听 `127.0.0.1:8787`。系统用户服务已开启，注销登录后继续运行；防火墙仅放行本机所在的 `10.17.0.0/17` 网段访问 4321 端口。
+此前内网测试地址为 `http://10.17.17.84:4321/`。网站现已迁移至下方云服务器，本机前后端服务已停止并禁用自启。源码和本地数据副本保留；需要恢复本机调试时，可按下方步骤手动启动。
 
-更新代码后运行：
+仅在需要恢复本机内网服务时运行：
 
 ```bash
 SITE_URL=http://10.17.17.84:4321 npm run build
@@ -115,7 +115,7 @@ systemctl --user stop jokerbai-blog-web jokerbai-blog-api
 journalctl --user -u jokerbai-blog-web -u jokerbai-blog-api -f
 ```
 
-内网 IP 来自 DHCP；地址改变时用新地址重新构建、运行安装脚本，并同步调整防火墙规则。内页日语漫画背景仅用于二次元主题的 BLOG、WORKS、LINKS 和 ME，主页和 Blank 不启用。背景以两页并排横向显示，各页用不同原画，来源记录在 `public/illustrations/manga-backgrounds/sources.json`。
+内网 IP 来自 DHCP；恢复本机服务时需要检查 IP 和防火墙规则。内页日语漫画背景仅用于二次元主题的 BLOG、WORKS、LINKS 和 ME，主页和 Blank 不启用。背景以两页并排横向显示，各页用不同原画，来源记录在 `public/illustrations/manga-backgrounds/sources.json`。
 
 Rust 服务使用 release 构建（Thin LTO）。文章字数在写入时缓存，列表不读取或解析正文；旧数据库首次启动时自动分批补齐字数，不改变文章内容。Markdown 渲染在有并发上限的阻塞任务池中执行，避免占住异步请求线程。
 
