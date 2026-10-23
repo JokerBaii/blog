@@ -34,6 +34,8 @@ npm run dev
 
 写作区默认左侧 Markdown 编辑、右侧实时预览，停止输入约 300 ms 后自动更新；两侧按正文段落位置双向同步滚动，手机上改为上下排列。预览保留脚本禁用的沙箱与 HTML 清理。会话失效时，未保存的文章和页面配置会在当前标签页暂存，重新登录后恢复；刷新前仍会提醒保存。首页刷新会回到顶部，不会恢复旧的页脚滚动位置。
 
+文章没有改动时，保存按钮置灰；修改后启用，撤销或改回已保存内容后再次置灰。已发布文章显示“更新这一页”，草稿勾选公开发布时显示“发布这一页”。附件随文章一起提交，删除附件会同时更新正文与保存状态。
+
 新部署的数据目录需要先使用 `BLOG_ADMIN_TOKEN` 调用 `POST /api/admin/account` 创建账号，JSON 为 `{"username":"你的用户名","password":"至少6字节的密码"}`。账号不会被重复初始化覆盖；部署配置和账号接口说明见后端文档。密码使用 Argon2 哈希，登录会话通过 HttpOnly、SameSite=Strict Cookie 保持 30 天（HTTPS 下设置 Secure），刷新和重新打开浏览器可恢复。退出后服务器撤销会话；每次管理操作都验证有效期。游客只能访问公开内容，无法修改文章、头像和页面配置。
 
 ## 构建与运行
@@ -116,3 +118,17 @@ journalctl --user -u jokerbai-blog-web -u jokerbai-blog-api -f
 内网 IP 来自 DHCP；地址改变时用新地址重新构建、运行安装脚本，并同步调整防火墙规则。内页日语漫画背景仅用于二次元主题的 BLOG、WORKS、LINKS 和 ME，主页和 Blank 不启用。背景以两页并排横向显示，各页用不同原画，来源记录在 `public/illustrations/manga-backgrounds/sources.json`。
 
 Rust 服务使用 release 构建（Thin LTO）。文章字数在写入时缓存，列表不读取或解析正文；旧数据库首次启动时自动分批补齐字数，不改变文章内容。Markdown 渲染在有并发上限的阻塞任务池中执行，避免占住异步请求线程。
+
+## 云服务器部署
+
+访问地址：`http://121.41.195.165/`，站长入口为 `/login/`，写作后台为 `/admin/`。Nginx 监听 80，Node 前端和 Rust API 分别只监听 `127.0.0.1:4321`、`127.0.0.1:8787`。
+
+程序按版本放在 `/opt/jokerbai-lab/releases/`，`current` 软链接指向正在使用的版本。数据库和附件独立放在 `/var/lib/jokerbai-lab/data/`，运行配置位于 `/etc/jokerbai-lab/api.env`，更新程序时保留数据目录。构建包包含本机测试后的前端、生产依赖、Node 运行时和 Rust release 程序；服务器无需运行编译任务。SSH 私钥和运行配置不纳入仓库。
+
+```bash
+systemctl status jokerbai-blog-web jokerbai-blog-api nginx
+systemctl restart jokerbai-blog-web jokerbai-blog-api
+journalctl -u jokerbai-blog-web -u jokerbai-blog-api -f
+```
+
+备份需包含整个数据目录；运行期间备份 SQLite 请使用其在线备份接口，避免只复制主数据库而遗漏 WAL 中的写入。

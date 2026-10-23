@@ -7,6 +7,7 @@ button, input, textarea { font: inherit; }
 button { appearance: none; padding: 7px 12px; border: 1px solid #d8e3ef; border-radius: 7px; background: #f8fbff; color: #536783; font-size: 12px; cursor: pointer; }
 button:hover { background: #eaf2fa; }
 button:disabled { opacity: .45; cursor: wait; }
+#save-article:disabled { filter: grayscale(1); cursor: not-allowed; }
 button.primary { color: #fff; background: var(--accent); border-color: var(--accent); border-radius: 8px; }
 button.primary:hover { background: #6388ab; }
 button.danger { color: #b06585; border-color: #ebd2dd; background: #fff4f8; }
@@ -26,7 +27,7 @@ small { display: block; }
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 kbd { font: 10px "Maple Mono", monospace; color: #91a0b5; }
 .topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; max-width: 1480px; height: 66px; margin: auto; padding: 0 30px; border-bottom: 1px solid var(--line); }
-.topbar > a { display: flex; gap: 3px; color: #627b95; font-size: 15px; font-weight: 700; white-space: nowrap; }
+.topbar > a { display: flex; align-items: center; gap: 3px; color: #627b95; font-size: 15px; font-weight: 700; white-space: nowrap; }
 .topbar > a span { font-weight: 400; }
 .topbar nav { display: flex; gap: 16px; align-items: center; white-space: nowrap; font-size: 11px; }
 .topbar nav a { color: var(--muted); }

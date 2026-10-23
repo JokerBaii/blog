@@ -439,7 +439,7 @@ const themedNotFoundRedirectScript = `(() => {
 
       const isHomeRoute = () => {
         const path = window.location.pathname.replace(/\/index\.html$/, "/");
-        return path === "/themes/fuyukawa-kagari/" || path === "/themes/fuyukawa-kagari";
+        return path === "/" || path === "/themes/fuyukawa-kagari/" || path === "/themes/fuyukawa-kagari";
       };
 
       const setLive2dControlsLocked = (locked) => {

@@ -3,6 +3,7 @@ import { chooseImage, confirmAction } from "./dialogs";
 import { mountMarkdownEditor } from "./markdown-editor";
 import { mountLivePreview } from "./live-preview";
 import { mountAttachmentQueue } from "./attachment-queue";
+import { attachmentLinkChanges } from "./attachment-links";
 type Article = {
   id: string;
   title: string;
@@ -26,6 +27,7 @@ const view = element<HTMLAnchorElement>("view-article");
 const markdownEditor = mountMarkdownEditor(element<HTMLTextAreaElement>("content"));
 let current: Article | null = null;
 let dirty = false;
+let savedFields: ReturnType<typeof readArticle>;
 let busy = false;
 let page = 1;
 let total = 0;
@@ -33,6 +35,15 @@ let query = "";
 let leaving = false;
 const recoveryKey = "jokerbai-desk-recovery-v1";
 const articleFields = ["title", "slug", "description", "tags", "category", "content"] as const;
+const readArticle = () => ({
+  title: input("title").value,
+  slug: input("slug").value,
+  description: element<HTMLTextAreaElement>("description").value,
+  content_markdown: element<HTMLTextAreaElement>("content").value,
+  tags: input("tags").value.split(/[,，]/).map(tag => tag.trim()).filter(Boolean),
+  category: input("category").value,
+  published: input("published").checked,
+});
 const readRecovery = () => {
   try {
     const raw = sessionStorage.getItem(recoveryKey);
@@ -80,6 +91,7 @@ const run = async (action: () => Promise<void>) => {
     element("workspace").setAttribute("aria-busy", "false");
     if (input("slug").hidden) input("slug").disabled = true;
     pagination();
+    updateSaveButton();
   }
 };
 const api = async (path: string, options: RequestInit = {}) => {
@@ -122,8 +134,9 @@ const livePreview = mountLivePreview(markdownEditor.view, async content_markdown
 const canLeave = (includePageContent = false) =>
   (!dirty && (!includePageContent || !pageContentEditor.isDirty())) || confirmAction("还有未保存的修改，确定丢弃并离开吗？", "笔记还没有保存");
 const markDirty = () => {
-  dirty = true;
-  element("save-state").textContent = "有未保存的修改";
+  dirty = attachmentQueue.hasPending() || JSON.stringify(readArticle()) !== JSON.stringify(savedFields);
+  element("save-state").textContent = dirty ? "有未保存的修改" : current ? "已保存" : "";
+  updateSaveButton();
 };
 form.addEventListener("input", markDirty);
 const attachmentQueue = mountAttachmentQueue({
@@ -131,8 +144,12 @@ const attachmentQueue = mountAttachmentQueue({
   insert: text => markdownEditor.insert(`\n${text}\n`, ""),
   remove: href => markdownEditor.removeAttachment(href),
 });
-const updateSaveLabel = () => { element("save-article").textContent = input("published").checked ? "发布这一页 ↗" : "保存草稿 ↗"; };
-input("published").addEventListener("change", () => { updateSaveLabel(); markDirty(); });
+const updateSaveButton = () => {
+  const button = element<HTMLButtonElement>("save-article");
+  button.textContent = input("published").checked ? current?.published ? "更新这一页 ↗" : "发布这一页 ↗" : "保存草稿 ↗";
+  button.disabled = busy || !dirty;
+};
+input("published").addEventListener("change", markDirty);
 const renderAttachments = (items: Attachment[]) => {
   const root = element("attachment-list");
   root.replaceChildren();
@@ -160,16 +177,20 @@ const renderAttachments = (items: Attachment[]) => {
     remove.addEventListener("click", async () => {
       if (busy || !await confirmAction(`确定删除附件“${attachment.filename}”吗？`, "删除附件")) return;
       void run(async () => {
-        const wasDirty = dirty;
         await api(`attachments/${attachment.id}`, { method: "DELETE" });
-        markdownEditor.removeAttachment(`/api/attachments/${attachment.id}/download`);
+        const href = `/api/attachments/${attachment.id}/download`;
+        // Deletion already persists on the server; compare edits against the cleaned baseline.
+        for (const { from, to } of attachmentLinkChanges(savedFields.content_markdown, href).reverse()) {
+          savedFields.content_markdown = savedFields.content_markdown.slice(0, from) + savedFields.content_markdown.slice(to);
+        }
+        markdownEditor.removeAttachment(href);
         if (current) {
           current.attachments = current.attachments.filter(
             (item) => item.id !== attachment.id,
           );
           renderAttachments(current.attachments);
         }
-        if (!wasDirty) { dirty = false; element("save-state").textContent = "已保存"; }
+        markDirty();
         notify("附件已删除，正文中的对应链接也已同步移除。");
       });
     });
@@ -218,9 +239,10 @@ const fill = (article: Article | null, syncLocation = true) => {
   element("delete-article").hidden = !article;
   view.href = article ? `/blog/${article.slug}/` : "#";
   livePreview.update();
-  updateSaveLabel();
   renderAttachments(article?.attachments ?? []);
+  savedFields = readArticle();
   dirty = false;
+  updateSaveButton();
   list
     .querySelectorAll<HTMLButtonElement>("button")
     .forEach((button) =>
@@ -318,7 +340,7 @@ const enterWorkspace = async () => {
         livePreview.update();
       }
       await attachmentQueue.restoreAfterLogin();
-      updateSaveLabel();
+      updateSaveButton();
       showView(draft.section ?? "writing", draft.pageContent ? String(draft.pageContent.selected) : undefined);
       // Restore the selected ME subsection as well as the top-level navigation.
       if (draft.pageContent) pageContentEditor.restore(draft.pageContent);
@@ -395,25 +417,14 @@ element("custom-slug").addEventListener("click", () => {
   input("slug").focus();
 });
 document.querySelectorAll<HTMLInputElement>("[name=article-category]").forEach(radio => {
-  radio.addEventListener("change", () => { if (radio.checked) input("category").value = radio.value; });
+  radio.addEventListener("change", () => { if (radio.checked) { input("category").value = radio.value; markDirty(); } });
 });
 form.addEventListener("submit", (event) => {
   event.preventDefault();
+  if (busy || !dirty) return;
   void run(async () => {
-    const payload = {
-      title: input("title").value,
-      slug: input("slug").value,
-      description: element<HTMLTextAreaElement>("description").value,
-      content_markdown: element<HTMLTextAreaElement>("content").value,
-      tags: input("tags")
-        .value.split(/[,，]/)
-        .map((tag) => tag.trim())
-        .filter(Boolean),
-      category: input("category").value,
-      published: input("published").checked,
-    };
     const submission = new FormData();
-    submission.append("article", JSON.stringify(payload));
+    submission.append("article", JSON.stringify(readArticle()));
     attachmentQueue.appendTo(submission);
     const article = await (await api(current ? `articles/${current.id}` : "articles", { method: current ? "PUT" : "POST", body: submission })).json();
     fill(article);

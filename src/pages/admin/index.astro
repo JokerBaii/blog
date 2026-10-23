@@ -2,6 +2,7 @@
 import SiteFonts from "@/core/SiteFonts.astro";
 import { readSession } from "@/core/admin/session";
 import PageContentEditor from "@/core/admin/PageContentEditor.astro";
+import { kagariAssets } from "@/themes/fuyukawa-kagari/assets";
 
 export const prerender = false;
 Astro.response.headers.set("Cache-Control", "no-store");
@@ -33,10 +34,11 @@ const tools = [
       try { document.documentElement.dataset.adminTheme = localStorage.getItem("yuimi-theme-id-v2") === "blank" ? "blank" : "manga"; } catch {}
     </script>
     <SiteFonts />
-    <link rel="icon" href="/avatar.svg" type="image/svg+xml" />
+    <link rel="icon" href={kagariAssets.favicon} type="image/png" />
+    <link rel="apple-touch-icon" href={kagariAssets.appleTouchIcon} />
   </head>
   <body>
-    <header class="topbar"><a href="/" aria-label="返回 Jokerbai Lab 首页">Jokerbai <span>Lab</span></a><nav><a href="/blog/">阅读博客 ↗</a><button id="logout">退出登录</button></nav></header>
+    <header class="topbar"><a href="/" aria-label="返回 Jokerbai Lab 首页"><img src={kagariAssets.brand} alt="" width="28" height="25" />Jokerbai <span>Lab</span></a><nav><a href="/blog/">阅读博客 ↗</a><button id="logout">退出登录</button></nav></header>
     <main>
       <p id="message" class="message" role="status" aria-live="polite"></p>
       <section id="workspace" class="workspace">
@@ -56,7 +58,7 @@ const tools = [
               <div class="pagination"><button id="previous" type="button" aria-label="上一页">←</button><span id="page-info"></span><button id="next" type="button" aria-label="下一页">→</button></div>
             </aside>
             <section class="editor panel">
-              <div class="section-head editor-heading"><div><span id="article-status" class="status">新草稿</span><span id="save-state" class="hint"></span><a id="view-article" target="_blank" rel="noreferrer" hidden>查看文章 ↗</a></div><div class="actions article-actions"><button id="save-article" form="editor-form" class="primary" type="submit">保存草稿 ↗</button><label class="publish-control"><input id="published" form="editor-form" type="checkbox" role="switch" /><span class="switch-track"></span>公开发布</label><button id="delete-article" class="danger" type="button" hidden>删除</button></div></div>
+              <div class="section-head editor-heading"><div><span id="article-status" class="status">新草稿</span><span id="save-state" class="hint"></span><a id="view-article" target="_blank" rel="noreferrer" hidden>查看文章 ↗</a></div><div class="actions article-actions"><button id="save-article" form="editor-form" class="primary" type="submit" disabled>保存草稿 ↗</button><label class="publish-control"><input id="published" form="editor-form" type="checkbox" role="switch" /><span class="switch-track"></span>公开发布</label><button id="delete-article" class="danger" type="button" hidden>删除</button></div></div>
               <form id="editor-form">
                 <label class="sr-only" for="title">文章标题</label><input id="title" maxlength="200" required placeholder="给今天的故事起个名字…" />
                 <div class="section-head body-heading"><div class="format-tools" aria-label="Markdown 格式"><button type="button" data-format="bold" title="加粗"><strong>B</strong></button><button type="button" data-format="italic" title="斜体"><em>I</em></button><button type="button" data-format="heading" title="二级标题">H₂</button><button type="button" data-format="link" title="插入链接">↗</button><button type="button" data-format="code" title="代码块">&lt;/&gt;</button><button id="attach-files" type="button" title="添加附件">＋ 附件</button></div><button id="preview-button" type="button" title="切换实时预览（Ctrl Shift V）" aria-expanded="true" aria-controls="preview-panel">◫ 实时预览 <kbd>Ctrl ⇧ V</kbd></button></div>
