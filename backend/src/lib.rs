@@ -100,13 +100,6 @@ async fn not_found() -> error::ApiError {
 }
 
 pub fn router(state: AppState) -> Router {
-    let upload = post(attachments::upload)
-        .layer::<_, std::convert::Infallible>(DefaultBodyLimit::max(
-            state.config.max_upload_bytes + 65536,
-        ))
-        .layer(tower_http::limit::RequestBodyLimitLayer::new(
-            state.config.max_upload_bytes + 65536,
-        ));
     let admin = Router::new()
         .route(
             "/articles",
@@ -135,7 +128,6 @@ pub fn router(state: AppState) -> Router {
             "/articles/by-slug/{slug}",
             get(articles::admin_detail_by_slug),
         )
-        .route("/articles/{id}/attachments", upload)
         .route(
             "/attachments/{id}",
             axum::routing::delete(attachments::delete),

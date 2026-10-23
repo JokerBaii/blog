@@ -237,7 +237,7 @@ async fn persist_submission(
         let mut files = files;
         for (_, file) in &mut files { file.commit(&state, &id, &mut transaction).await?; }
         transaction.commit().await?;
-        for (_, file) in files { file.finish(id.clone()); }
+        for (_, file) in files { file.persist(); }
         Ok(admin_detail(State(state), Path(id)).await?.0)
     }).await.map_err(ApiError::internal)?
 }

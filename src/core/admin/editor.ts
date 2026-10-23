@@ -115,16 +115,10 @@ const api = async (path: string, options: RequestInit = {}) => {
   }
   return response;
 };
-const json = async (path: string, method: string, data: unknown) =>
-  (
-    await api(path, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    })
-  ).json();
 const pageContentEditor = mountPageContentEditor(api, run, notify);
-const livePreview = mountLivePreview(markdownEditor.view, path => json("preview", "POST", { content_markdown: path }));
+const livePreview = mountLivePreview(markdownEditor.view, async content_markdown => (await api("preview", {
+  method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content_markdown }),
+})).json());
 const canLeave = (includePageContent = false) =>
   (!dirty && (!includePageContent || !pageContentEditor.isDirty())) || confirmAction("还有未保存的修改，确定丢弃并离开吗？", "笔记还没有保存");
 const markDirty = () => {

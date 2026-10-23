@@ -1,14 +1,11 @@
 import defaults from "./page-content-defaults.json";
 import { apiOrigin } from "@/core/content/blog";
-import type { profileTech, animeFavorites, xpFavorites, favoriteGames } from "./profile";
-import type { projectEntries } from "./projects";
 
+type TechKey = "cpp" | "cloud" | "algorithms" | "cmake" | "notes";
 export type PageContent = typeof defaults & {
-  tech: Array<(typeof defaults.tech)[number] & { key: (typeof profileTech)[number]["key"] }>;
-  anime: Array<(typeof defaults.anime)[number] & { key: (typeof animeFavorites)[number]["key"] }>;
-  favorites: Array<(typeof defaults.favorites)[number] & { key: (typeof xpFavorites)[number]["key"] }>;
-  relaxation: Array<(typeof defaults.relaxation)[number] & { key: (typeof favoriteGames)[number]["key"] }>;
-  projects: Array<(typeof defaults.projects)[number] & { id: (typeof projectEntries)[number]["id"]; line: (typeof profileTech)[number]["key"] }>;
+  tech: Array<(typeof defaults.tech)[number] & { key: TechKey }>;
+  relaxation: Array<(typeof defaults.relaxation)[number] & { key: "cyberpunk-2077" | "the-finals" | "kovaaks" | "aimlabs" }>;
+  projects: Array<(typeof defaults.projects)[number] & { id: "cpp-notes" | "cloud-lab" | "algorithm-notes" | "build-notes" | "campus-notes" | "blog-lab"; line: TechKey }>;
 };
 
 export async function getPageContent(): Promise<PageContent> {

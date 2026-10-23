@@ -1,13 +1,11 @@
 use crate::{
     AppState,
     error::{ApiError, ApiResult},
-    models::Attachment,
     now, valid_id,
 };
 use axum::{
-    Json,
     body::Body,
-    extract::{Multipart, Path, Request, State},
+    extract::{Path, Request, State},
     http::{HeaderValue, StatusCode, header},
     response::Response,
 };
@@ -42,48 +40,6 @@ pub(crate) fn multipart_error(error: axum::extract::multipart::MultipartError) -
         ApiError::bad("附件表单格式不正确")
     }
 }
-pub async fn upload(
-    State(state): State<AppState>,
-    Path(article_id): Path<String>,
-    mut multipart: Multipart,
-) -> ApiResult<(StatusCode, Json<Attachment>)> {
-    valid_id(&article_id)?;
-    let exists: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM articles WHERE id = ?)")
-        .bind(&article_id)
-        .fetch_one(&state.db)
-        .await?;
-    if !exists {
-        return Err(ApiError::missing());
-    }
-    let field = multipart
-        .next_field()
-        .await
-        .map_err(multipart_error)?
-        .ok_or_else(|| ApiError::bad("请选择附件"))?;
-    if field.name() != Some("file") {
-        return Err(ApiError::bad("附件字段名必须为 file"));
-    }
-    let staged = stage_field(field, &state).await?;
-    if multipart
-        .next_field()
-        .await
-        .map_err(multipart_error)?
-        .is_some()
-    {
-        return Err(ApiError::bad("每次只能上传一个附件"));
-    }
-    tokio::spawn(async move {
-        let mut transaction = state.db.begin().await?;
-        let mut staged = staged;
-        staged.commit(&state, &article_id, &mut transaction).await?;
-        transaction.commit().await?;
-        let attachment = staged.finish(article_id);
-        Ok((StatusCode::CREATED, Json(attachment)))
-    })
-    .await
-    .map_err(ApiError::internal)?
-}
-
 pub(crate) struct StagedAttachment {
     pub id: String,
     pub filename: String,
@@ -102,16 +58,8 @@ impl StagedAttachment {
             .bind(&self.id).bind(article_id).bind(&self.filename).bind(self.size as i64).bind(now()).execute(&mut **transaction).await?;
         Ok(())
     }
-    pub fn finish(self, article_id: String) -> Attachment {
+    pub fn persist(self) {
         self.file.persist();
-        Attachment {
-            download_url: format!("/api/attachments/{}/download", self.id),
-            id: self.id,
-            article_id,
-            filename: self.filename,
-            size: self.size as i64,
-            created_at: now(),
-        }
     }
 }
 

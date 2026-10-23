@@ -135,14 +135,19 @@ impl App {
         assert_eq!(status, StatusCode::CREATED, "{article}");
         article
     }
-    async fn upload(&self, id: &str, data: Vec<u8>) -> (StatusCode, Value) {
+    async fn submit(&self, id: Option<&str>, input: Value, files: Vec<u8>) -> (StatusCode, Value) {
+        let mut data = format!("--upload-boundary\r\nContent-Disposition: form-data; name=\"article\"\r\n\r\n{input}\r\n").into_bytes();
+        data.extend(files);
         let response = self
             .router
             .clone()
             .oneshot(
                 Request::builder()
-                    .method("POST")
-                    .uri(format!("/api/admin/articles/{id}/attachments"))
+                    .method(if id.is_some() { "PUT" } else { "POST" })
+                    .uri(id.map_or_else(
+                        || "/api/admin/articles".into(),
+                        |id| format!("/api/admin/articles/{id}"),
+                    ))
                     .header("authorization", format!("Bearer {TOKEN}"))
                     .header(
                         "content-type",
@@ -160,6 +165,36 @@ impl App {
             serde_json::from_slice(&bytes).unwrap_or(Value::Null),
         )
     }
+    // Fixtures use the same article-and-files transaction as the editor.
+    async fn save_attachment(&self, id: &str, files: Vec<u8>) -> (StatusCode, Value) {
+        let (_, before) = self
+            .send("GET", &format!("/api/admin/articles/{id}"), None, true)
+            .await;
+        let mut input = article(false);
+        for (key, value) in input.as_object_mut().unwrap() {
+            if let Some(saved) = before.get(key) {
+                *value = saved.clone();
+            }
+        }
+        let (status, saved) = self.submit(Some(id), input, files).await;
+        if !status.is_success() {
+            return (status, saved);
+        }
+        let attachment = saved["attachments"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|file| {
+                !before["attachments"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .any(|old| old["id"] == file["id"])
+            })
+            .unwrap()
+            .clone();
+        (status, attachment)
+    }
     fn file_count(&self) -> usize {
         std::fs::read_dir(self.config.data_dir.join("uploads"))
             .unwrap()
@@ -170,7 +205,7 @@ fn article(published: bool) -> Value {
     json!({"title":"测试文章", "slug":"hello-rust", "description":"文章摘要", "content_markdown":"## 标题\n\n正文 **加粗**", "tags":["Rust","后端"], "category":"tech", "published":published})
 }
 fn multipart(content: &[u8], filename: &str) -> Vec<u8> {
-    let mut body = format!("--upload-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"{filename}\"\r\nContent-Type: application/octet-stream\r\n\r\n").into_bytes();
+    let mut body = format!("--upload-boundary\r\nContent-Disposition: form-data; name=\"file-00000000-0000-4000-8000-000000000001\"; filename=\"{filename}\"\r\nContent-Type: application/octet-stream\r\n\r\n").into_bytes();
     body.extend_from_slice(content);
     body.extend_from_slice(b"\r\n--upload-boundary--\r\n");
     body
@@ -417,9 +452,9 @@ async fn attachment_permissions_unicode_filename_ranges_head_and_unpublishing() 
     let article = app.create(false).await;
     let id = article["id"].as_str().unwrap();
     let (status, attachment) = app
-        .upload(id, multipart(b"file contents", "../报告.txt"))
+        .save_attachment(id, multipart(b"file contents", "../报告.txt"))
         .await;
-    assert_eq!(status, StatusCode::CREATED, "{attachment}");
+    assert_eq!(status, StatusCode::OK, "{attachment}");
     assert_eq!(attachment["filename"], "报告.txt");
     let file_id = attachment["id"].as_str().unwrap();
     let url = attachment["download_url"].as_str().unwrap();
@@ -633,8 +668,12 @@ async fn attachment_deletion_cleans_markdown_atomically_without_touching_other_c
     let app = App::new(1024).await;
     let saved = app.create(true).await;
     let article_id = saved["id"].as_str().unwrap();
-    let (_, removed) = app.upload(article_id, multipart(b"one", "one.txt")).await;
-    let (_, kept) = app.upload(article_id, multipart(b"two", "two.txt")).await;
+    let (_, removed) = app
+        .save_attachment(article_id, multipart(b"one", "one.txt"))
+        .await;
+    let (_, kept) = app
+        .save_attachment(article_id, multipart(b"two", "two.txt"))
+        .await;
     let href = removed["download_url"].as_str().unwrap();
     let other_href = kept["download_url"].as_str().unwrap();
     let markdown = format!(
@@ -715,30 +754,38 @@ async fn rejected_uploads_do_not_leave_files() {
     let article = app.create(false).await;
     let id = article["id"].as_str().unwrap();
     assert_eq!(
-        app.upload(id, multipart(b"123456789", "large.txt")).await.0,
+        app.save_attachment(id, multipart(b"123456789", "large.txt"))
+            .await
+            .0,
         StatusCode::PAYLOAD_TOO_LARGE
     );
     assert_eq!(app.file_count(), 0);
     let mut two_files = multipart(b"abc", "first.txt");
     two_files.truncate(two_files.len() - b"--upload-boundary--\r\n".len());
     two_files.extend_from_slice(&multipart(b"def", "second.txt"));
-    assert_eq!(app.upload(id, two_files).await.0, StatusCode::BAD_REQUEST);
+    assert_eq!(
+        app.save_attachment(id, two_files).await.0,
+        StatusCode::BAD_REQUEST
+    );
     assert_eq!(app.file_count(), 0);
     assert_eq!(
-        app.upload(id, multipart(b"", "empty.txt")).await.0,
+        app.save_attachment(id, multipart(b"", "empty.txt")).await.0,
         StatusCode::BAD_REQUEST
     );
     assert_eq!(app.file_count(), 0);
     let mut body = multipart(b"abc", "broken.txt");
     body.truncate(body.len() - 20);
-    assert_eq!(app.upload(id, body).await.0, StatusCode::BAD_REQUEST);
+    assert_eq!(
+        app.save_attachment(id, body).await.0,
+        StatusCode::BAD_REQUEST
+    );
     assert_eq!(app.file_count(), 0);
     let (_, detail) = app
         .send("GET", &format!("/api/admin/articles/{id}"), None, true)
         .await;
     assert_eq!(detail["attachments"], json!([]));
     assert_eq!(
-        app.upload(
+        app.save_attachment(
             "00000000-0000-0000-0000-000000000000",
             multipart(b"a", "a.txt")
         )
@@ -754,12 +801,12 @@ async fn configured_upload_limit_overrides_the_default_two_megabyte_body_limit()
     let article = app.create(false).await;
     let size = 2 * 1024 * 1024 + 128;
     let (status, attachment) = app
-        .upload(
+        .save_attachment(
             article["id"].as_str().unwrap(),
             multipart(&vec![42; size], "large.bin"),
         )
         .await;
-    assert_eq!(status, StatusCode::CREATED, "{attachment}");
+    assert_eq!(status, StatusCode::OK, "{attachment}");
     assert_eq!(attachment["size"], size);
     assert_eq!(app.file_count(), 1);
 }
@@ -769,7 +816,9 @@ async fn deleting_article_cascades_attachment_metadata_and_disk_file() {
     let app = App::new(1024).await;
     let article = app.create(true).await;
     let id = article["id"].as_str().unwrap();
-    let (_, attachment) = app.upload(id, multipart(b"persist me", "a.txt")).await;
+    let (_, attachment) = app
+        .save_attachment(id, multipart(b"persist me", "a.txt"))
+        .await;
     assert_eq!(app.file_count(), 1);
     app.send("DELETE", &format!("/api/admin/articles/{id}"), None, true)
         .await;
@@ -792,7 +841,7 @@ async fn database_and_uploads_survive_reopening() {
     let app = App::new(1024).await;
     let article = app.create(true).await;
     let (_, attachment) = app
-        .upload(
+        .save_attachment(
             article["id"].as_str().unwrap(),
             multipart(b"durable", "durable.txt"),
         )
@@ -829,6 +878,22 @@ async fn database_and_uploads_survive_reopening() {
 #[tokio::test]
 async fn removed_custom_pages_and_private_paths_are_not_served() {
     let app = App::new(1024).await;
+    let saved = app.create(false).await;
+    assert_eq!(
+        app.send(
+            "POST",
+            &format!(
+                "/api/admin/articles/{}/attachments",
+                saved["id"].as_str().unwrap()
+            ),
+            None,
+            true
+        )
+        .await
+        .0,
+        StatusCode::NOT_FOUND
+    );
+    assert_eq!(app.file_count(), 0);
     for path in [
         "/manage/",
         "/articles/",
@@ -1072,36 +1137,14 @@ async fn admin_account_login_and_session_logout() {
 #[tokio::test]
 async fn combined_article_submission_commits_files_together_and_rolls_back_failure() {
     async fn submit(app: &App, input: Value, files: &[(&str, &[u8])]) -> (StatusCode, Value) {
-        let mut body = format!(
-            "--combined\r\nContent-Disposition: form-data; name=\"article\"\r\n\r\n{input}\r\n"
-        )
-        .into_bytes();
+        let mut body = Vec::new();
         for (key, content) in files {
-            body.extend_from_slice(format!("--combined\r\nContent-Disposition: form-data; name=\"file-{key}\"; filename=\"homework.txt\"\r\nContent-Type: text/plain\r\n\r\n").as_bytes());
+            body.extend_from_slice(format!("--upload-boundary\r\nContent-Disposition: form-data; name=\"file-{key}\"; filename=\"homework.txt\"\r\nContent-Type: text/plain\r\n\r\n").as_bytes());
             body.extend_from_slice(content);
             body.extend_from_slice(b"\r\n");
         }
-        body.extend_from_slice(b"--combined--\r\n");
-        let response = app
-            .router
-            .clone()
-            .oneshot(
-                Request::builder()
-                    .method("POST")
-                    .uri("/api/admin/articles")
-                    .header("authorization", format!("Bearer {TOKEN}"))
-                    .header("content-type", "multipart/form-data; boundary=combined")
-                    .body(Body::from(body))
-                    .unwrap(),
-            )
-            .await
-            .unwrap();
-        let status = response.status();
-        let bytes = response.into_body().collect().await.unwrap().to_bytes();
-        (
-            status,
-            serde_json::from_slice(&bytes).unwrap_or(Value::Null),
-        )
+        body.extend_from_slice(b"--upload-boundary--\r\n");
+        app.submit(None, input, body).await
     }
     let app = App::new(32).await;
     let a = "00000000-0000-4000-8000-000000000001";

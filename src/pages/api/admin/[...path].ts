@@ -8,7 +8,6 @@ const routes: [RegExp, string[]][] = [
   [/^articles$/, ["GET", "POST"]],
   [/^articles\/by-slug\/[a-z0-9](?:[a-z0-9-]{0,118}[a-z0-9])?$/, ["GET"]],
   [new RegExp(`^articles/${uuid}$`), ["GET", "PUT", "DELETE"]],
-  [new RegExp(`^articles/${uuid}/attachments$`), ["POST"]],
   [new RegExp(`^attachments/${uuid}$`), ["DELETE"]],
   [new RegExp(`^attachments/${uuid}/download$`), ["GET", "HEAD"]],
   [/^avatar$/, ["POST"]],

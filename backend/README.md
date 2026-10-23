@@ -53,7 +53,6 @@ python3 -c 'import secrets; print(secrets.token_urlsafe(32))'
 | POST | `/api/admin/articles` | 创建文章 |
 | GET / PUT / DELETE | `/api/admin/articles/{id}` | 读取、完整更新、删除文章 |
 | GET | `/api/admin/articles/by-slug/{slug}` | 按地址读取文章，包括草稿，仅管理员可用 |
-| POST | `/api/admin/articles/{id}/attachments` | 上传附件，multipart 字段名为 `file` |
 | DELETE | `/api/admin/attachments/{id}` | 删除附件 |
 | GET / HEAD | `/api/admin/attachments/{id}/download` | 包括草稿附件的鉴权下载 |
 | POST | `/api/admin/preview` | 预览 Markdown，返回清理后的 HTML |
@@ -92,15 +91,16 @@ curl -X POST http://127.0.0.1:8787/api/admin/articles \
   --data-binary @article.json
 ```
 
-使用返回的文章 `id` 上传附件：
+文章与附件通过同一次 multipart 请求提交；无需先保存文章。`article` 字段为上面的 JSON，附件字段为 `file-<UUID>`，正文使用 `attachment:pending-<UUID>` 引用待提交文件，保存时自动替换为下载地址。例如：
 
 ```bash
-curl -X POST http://127.0.0.1:8787/api/admin/articles/文章ID/attachments \
+curl -X POST http://127.0.0.1:8787/api/admin/articles \
   -H "Authorization: Bearer $BLOG_ADMIN_TOKEN" \
-  -F 'file=@./附件.zip'
+  -F 'article=<article.json' \
+  -F 'file-00000000-0000-4000-8000-000000000001=@./附件.zip'
 ```
 
-正文可使用 `[下载附件](/api/attachments/附件ID/download)` 插入下载链接。原主题文章页也会自动在正文后列出该文章的全部附件。设置 `published: true` 后，原前端首页和归档立即能读取文章，无需重新构建。
+更新文章使用相同的 multipart 结构，发送到 `PUT /api/admin/articles/{id}`。可一次提交多个附件，每个字段使用不同的 UUID。旧的独立附件上传接口已移除。正文未引用的附件会列在文章底部；删除附件也会同步移除正文中的对应链接。设置 `published: true` 后，前端首页和归档立即能读取文章，无需重新构建。
 
 附件流式写入磁盘，超限、空文件和格式不正确的上传会清理临时文件。文件存储路径使用 UUID，原文件名仅用于展示和下载。下载响应强制 `Content-Disposition: attachment`、`application/octet-stream` 和 `nosniff`，支持 UTF-8 文件名。删除文章会同时删除其附件记录和文件，文件清理失败会记入日志。
 
