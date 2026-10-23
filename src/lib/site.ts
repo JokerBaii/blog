@@ -1,13 +1,13 @@
 export const site = {
-  name: "Yuimi Lab",
-  title: "Yuimi Lab | Anime x Code",
-  description: "一个混合二次元审美与技术开发记录的个人博客。",
-  author: "喝益胃 / Yuimi-chaya",
-  keywords: ["喝益胃", "Yuimi-chaya", "Yuimi Lab", "个人博客", "二次元", "技术开发", "Astro"],
+  name: "Jokerbai Lab",
+  title: "Jokerbai Lab",
+  description: "一个路过的大学生，记录 C++、点云和与她有关的日常。",
+  author: "jokerbai",
+  keywords: ["jokerbai", "Jokerbai Lab", "个人博客", "C++", "点云", "大学生活", "学习笔记"],
   nav: [
     { href: "/", label: "HOME", icon: "tabler:home-heart", hint: "front page" },
     { href: "/blog/", label: "BLOG", icon: "tabler:book-2", hint: "notes" },
-    { href: "/games/", label: "GAME", icon: "tabler:device-gamepad-2", hint: "playroom" },
+    { href: "/games/", label: "LINKS", icon: "tabler:external-link", hint: "daily links" },
     { href: "/projects/", label: "WORKS", icon: "tabler:code", hint: "projects" },
     { href: "/about/", label: "ME", icon: "tabler:user-heart", hint: "profile" }
   ]

@@ -1,0 +1,8 @@
+---
+import backgrounds from "../../../../public/illustrations/manga-backgrounds/sources.json";
+interface Props { section: string; }
+const background = backgrounds.find(item => item.page === Astro.props.section);
+---
+{background && <div class="manga-page-backdrop" data-manga-background={background.page} aria-hidden="true">
+  <div class="manga-page-spread">{background.images.map(image => <img src={image.asset} width={image.width} height={image.height} alt="" decoding="async" />)}</div>
+</div>}

@@ -1,0 +1,27 @@
+---
+import SiteFonts from "@/core/SiteFonts.astro";
+import EntryGate from "@/core/EntryGate.astro";
+import { deskDestination, readSession } from "@/core/admin/session";
+
+export const prerender = false;
+Astro.response.headers.set("Cache-Control", "no-store");
+Astro.response.headers.set("X-Robots-Tag", "noindex, nofollow");
+Astro.response.headers.set("X-Frame-Options", "DENY");
+Astro.response.headers.set("Referrer-Policy", "no-referrer");
+const next = deskDestination(Astro.url.searchParams.get("next"));
+try {
+  if ((await readSession(Astro.cookies)).authenticated) return Astro.redirect(next ?? "/");
+} catch { /* The shared login displays service errors without discarding the cookie. */ }
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>欢迎回来 | Jokerbai Lab</title>
+    <link rel="icon" href="/avatar.svg" type="image/svg+xml" />
+    <SiteFonts />
+    <style is:global>html, body { margin: 0; background: #fbfcff; }</style>
+  </head>
+  <body><EntryGate theme="manga" standalone next={next} /></body>
+</html>

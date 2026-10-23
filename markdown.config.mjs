@@ -14,13 +14,13 @@ export const expressiveCodeOptions = {
   },
   styleOverrides: {
     borderRadius: "8px",
-    codeFontFamily: '"Cascadia Code", "Fira Code", Consolas, monospace',
+    codeFontFamily: '"Maple Mono", "HarmonyOS Sans SC", Consolas, monospace',
     codeFontSize: "0.9rem",
     codeLineHeight: "1.72",
     codePaddingBlock: "1.1rem",
     codePaddingInline: "1.25rem",
     codeBackground: "#111827",
-    uiFontFamily: '"Cascadia Code", "Fira Code", Consolas, monospace',
+    uiFontFamily: '"Maple Mono", "HarmonyOS Sans SC", Consolas, monospace',
     frames: {
       frameBoxShadowCssValue: "0 18px 38px rgba(12, 18, 31, 0.28)",
       editorActiveTabBackground: "#111827",

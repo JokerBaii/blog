@@ -1,4 +1,12 @@
 ---
+import ScrollStart from "@/core/ScrollStart.astro";
+import BlankCursorLens from "@/core/BlankCursorLens.astro";
+import EntryGate from "@/core/EntryGate.astro";
+import SiteFonts from "@/core/SiteFonts.astro";
+import FontCredits from "@/core/FontCredits.astro";
+import LoveCounter from "@/core/LoveCounter.astro";
+import ContextEdit from "@/core/ContextEdit.astro";
+import ProfileQq from "@/core/ProfileQq.astro";
 import "../styles/theme.css";
 import { Icon } from "astro-icon/components";
 import type { BlogPost } from "@/core/content/blog";
@@ -8,7 +16,8 @@ import ConsoleEasterEgg from "@/core/ConsoleEasterEgg.astro";
 import PerformanceProfile from "@/core/PerformanceProfile.astro";
 import SeoMeta from "@/core/SeoMeta.astro";
 import { getCanonicalPath, getThemePath, themes } from "@/core/themes/registry";
-import { profileIdentity } from "@/core/data/profile";
+import { getPageContent } from "@/core/data/page-content";
+const { identity: profileIdentity } = await getPageContent();
 import { site } from "@/lib/site";
 
 interface Props {
@@ -18,7 +27,7 @@ interface Props {
   article?: BlogPost["data"];
 }
 
-const { title = "Yuimi Lab | Blank", description = site.description, isArticlePage = false, article } = Astro.props;
+const { title = "Jokerbai Lab | Blank", description = site.description, isArticlePage = false, article } = Astro.props;
 const canonicalPath = getCanonicalPath(Astro.url.pathname);
 const canonical = new URL(canonicalPath, Astro.site ?? Astro.url);
 const navItems = site.nav.map((item, index) => ({
@@ -34,6 +43,7 @@ const navItems = site.nav.map((item, index) => ({
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <ScrollStart />
     <PerformanceProfile />
     <SeoMeta title={title} description={description} canonical={canonical} isArticlePage={isArticlePage} article={article} />
     <meta name="theme-color" content="#ffffff" />
@@ -42,13 +52,17 @@ const navItems = site.nav.map((item, index) => ({
     <ThemePreferenceGate currentTheme="blank" />
     <ConsoleEasterEgg />
     <title>{title}</title>
+    <SiteFonts />
   </head>
   <body data-blank data-pagefind-ignore data-yuimi-article-page={isArticlePage ? "true" : undefined}>
+    <EntryGate theme="blank" />
+    <BlankCursorLens />
+    <ContextEdit />
     <a class="blank-skip-link" href="#blank-main">跳到正文</a>
     <header class="blank-header">
       <div class="blank-header-inner">
-        <a class="blank-wordmark" href={getThemePath("blank", "/")} aria-label="Yuimi Lab 首页">
-          <strong>yuimi<span aria-hidden="true">.</span></strong>
+        <a class="blank-wordmark" href={getThemePath("blank", "/")} aria-label="Jokerbai Lab 首页">
+          <strong>jokerbai<span aria-hidden="true">.</span></strong>
           <span class="blank-edition">BLANK / 02</span>
         </a>
         <nav class="blank-nav" aria-label="主导航">
@@ -73,18 +87,21 @@ const navItems = site.nav.map((item, index) => ({
 
     <footer class="blank-footer">
       <div class="blank-footer-top">
-        <a class="blank-footer-brand" href={getThemePath("blank", "/")}>Yuimi Lab<span aria-hidden="true">.</span></a>
+        <a class="blank-footer-brand" href={getThemePath("blank", "/")}>Jokerbai Lab<span aria-hidden="true">.</span></a>
         <div class="blank-footer-links">
-          <a href={profileIdentity.github} target="_blank" rel="noopener noreferrer">GitHub <Icon name="tabler:external-link" size={14} /></a>
-          <a href={profileIdentity.bilibili} target="_blank" rel="noopener noreferrer">Bilibili <Icon name="tabler:external-link" size={14} /></a>
+          {profileIdentity.github && (<a href={profileIdentity.github} target="_blank" rel="noopener noreferrer">GitHub <Icon name="tabler:external-link" size={14} /></a>)}
+          <ProfileQq />
           <a href={getThemePath("blank", "/about/")}>关于我 <Icon name="tabler:arrow-right" size={15} /></a>
         </div>
       </div>
       <div class="blank-footer-bottom">
-        <span>© 2026 喝益胃 / Yuimi-chaya</span>
+        <span>© 2026 jokerbai</span>
         <span>记录、创造，以及生活。</span>
         <a href="#blank-main" class="blank-back-top">回到顶部 <Icon name="tabler:arrow-up" size={14} /></a>
       </div>
+      <button type="button" data-entry-open>入站入口</button>
+      <FontCredits />
+      <LoveCounter />
       <noscript>
         <div class="blank-noscript-themes">
           {themes.map((theme) => <a href={getThemePath(theme.id, canonicalPath)}>{theme.label}</a>)}

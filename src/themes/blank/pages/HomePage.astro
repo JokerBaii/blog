@@ -3,8 +3,9 @@ import { Icon } from "astro-icon/components";
 import BlankLayout from "../layouts/BlankLayout.astro";
 import PostRow from "../components/PostRow.astro";
 import { getPublishedPosts } from "@/core/content/blog";
-import { profileIdentity, profileTech, currentSignals } from "@/core/data/profile";
-import { projectEntries } from "@/core/data/projects";
+import { getPageContent } from "@/core/data/page-content";
+const { identity: profileIdentity, tech: profileTech, signals: currentSignals, projects: projectEntries } = await getPageContent();
+
 import { getThemePath } from "@/core/themes/registry";
 import { categoryLabel } from "@/lib/site";
 
@@ -13,14 +14,14 @@ const [featured, ...remaining] = posts;
 const date = featured && (featured.data.updatedDate ?? featured.data.pubDate);
 ---
 
-<BlankLayout title="Yuimi Lab | Blank" description="喝益胃的个人记录。关于开发、创作，和日常里的有趣之事。">
+<BlankLayout title="Jokerbai Lab | Blank" description="jokerbai的个人记录。关于开发、创作，和日常里的有趣之事。">
   <section class="blank-home-hero" aria-labelledby="blank-home-title">
-    <div class="blank-home-topline"><p class="blank-kicker">PERSONAL JOURNAL / 个人记录</p><span class="blank-kicker">BY YUIMI-CHAYA</span></div>
-    <h1 id="blank-home-title">Yuimi Lab<span aria-hidden="true">.</span></h1>
+    <div class="blank-home-topline"><p class="blank-kicker">PERSONAL JOURNAL / 个人记录</p><span class="blank-kicker">BY JOKERBAI</span></div>
+    <h1 id="blank-home-title">Jokerbai Lab<span aria-hidden="true">.</span></h1>
     <div class="blank-home-bottom">
       <p class="blank-home-statement">把想法写下来。<br />把喜欢的事做出来。</p>
       <div class="blank-home-intro">
-        <p>我是{profileIdentity.displayName}。在代码、游戏与日常之间，<br class="blank-desktop-break" />留下一些尝试，也保留一点好奇心。</p>
+        <p>我是{profileIdentity.displayName}。在 C++、点云与大学日常之间，<br class="blank-desktop-break" />留下一些尝试，也保留一点好奇心。</p>
         <a class="blank-text-link" href={getThemePath("blank", "/about/")}>关于我 <Icon name="tabler:arrow-right" size={17} /></a>
       </div>
       <a class="blank-home-down blank-icon-button" href="#blank-latest" aria-label="阅读最新文章" title="阅读最新文章"><Icon name="tabler:arrow-down" size={24} /></a>
@@ -28,7 +29,7 @@ const date = featured && (featured.data.updatedDate ?? featured.data.pubDate);
     <div class="blank-home-index">
       <a href={getThemePath("blank", "/blog/")}><span>01 / 文字</span><strong>{String(posts.length).padStart(2, "0")} 篇记录</strong></a>
       <a href={getThemePath("blank", "/projects/")}><span>02 / 实践</span><strong>{String(projectEntries.length).padStart(2, "0")} 个项目</strong></a>
-      <a href={getThemePath("blank", "/games/")}><span>03 / 闲暇</span><strong>留一点时间玩耍</strong></a>
+      <a href={getThemePath("blank", "/games/")}><span>03 / LINKS</span><strong>Daily Links · 常用站点</strong></a>
     </div>
   </section>
 

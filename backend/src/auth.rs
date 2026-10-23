@@ -19,12 +19,17 @@ pub async fn require_admin(
         .and_then(|h| h.to_str().ok())
         .and_then(|h| h.strip_prefix("Bearer "))
         .filter(|s| s.len() <= 512);
-    let valid = token
+    let mut valid = token
         .map(|token| {
             let digest: [u8; 32] = Sha256::digest(token.as_bytes()).into();
             bool::from(digest.ct_eq(&state.token_hash))
         })
         .unwrap_or(false);
+    if !valid && let Some(token) = token {
+        let digest = format!("{:x}", Sha256::digest(token.as_bytes()));
+        valid = sqlx::query_scalar::<_, bool>("SELECT EXISTS(SELECT 1 FROM admin_sessions WHERE token_hash = ? AND expires_at > unixepoch())")
+            .bind(digest).fetch_one(&state.db).await?;
+    }
     if !valid {
         return Err(ApiError(StatusCode::UNAUTHORIZED, "管理员令牌无效".into()));
     }

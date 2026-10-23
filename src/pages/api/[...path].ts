@@ -5,7 +5,7 @@ export const prerender = false;
 // Same-origin public API/download bridge; never forwards admin credentials.
 const proxy: APIRoute = async ({ params, request, url }) => {
   const path = params.path ?? "";
-  if (!/^(articles(?:\/[a-z0-9-]+)?|attachments\/[a-f0-9-]{36}\/download)$/.test(path)) {
+  if (!/^(page-content|articles(?:\/[a-z0-9-]+)?|attachments\/[a-f0-9-]{36}\/download)$/.test(path)) {
     return new Response("Not found", { status: 404 });
   }
   const headers = new Headers();
@@ -19,8 +19,6 @@ const proxy: APIRoute = async ({ params, request, url }) => {
     const response = await fetch(`${apiOrigin()}/api/${path}${url.search}`, {
       method: request.method, headers, redirect: "manual", signal: controller.signal,
     });
-    // Only time out opening the upstream request; allow slow downloads to finish.
-    clearTimeout(connectionTimeout);
     const outgoing = new Headers(response.headers);
     outgoing.set("Cache-Control", "no-store");
     return new Response(response.body, { status: response.status, headers: outgoing });

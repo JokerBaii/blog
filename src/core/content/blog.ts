@@ -72,4 +72,3 @@ export async function renderPost(post: BlogPost) {
   });
   return (await processor).render(post.body);
 }
-

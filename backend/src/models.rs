@@ -6,6 +6,7 @@ use sqlx::Row;
 #[serde(deny_unknown_fields)]
 pub struct ArticleInput {
     pub title: String,
+    #[serde(default)]
     pub slug: String,
     #[serde(default)]
     pub description: String,
@@ -29,19 +30,7 @@ impl ArticleInput {
         if self.title.is_empty() || self.title.chars().count() > 200 {
             return Err(ApiError::bad("标题需为 1–200 个字符"));
         }
-        if self.slug.is_empty()
-            || self.slug.len() > 120
-            || !self
-                .slug
-                .bytes()
-                .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == b'-')
-            || self.slug.starts_with('-')
-            || self.slug.ends_with('-')
-        {
-            return Err(ApiError::bad(
-                "文章地址需为 1–120 位小写字母、数字和连字符，且不能以连字符开头或结尾",
-            ));
-        }
+        validate_slug(&self.slug)?;
         if self.description.chars().count() > 1000 {
             return Err(ApiError::bad("摘要不能超过 1000 个字符"));
         }
@@ -73,6 +62,22 @@ impl ArticleInput {
     }
 }
 
+pub fn validate_slug(slug: &str) -> ApiResult<()> {
+    if slug.is_empty()
+        || slug.len() > 120
+        || !slug
+            .bytes()
+            .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == b'-')
+        || slug.starts_with('-')
+        || slug.ends_with('-')
+    {
+        return Err(ApiError::bad(
+            "文章地址需为 1–120 位小写字母、数字和连字符，且不能以连字符开头或结尾",
+        ));
+    }
+    Ok(())
+}
+
 #[derive(Serialize)]
 pub struct ArticleSummary {
     pub id: String,
@@ -101,11 +106,11 @@ impl ArticleSummary {
             created_at: row.try_get("created_at")?,
             updated_at: row.try_get("updated_at")?,
             published_at: row.try_get("published_at")?,
-            word_count: count_words(&row.try_get::<String, _>("content_markdown")?),
+            word_count: row.try_get::<i64, _>("word_count")? as usize,
         })
     }
 }
-fn count_words(markdown: &str) -> usize {
+pub(crate) fn count_words(markdown: &str) -> usize {
     let mut count = 0;
     for event in pulldown_cmark::Parser::new(markdown) {
         if let pulldown_cmark::Event::Text(text) | pulldown_cmark::Event::Code(text) = event {
@@ -183,4 +188,63 @@ pub fn markdown_html(markdown: &str) -> String {
     let mut html = String::new();
     pulldown_cmark::html::push_html(&mut html, parser);
     ammonia::clean(&html)
+}
+
+// Preview-only block anchors connect rendered paragraphs to Markdown source lines.
+// Keep the published article HTML unchanged and sanitize the complete document once.
+pub fn markdown_preview_html(markdown: &str) -> String {
+    use pulldown_cmark::{Event, Options, Parser};
+    let line_starts: Vec<usize> = std::iter::once(0)
+        .chain(markdown.match_indices('\n').map(|(offset, _)| offset + 1))
+        .collect();
+    let parser = Parser::new_ext(
+        markdown,
+        Options::ENABLE_TABLES | Options::ENABLE_STRIKETHROUGH | Options::ENABLE_TASKLISTS,
+    );
+    let mut depth = 0usize;
+    let events = parser.into_offset_iter().flat_map(|(event, range)| {
+        let mut events = Vec::with_capacity(2);
+        if matches!(event, Event::Start(_)) {
+            if depth == 0 {
+                let line = line_starts.partition_point(|start| *start <= range.start);
+                events.push(Event::Html(
+                    format!("<div data-preview-line=\"{line}\">").into(),
+                ));
+            }
+            depth += 1;
+        }
+        let end = matches!(event, Event::End(_));
+        events.push(event);
+        if end {
+            depth = depth.saturating_sub(1);
+            if depth == 0 {
+                events.push(Event::Html("</div>".into()));
+            }
+        }
+        events
+    });
+    let mut html = String::new();
+    pulldown_cmark::html::push_html(&mut html, events);
+    ammonia::Builder::default()
+        .add_tag_attributes("div", &["data-preview-line"])
+        .clean(&html)
+        .to_string()
+}
+
+#[cfg(test)]
+mod preview_tests {
+    use super::*;
+
+    #[test]
+    fn source_anchors_follow_blocks_and_preview_remains_sanitized() {
+        let html = markdown_preview_html(
+            "# 标题\n\n正文\n\n- 第一项\n- 第二项\n\n<script>alert(1)</script>\n\n![图](javascript:alert(1))",
+        );
+        assert!(html.contains("data-preview-line=\"1\""));
+        assert!(html.contains("data-preview-line=\"3\""));
+        assert!(html.contains("data-preview-line=\"5\""));
+        assert!(!html.contains("<script"));
+        assert!(!html.contains("javascript:"));
+        assert!(!markdown_html("# 标题").contains("data-preview-line"));
+    }
 }

@@ -1,0 +1,201 @@
+/* Keep the existing ME sections and interactions, with the atelier's paper palette. */
+body[data-fuyukawa] .about-scrapbook :is(.about-media-card, .about-xp-card, .about-game-card) img[src^="/links/"] {
+  object-fit: contain;
+  padding: 10px;
+  background: #faf5fc;
+}
+body[data-fuyukawa] .about-scrapbook {
+  --keepsake-ink: #697690;
+  --keepsake-muted: #8590a4;
+  --keepsake-line: #e6dce9;
+}
+
+body[data-fuyukawa] .about-scrapbook :is(.about-id-card, .about-status-card) {
+  padding: 23px 19px;
+  border: 1px solid var(--keepsake-line);
+  border-radius: 17px 8px 17px 8px;
+  background: linear-gradient(135deg, #fffdfb, #faf5fc);
+  box-shadow: 0 4px 0 #f0edf670;
+}
+
+body[data-fuyukawa] .about-scrapbook .about-status-card {
+  background: repeating-linear-gradient(0deg, transparent 0 27px, #d0c6dc16 27px 28px), #fffdfb;
+}
+
+body[data-fuyukawa] .about-scrapbook :is(.about-kicker, .about-mini-title) {
+  color: #ac97b5;
+  font-size: 10px;
+  letter-spacing: 0.07em;
+}
+
+body[data-fuyukawa] .about-scrapbook .about-section-heading > svg {
+  color: #a78fb6;
+  border: 2px solid white;
+  border-radius: 12px 8px 12px 8px;
+  background: #f3edf8;
+  box-shadow: 0 0 0 1px #e7dced;
+  transform: rotate(-5deg);
+}
+
+body[data-fuyukawa] .about-scrapbook .about-section-heading p {
+  color: #ac97b5;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+body[data-fuyukawa] .about-scrapbook .about-section-heading h2 {
+  color: var(--keepsake-ink);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+body[data-fuyukawa] .about-scrapbook .about-tech-grid {
+  gap: 23px 17px;
+  padding-top: 5px;
+}
+
+body[data-fuyukawa] .about-scrapbook .about-tech-card {
+  --note-color: #819fc3;
+  --note-wash: #eef5fc;
+  --note-line: #d8e6f2;
+  position: relative;
+  min-height: 147px;
+  gap: 15px;
+  padding: 24px 20px 20px;
+  border: 1px solid var(--note-line);
+  border-radius: 16px 7px 16px 7px;
+  background:
+    radial-gradient(ellipse at 100% 0, var(--note-wash), transparent 75%),
+    repeating-linear-gradient(0deg, transparent 0 27px, #c7c4da12 27px 28px),
+    #fffefd;
+  box-shadow: 0 4px 0 #f0edf660;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+body[data-fuyukawa] .about-scrapbook .about-tech-card--mint {
+  --note-color: #75a99a;
+  --note-wash: #edf7f1;
+  --note-line: #d5e9e0;
+}
+
+body[data-fuyukawa] .about-scrapbook .about-tech-card--orange {
+  --note-color: #bd9971;
+  --note-wash: #fff6e9;
+  --note-line: #eee2cf;
+}
+
+body[data-fuyukawa] .about-scrapbook .about-tech-card--ink {
+  --note-color: #9b9dc0;
+  --note-wash: #f1f0fa;
+  --note-line: #dfdeef;
+}
+
+body[data-fuyukawa] .about-scrapbook .about-tech-card--pink {
+  --note-color: #c490a8;
+  --note-wash: #fdf0f4;
+  --note-line: #eed9e3;
+}
+
+body[data-fuyukawa] .about-scrapbook .about-tech-card::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: 17px;
+  width: 53px;
+  height: 15px;
+  border: 1px solid #ffffffa0;
+  background: repeating-linear-gradient(105deg, #ffffff50 0 4px, transparent 4px 8px), var(--note-line);
+  opacity: 0.85;
+  transform: rotate(-7deg);
+  pointer-events: none;
+}
+
+body[data-fuyukawa] .about-scrapbook .about-note-number {
+  position: absolute;
+  top: 14px;
+  right: 13px;
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border: 1px dashed var(--note-line);
+  border-radius: 50%;
+  color: var(--note-color);
+  font: italic 11px/1 Georgia, serif;
+}
+
+body[data-fuyukawa] .about-scrapbook .about-tech-icon {
+  width: 36px;
+  height: 36px;
+  border: 2px solid white;
+  border-radius: 11px 7px 11px 7px;
+  background: var(--note-wash);
+  color: var(--note-color);
+  box-shadow: 0 0 0 1px var(--note-line);
+  transform: rotate(-5deg);
+}
+
+body[data-fuyukawa] .about-scrapbook .about-tech-card h3 {
+  color: var(--keepsake-ink);
+  font-weight: 600;
+}
+
+body[data-fuyukawa] .about-scrapbook .about-tech-card p {
+  color: var(--keepsake-muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+body[data-fuyukawa] .about-scrapbook :is(.about-media-card, .about-xp-card, .about-game-card) {
+  border: 1px solid var(--keepsake-line);
+  border-radius: 16px 7px 16px 7px;
+  background: #fffdfb;
+  box-shadow: 0 4px 0 #f0edf670;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+body[data-fuyukawa] .about-scrapbook :is(.about-media-card, .about-xp-card) > div {
+  background: linear-gradient(135deg, #fffdfb, #faf5fc);
+}
+
+body[data-fuyukawa] .about-scrapbook .about-media-card img {
+  padding: 7px 7px 0;
+  border-radius: 17px 12px 0 0;
+  background: #fffdfb;
+}
+
+body[data-fuyukawa] .about-scrapbook .about-activity-grid article {
+  border: 1px dashed #d6e5df;
+  border-radius: 15px 7px 15px 7px;
+  background: #f0f7f2;
+  box-shadow: 0 4px 0 #e6eee950;
+}
+
+body[data-fuyukawa] .about-scrapbook .about-activity-grid article:nth-child(2) {
+  border-color: #ead6e0;
+  background: #fcf1f5;
+}
+
+body[data-fuyukawa] .about-scrapbook .about-activity-grid article:nth-child(3) {
+  border-color: #d6e3ef;
+  background: #f0f5fc;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  body[data-fuyukawa] .about-scrapbook :is(.about-tech-card, .about-media-card, .about-xp-card, .about-game-card):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 0 #f0edf680, 0 12px 25px #73638609;
+  }
+}
+
+@media (max-width: 720px) {
+  body[data-fuyukawa] .about-scrapbook .about-tech-card {
+    min-height: 135px;
+    padding: 21px 15px 17px;
+  }
+
+  body[data-fuyukawa] .about-scrapbook .about-note-number {
+    top: 12px;
+    right: 10px;
+  }
+}

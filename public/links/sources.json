@@ -1,0 +1,107 @@
+{
+  "source": "https://nxm-clw-cdn.dn.nexoncdn.co.kr/ba/goods/Happy_100th_Day!_Celebration_Digital_Merch.zip",
+  "notice": "https://forum.nexon.com/bluearchive/board_view?board=1044&thread=1881343",
+  "copyright": "Blue Archive © NEXON Korea Corp. & NEXON Games Co., Ltd.",
+  "files": [
+    {
+      "file": "ba-sticker-01.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/01.png",
+      "sha256": "d112aa75dc3d288808bb51347e69e15f0e0fdb92639c7a6939be9e0556239e6a"
+    },
+    {
+      "file": "ba-sticker-02.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/03.png",
+      "sha256": "f99ff81f7ddd5197a3dd9bd179c1c6df9346adc3bf7c1921d49bd1d14c8ab4c6"
+    },
+    {
+      "file": "ba-sticker-03.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/04.png",
+      "sha256": "93817edbf3107b6970047a460d2a1f89b227c3fda07da1e5cd28655fa04d1cf3"
+    },
+    {
+      "file": "ba-sticker-04.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/06.png",
+      "sha256": "8b36773bbfa66049e2d86e00ce91bc25a1862ac2ec76769044fbfb0b4019e37c"
+    },
+    {
+      "file": "ba-sticker-05.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/08.png",
+      "sha256": "82f44ca0020bede4a893496967474808832c57ce516f0997f32b43578d29fe29"
+    },
+    {
+      "file": "ba-sticker-06.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/09.png",
+      "sha256": "fb2b8ff117dec28793804dfdfe65423b28fc296dbec75db973e68a47b58cc7c6"
+    },
+    {
+      "file": "work-sticker-01.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/12.png",
+      "sha256": "d6913e167d027cddb342e40c73d2840eb044970f993fe70cb59e5b46bec11d16"
+    },
+    {
+      "file": "work-sticker-02.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/13.png",
+      "sha256": "2009004202e2bd6f92591a446d618700500c105f25c504d6b546c1daa4559edb"
+    },
+    {
+      "file": "work-sticker-03.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/14.png",
+      "sha256": "c7ce3c685bd7d870b7fba7402b42041e093c98c6aae722e83435efbea61009ee"
+    },
+    {
+      "file": "work-sticker-04.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/16.png",
+      "sha256": "5a841c3292cd75c09f190ab6a34b833a002889cd9f81d69621683b9fc8aeb252"
+    },
+    {
+      "file": "work-sticker-05.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/18.png",
+      "sha256": "992efe966604286df47801f78d37ae7979997b9e5573f0dbc410258a1b11330f"
+    },
+    {
+      "file": "work-sticker-06.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/20.png",
+      "sha256": "882c94023391f849c109ea8f30fd77e847e8759facf40011e40f90794eb1320f"
+    },
+    {
+      "file": "extra-sticker-01.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/02.png",
+      "sha256": "6b24c69157940455f1a0538091bece29edda291d0c50c229d770dcedc4890430"
+    },
+    {
+      "file": "extra-sticker-02.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/05.png",
+      "sha256": "5139531bdce5f9fc99d3fcb772ddb25ccb41319e2e7b8c8b02df00364671d741"
+    },
+    {
+      "file": "extra-sticker-03.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/07.png",
+      "sha256": "bc64ec856c6f5e5aead278bac9fe59850b6823367b640d1ac2544ea4df955c33"
+    },
+    {
+      "file": "extra-sticker-04.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/10.png",
+      "sha256": "68d8a81a0d881d770860f8923f33c7d87fa5a7f46074853474af5879fb1a2734"
+    },
+    {
+      "file": "extra-sticker-05.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/11.png",
+      "sha256": "5746719f7204603fc0c389d992b908a409dad24e73a8c0c11d01d27970527435"
+    },
+    {
+      "file": "extra-sticker-06.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/15.png",
+      "sha256": "6859d52d48e8b4fea3b2a06d1fb2844d13ba9a836894a7c662bda6f7c578d524"
+    },
+    {
+      "file": "extra-sticker-07.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/17.png",
+      "sha256": "8a34a434ad73e3ac6460210beb60c896c58599149077b896d5ec582b6cf636df"
+    },
+    {
+      "file": "extra-sticker-08.png",
+      "archive_entry": "01.Digital Notes & Stickers/Stickers/05_CHARACTER3/05_CHARACTER3_STICKERS_PNG/19.png",
+      "sha256": "42e61e1a24307ca0cd334d13ff2e44b60a71fbb8110eefe319af5eb754324f62"
+    }
+  ]
+}

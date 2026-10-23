@@ -42,7 +42,7 @@ try {
     await new Promise(resolve => setTimeout(resolve, 100));
   }
   if (!ready) throw new Error(`Frontend did not start: ${logs}`);
-  for (const route of ["/", "/blog/", "/games/", "/projects/", "/about/", "/themes/fuyukawa-kagari/"]) {
+  for (const route of ["/", "/blog/", "/games/", "/projects/", "/about/", "/themes/fuyukawa-kagari/", "/themes/blank/"]) {
     const response = await fetch(`${origin}${route}`);
     if (!response.ok) throw new Error(`${route}: HTTP ${response.status}\n${logs}`);
     const filename = path.join(snapshots, route, "index.html");

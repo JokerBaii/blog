@@ -1,54 +1,40 @@
 ---
+import TechIcon from "@/core/TechIcon.astro";
+import PageIntro from "../components/PageIntro.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { Icon } from "astro-icon/components";
-import { projectEntries, projectTechLines } from "@/core/data/projects";
-import MangaArt from "../components/MangaArt.astro";
+import { projectTechLines as techLines } from "@/core/data/projects";
+import { getPageContent } from "@/core/data/page-content";
+const { projects: projectEntries } = await getPageContent();
+import { getPublishedPosts } from "@/core/content/blog";
+import { getThemePath } from "@/core/themes/registry";
+import "../styles/works-scrapbook.css";
 
-const techIcons = {
-  unity: "simple-icons:unity",
-  blender: "simple-icons:blender",
-  ue5: "simple-icons:unrealengine",
-  mmd: "tabler:sparkles",
-  astrbot: "tabler:terminal-2"
-} as const;
-const techLines = projectTechLines.map((item) => ({ ...item, icon: techIcons[item.key] }));
 const projectPresentation = {
-  "astrbot-lab": { icon: "tabler:terminal-2", accent: "mint" },
-  "unity-toys": { icon: "simple-icons:unity", accent: "blue" },
-  "blender-props": { icon: "simple-icons:blender", accent: "orange" },
-  "ue5-room": { icon: "simple-icons:unrealengine", accent: "ink" },
-  "mmd-camera": { icon: "tabler:sparkles", accent: "pink" },
-  "yuimi-web-lab": { icon: "tabler:flower", accent: "lavender" }
+  "cpp-notes": { accent: "mint", note: "one small step ♡" },
+  "cloud-lab": { accent: "blue", note: "connect the dots" },
+  "algorithm-notes": { accent: "orange", note: "take your time" },
+  "build-notes": { accent: "ink", note: "it works, yay!" },
+  "campus-notes": { accent: "pink", note: "little moments ♡" },
+  "blog-lab": { accent: "lavender", note: "made with love" }
 } as const;
 const projectCards = projectEntries.map((project) => ({
   ...project,
   ...projectPresentation[project.id]
 }));
+const campusPosts = (await getPublishedPosts()).filter((post) => post.data.tags.includes("下课后的随手记"));
 
 ---
 
-<BaseLayout title="Projects | Yuimi Lab" description="Yuimi Lab 的项目、技术线和个人实验收藏架。">
-  <section class="works-shell" aria-labelledby="works-title">
-    <div class="works-hero">
-      <div>
-        <p class="section-kicker">02 / The atelier</p>
-        <h1 id="works-title">灵感工坊<span class="page-title-en">Projects</span></h1>
-        <p>
-          从一个小念头开始，让喜欢的技术慢慢长成作品。这里收着正在做的实验，也留着下一次继续的线索。
-        </p>
-      </div>
-      <div class="workshop-scene" aria-hidden="true">
-        <MangaArt image="workshop-strip" class="workshop-panel" eager />
-        <MangaArt image="haruto-gift" class="workshop-character" eager />
-        <span class="manga-handwritten">Made of little ideas.</span>
-      </div>
-    </div>
+<BaseLayout title="Projects | Jokerbai Lab" description="jokerbai 的 C++、点云与个人学习笔记。">
+  <section class="works-shell works-scrapbook" aria-labelledby="works-title">
+    <PageIntro image="projects" title="灵感工坊" subtitle="Made of little ideas." titleId="works-title" />
 
     <div class="works-filter" data-works-filter aria-label="Project filters">
       <button type="button" class="is-active" data-filter="all" aria-pressed="true">全部</button>
       {techLines.map((item) => (
         <button type="button" data-filter={item.key} aria-pressed="false">
-          <Icon name={item.icon} aria-hidden="true" />
+          <TechIcon tech={item.key} />
           {item.label}
         </button>
       ))}
@@ -57,20 +43,24 @@ const projectCards = projectEntries.map((project) => ({
     <section class="works-tech-board" aria-label="Tech lines">
       {techLines.map((item) => (
         <article data-line-card={item.key}>
-          <Icon name={item.icon} aria-hidden="true" />
+          <TechIcon tech={item.key} />
           <strong>{item.label}</strong>
           <span>{item.note}</span>
         </article>
       ))}
     </section>
 
+    <header class="works-collection-heading">
+      <div><p>MY LITTLE COLLECTION</p><h2>把小想法，慢慢养大<span aria-hidden="true"> ♡</span></h2></div>
+      <span class="works-collection-count">{String(projectCards.length).padStart(2, "0")} 份小小的尝试</span>
+    </header>
     <section class="works-grid" aria-label="Project cards">
       {projectCards.map((project, index) => (
         <article class={`works-card works-card--${project.accent}`} data-project-line={project.line}>
           <span class="works-page-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
           <div class="works-card-head">
             <span class="works-card-icon" aria-hidden="true">
-              <Icon name={project.icon} />
+              <TechIcon tech={project.line} />
             </span>
             <div>
               <p>{project.type}</p>
@@ -83,19 +73,30 @@ const projectCards = projectEntries.map((project) => ({
               <span>{detail}</span>
             ))}
           </div>
-          <button type="button" class="works-card-toggle" data-card-toggle aria-expanded="false" aria-controls={`project-status-${project.id}`}>
-            <Icon name="tabler:chevron-down" aria-hidden="true" />
-            查看状态
-          </button>
+          <footer class="works-card-footer">
+            <button type="button" class="works-card-toggle" data-card-toggle aria-expanded="false" aria-controls={`project-status-${project.id}`}>
+              <Icon name="tabler:book-2" aria-hidden="true" />
+              <span>翻开这一页</span>
+              <Icon name="tabler:chevron-down" aria-hidden="true" />
+            </button>
+            <span class="works-card-handwriting">{project.note}</span>
+            <img src={project.sticker} class="works-card-sticker" data-art-kind={project.sticker.startsWith("/illustrations/") ? "portrait" : "chibi"} alt="" width="72" height="72" loading="lazy" decoding="async" />
+          </footer>
           <div class="works-card-panel" id={`project-status-${project.id}`} data-card-panel hidden>
-            <strong>{project.status}</strong>
-            <p>下一步会把相关笔记、截图或可玩的 demo 慢慢补到这里。</p>
+            <strong>{project.id === "campus-notes" && campusPosts.length ? `已经夹好 ${campusPosts.length} 篇课后笔记` : project.status}</strong>
+            {project.id === "campus-notes" && campusPosts.length ? (
+              <ul class="works-note-links">
+                {campusPosts.map((post) => (
+                  <li><a href={getThemePath("fuyukawa-kagari", `/blog/${post.id}/`)}>{post.data.title}<span aria-hidden="true"> ↗</span></a></li>
+                ))}
+              </ul>
+            ) : <p>下一步会把相关笔记、截图或可玩的 demo 慢慢补到这里。</p>}
           </div>
-          {index === 0 && <MangaArt image="kagari-thinking" class="works-card-companion" />}
         </article>
       ))}
     </section>
 
+    <p class="works-art-credit">贴纸：Blue Archive · NEXON Games · <a href="https://forum.nexon.com/bluearchive/board_view?board=1044&amp;thread=1881343" target="_blank" rel="noopener noreferrer">官方数字周边</a></p>
   </section>
 
   <script is:inline data-astro-rerun>
@@ -132,6 +133,8 @@ const projectCards = projectEntries.map((project) => ({
 
         const isOpen = card.classList.toggle("is-open");
         button.setAttribute("aria-expanded", String(isOpen));
+        const label = button.querySelector("span");
+        if (label) label.textContent = isOpen ? "先夹好书签" : "翻开这一页";
         const panel = card.querySelector("[data-card-panel]");
         if (panel) panel.hidden = !isOpen;
       });
@@ -166,12 +169,6 @@ const projectCards = projectEntries.map((project) => ({
       height: 72px !important;
     }
 
-    .works-hero {
-      position: relative;
-      isolation: isolate;
-      overflow: visible;
-    }
-
     .works-filter,
 .works-tech-board {
       position: relative;
@@ -180,8 +177,7 @@ const projectCards = projectEntries.map((project) => ({
       -webkit-backdrop-filter: blur(2px) saturate(1.03);
     }
 
-    .works-card,
-.works-card {
+    .works-card {
       position: relative;
       isolation: isolate;
       overflow: visible;
@@ -189,37 +185,6 @@ const projectCards = projectEntries.map((project) => ({
       -webkit-backdrop-filter: blur(2px) saturate(1.03);
     }
 
-    .works-hero {
-      display: grid;
-      gap: 24px;
-      align-items: center;
-    }
-
-    .works-hero h1 {
-      color: var(--ink);
-      letter-spacing: 0;
-    }
-
-    .works-hero p:not(.section-kicker) {
-      line-height: 1.9;
-    }
-
-    .works-hero-orbit {
-      position: relative;
-      justify-self: center;
-    }
-
-    .works-hero-orbit span {
-      display: grid;
-      place-items: center;
-    }
-
-    .works-hero-orbit span:nth-child(1) { top: -4px; left: 68px; }
-    .works-hero-orbit span:nth-child(2) { top: 68px; right: -4px; color: #e2762d; }
-    .works-hero-orbit span:nth-child(3) { bottom: -4px; left: 68px; color: #fffaf1; background: #31425f; }
-    .works-hero-orbit span:nth-child(4) { top: 68px; left: -4px; color: #c85278; }
-
-    .works-hero-orbit svg,
     .works-card-icon svg,
     .works-tech-board svg {
       width: 1.35em;
@@ -353,6 +318,11 @@ const projectCards = projectEntries.map((project) => ({
       transform: rotate(180deg);
     }
 
+    .works-card[hidden],
+    .works-card-panel[hidden] {
+      display: none;
+    }
+
     .works-card-panel {
       display: grid;
       grid-template-rows: 0fr;
@@ -381,10 +351,6 @@ const projectCards = projectEntries.map((project) => ({
       .works-tech-board,
 .works-grid {
         grid-template-columns: 1fr;
-      }
-
-      .works-hero-orbit {
-        justify-self: start;
       }
     }
   </style>

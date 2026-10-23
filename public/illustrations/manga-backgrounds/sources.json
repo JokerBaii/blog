@@ -1,0 +1,102 @@
+[
+  {
+    "page": "blog",
+    "title": "儚いキミは猛攻をはじめる · 放課後",
+    "author": "葉佐乃",
+    "language": "ja",
+    "images": [
+      {
+        "url": "https://pbs.twimg.com/media/GXLzTTsbcAA2B4P.jpg?name=orig",
+        "source": "https://x.com/TEIGI_3/status/1833796832046076137",
+        "asset": "/illustrations/manga-backgrounds/blog-0.webp",
+        "width": 700,
+        "height": 1013,
+        "sha256": "ef3d5bd5adb3a1286aeea824e398d0f5b3beedaa08566fe274badc60bf16c72f"
+      },
+      {
+        "url": "https://pbs.twimg.com/media/GXYYO3HbEAAT8br.jpg?name=orig",
+        "source": "https://x.com/TEIGI_3/status/1834681776767484232",
+        "asset": "/illustrations/manga-backgrounds/blog-1.webp",
+        "width": 700,
+        "height": 1013,
+        "sha256": "3a42c738584e2d4f0b4bdc225fafa1a1e1af86379186e0a9d8b0fe3da4cb7126"
+      }
+    ],
+    "layout": "two original pages side by side; no rotation or translation"
+  },
+  {
+    "page": "projects",
+    "title": "儚いキミは猛攻をはじめる · いつもの日常",
+    "author": "葉佐乃",
+    "language": "ja",
+    "images": [
+      {
+        "url": "https://pbs.twimg.com/media/GXYYB1jbwAIPxgj.jpg?name=orig",
+        "source": "https://x.com/TEIGI_3/status/1833796836613832914",
+        "asset": "/illustrations/manga-backgrounds/projects-0.webp",
+        "width": 700,
+        "height": 1013,
+        "sha256": "e08c48477a69bfed13cd52fe75ab4e8ee30ae4d84c3fd6464635e38552a0b0ec"
+      },
+      {
+        "url": "https://pbs.twimg.com/media/GXYYEjHbwAAoDEp.jpg?name=orig",
+        "source": "https://x.com/TEIGI_3/status/1834681779254698401",
+        "asset": "/illustrations/manga-backgrounds/projects-1.webp",
+        "width": 700,
+        "height": 1013,
+        "sha256": "17730067a68ef3041c9f1406dd4a9c51307cd1a0c3df5d499e9d9a3931beab26"
+      }
+    ],
+    "layout": "two original pages side by side; no rotation or translation"
+  },
+  {
+    "page": "links",
+    "title": "儚いキミは猛攻をはじめる · 小さな気持ち",
+    "author": "葉佐乃",
+    "language": "ja",
+    "images": [
+      {
+        "url": "https://pbs.twimg.com/media/GjkxGAAaIAImhWX.jpg?name=orig",
+        "source": "https://x.com/TEIGI_3/status/1887054801261011082",
+        "asset": "/illustrations/manga-backgrounds/links-0.webp",
+        "width": 700,
+        "height": 1013,
+        "sha256": "04c8ba8d4afe79ea904d86163796326292952cf0727b3aa92f5f23cfd9521be0"
+      },
+      {
+        "url": "https://pbs.twimg.com/media/GjkxLatbAAAIQu1.jpg?name=orig",
+        "source": "https://x.com/TEIGI_3/status/1889596306382811335",
+        "asset": "/illustrations/manga-backgrounds/links-1.webp",
+        "width": 700,
+        "height": 1013,
+        "sha256": "34d3a20fc40390ef961ce0d81f3bf9800003cf2b2919e2947b0fa38b6e1e415b"
+      }
+    ],
+    "layout": "two original pages side by side; no rotation or translation"
+  },
+  {
+    "page": "about",
+    "title": "儚いキミは猛攻をはじめる · ふたりの話",
+    "author": "葉佐乃",
+    "language": "ja",
+    "images": [
+      {
+        "url": "https://pbs.twimg.com/media/GpDJmWzbwAAGbXu.jpg?name=orig",
+        "source": "https://x.com/TEIGI_3/status/1913527581795664201",
+        "asset": "/illustrations/manga-backgrounds/about-0.webp",
+        "width": 700,
+        "height": 1013,
+        "sha256": "0ccfb01c569add2f066e9ac7364cab669aa5997185f0a982e9c7a110c6c5845b"
+      },
+      {
+        "url": "https://pbs.twimg.com/media/GpDJiyMacAAh5MI.jpg?name=orig",
+        "source": "https://x.com/TEIGI_3/status/1913527584471892234",
+        "asset": "/illustrations/manga-backgrounds/about-1.webp",
+        "width": 700,
+        "height": 1013,
+        "sha256": "8d55c168dfa842e9704afefc136437d50ae001c16ac7718980ddf536fbdb5e5c"
+      }
+    ],
+    "layout": "two original pages side by side; no rotation or translation"
+  }
+]

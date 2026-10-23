@@ -8,7 +8,7 @@ import { categoryLabel } from "@/lib/site";
 const posts = await getPublishedPosts();
 const categories = Object.entries(categoryLabel).filter(([key]) => posts.some((post) => post.data.category === key));
 ---
-<BlankLayout title="Journal | Yuimi Lab Blank" description="开发笔记、二次元与生活记录。">
+<BlankLayout title="Journal | Jokerbai Lab Blank" description="开发笔记、二次元与生活记录。">
   <PageHead index="01" title="Journal" label="文字归档" description="思考的过程，做过的尝试，以及值得记下的小事。" count={String(posts.length).padStart(2, "0")} unit="篇记录" />
   <section class="blank-archive" data-blank-collection data-unit="篇文章" aria-label="文章归档">
     <form class="blank-filter-form" data-blank-filter-form role="search" hidden>

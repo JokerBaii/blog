@@ -35,7 +35,7 @@ impl Drop for PendingFile {
         }
     }
 }
-fn multipart_error(error: axum::extract::multipart::MultipartError) -> ApiError {
+pub(crate) fn multipart_error(error: axum::extract::multipart::MultipartError) -> ApiError {
     if error.status() == StatusCode::PAYLOAD_TOO_LARGE {
         ApiError::too_large()
     } else {
@@ -55,7 +55,7 @@ pub async fn upload(
     if !exists {
         return Err(ApiError::missing());
     }
-    let mut field = multipart
+    let field = multipart
         .next_field()
         .await
         .map_err(multipart_error)?
@@ -63,6 +63,62 @@ pub async fn upload(
     if field.name() != Some("file") {
         return Err(ApiError::bad("附件字段名必须为 file"));
     }
+    let staged = stage_field(field, &state).await?;
+    if multipart
+        .next_field()
+        .await
+        .map_err(multipart_error)?
+        .is_some()
+    {
+        return Err(ApiError::bad("每次只能上传一个附件"));
+    }
+    tokio::spawn(async move {
+        let mut transaction = state.db.begin().await?;
+        let mut staged = staged;
+        staged.commit(&state, &article_id, &mut transaction).await?;
+        transaction.commit().await?;
+        let attachment = staged.finish(article_id);
+        Ok((StatusCode::CREATED, Json(attachment)))
+    })
+    .await
+    .map_err(ApiError::internal)?
+}
+
+pub(crate) struct StagedAttachment {
+    pub id: String,
+    pub filename: String,
+    size: usize,
+    file: PendingFile,
+}
+impl StagedAttachment {
+    pub async fn commit(
+        &mut self,
+        state: &AppState,
+        article_id: &str,
+        transaction: &mut sqlx::Transaction<'_, sqlx::Sqlite>,
+    ) -> ApiResult<()> {
+        self.file.move_to(state.uploads.join(&self.id))?;
+        sqlx::query("INSERT INTO attachments (id, article_id, filename, size, created_at) VALUES (?, ?, ?, ?, ?)")
+            .bind(&self.id).bind(article_id).bind(&self.filename).bind(self.size as i64).bind(now()).execute(&mut **transaction).await?;
+        Ok(())
+    }
+    pub fn finish(self, article_id: String) -> Attachment {
+        self.file.persist();
+        Attachment {
+            download_url: format!("/api/attachments/{}/download", self.id),
+            id: self.id,
+            article_id,
+            filename: self.filename,
+            size: self.size as i64,
+            created_at: now(),
+        }
+    }
+}
+
+pub(crate) async fn stage_field(
+    mut field: axum::extract::multipart::Field<'_>,
+    state: &AppState,
+) -> ApiResult<StagedAttachment> {
     let original = field
         .file_name()
         .ok_or_else(|| ApiError::bad("附件缺少文件名"))?;
@@ -86,7 +142,7 @@ pub async fn upload(
         .write(true)
         .create_new(true)
         .open(&temporary)?;
-    let mut pending = PendingFile(Some(temporary.clone()));
+    let pending = PendingFile(Some(temporary.clone()));
     let mut file = tokio::fs::File::from_std(file);
     let mut size = 0usize;
     while let Some(chunk) = field.chunk().await.map_err(multipart_error)? {
@@ -98,37 +154,17 @@ pub async fn upload(
         }
         file.write_all(&chunk).await?;
     }
-    drop(field);
     if size == 0 {
         return Err(ApiError::bad("附件不能为空"));
     }
     file.sync_all().await?;
     drop(file);
-    if multipart
-        .next_field()
-        .await
-        .map_err(multipart_error)?
-        .is_some()
-    {
-        return Err(ApiError::bad("每次只能上传一个附件"));
-    }
-    // Finish the file/DB commit even if the client disconnects at this point.
-    tokio::spawn(async move {
-        let final_path = state.uploads.join(&id);
-        pending.move_to(final_path)?;
-        let timestamp = now();
-        let result = sqlx::query("INSERT INTO attachments (id, article_id, filename, size, created_at) VALUES (?, ?, ?, ?, ?)")
-            .bind(&id).bind(&article_id).bind(&filename).bind(size as i64).bind(&timestamp).execute(&state.db).await;
-        if let Err(error) = result {
-            if let sqlx::Error::Database(ref database) = error
-                && database.is_foreign_key_violation() {
-                return Err(ApiError::missing());
-            }
-            return Err(error.into());
-        }
-        pending.persist();
-        Ok((StatusCode::CREATED, Json(Attachment { download_url: format!("/api/attachments/{id}/download"), id, article_id, filename, size: size as i64, created_at: timestamp })))
-    }).await.map_err(ApiError::internal)?
+    Ok(StagedAttachment {
+        id,
+        filename,
+        size,
+        file: pending,
+    })
 }
 pub async fn public_download(
     State(state): State<AppState>,
@@ -183,15 +219,76 @@ pub async fn delete(
     Path(id): Path<String>,
 ) -> ApiResult<StatusCode> {
     valid_id(&id)?;
-    let result = sqlx::query("DELETE FROM attachments WHERE id = ?")
+    let mut transaction = state.db.begin().await?;
+    let row = sqlx::query("SELECT a.id AS article_id, a.content_markdown FROM attachments f JOIN articles a ON a.id = f.article_id WHERE f.id = ?")
+        .bind(&id).fetch_optional(&mut *transaction).await?.ok_or_else(ApiError::missing)?;
+    let article_id: String = row.try_get("article_id")?;
+    let markdown: String = row.try_get("content_markdown")?;
+    let cleaned = remove_attachment_links(&markdown, &format!("/api/attachments/{id}/download"));
+    sqlx::query(
+        "UPDATE articles SET content_markdown = ?, word_count = ?, updated_at = ? WHERE id = ?",
+    )
+    .bind(&cleaned)
+    .bind(crate::models::count_words(&cleaned) as i64)
+    .bind(now())
+    .bind(article_id)
+    .execute(&mut *transaction)
+    .await?;
+    sqlx::query("DELETE FROM attachments WHERE id = ?")
         .bind(&id)
-        .execute(&state.db)
+        .execute(&mut *transaction)
         .await?;
-    if result.rows_affected() == 0 {
-        return Err(ApiError::missing());
-    }
+    transaction.commit().await?;
     remove_stored_file(&state, &id).await;
     Ok(StatusCode::NO_CONTENT)
+}
+
+fn remove_attachment_links(markdown: &str, href: &str) -> String {
+    use pulldown_cmark::{Event, Options, Parser, Tag};
+    let matches = |destination: &str| destination.split(['?', '#']).next() == Some(href);
+    let parser = Parser::new_ext(
+        markdown,
+        Options::ENABLE_TABLES | Options::ENABLE_STRIKETHROUGH | Options::ENABLE_TASKLISTS,
+    );
+    let mut ranges: Vec<_> = parser
+        .reference_definitions()
+        .iter()
+        .filter(|(_, definition)| matches(&definition.dest))
+        .map(|(_, definition)| definition.span.clone())
+        .collect();
+    for (event, range) in parser.into_offset_iter() {
+        if let Event::Start(Tag::Link { dest_url, .. } | Tag::Image { dest_url, .. }) = event
+            && matches(&dest_url)
+        {
+            ranges.push(range);
+        }
+    }
+    for range in &mut ranges {
+        let start = markdown[..range.start].rfind('\n').map_or(0, |i| i + 1);
+        let end = markdown[range.end..]
+            .find('\n')
+            .map_or(markdown.len(), |i| range.end + i);
+        let prefix = markdown[start..range.start].trim();
+        let marker = ["-", "+", "*"].contains(&prefix)
+            || prefix.strip_suffix(['.', ')']).is_some_and(|number| {
+                !number.is_empty() && number.bytes().all(|byte| byte.is_ascii_digit())
+            });
+        if (prefix.is_empty() || marker) && markdown[range.end..end].trim().is_empty() {
+            range.start = start;
+            range.end = if end < markdown.len() { end + 1 } else { end };
+        }
+    }
+    ranges.sort_by_key(|range| (range.start, std::cmp::Reverse(range.end)));
+    let mut result = String::with_capacity(markdown.len());
+    let mut end = 0;
+    for range in ranges {
+        if range.start > end {
+            result.push_str(&markdown[end..range.start]);
+        }
+        end = end.max(range.end);
+    }
+    result.push_str(&markdown[end..]);
+    result
 }
 pub(crate) async fn remove_stored_file(state: &AppState, id: &str) {
     if valid_id(id).is_err() {

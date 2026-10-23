@@ -1,65 +1,65 @@
 export const projectTechLines = [
-  { key: "unity", label: "Unity3D", note: "互动原型 / 小游戏" },
-  { key: "blender", label: "Blender", note: "模型 / 场景 / 小道具" },
-  { key: "ue5", label: "UE5", note: "学习中 / 电影感场景" },
-  { key: "mmd", label: "MMD", note: "动作 / 镜头 / 舞台" },
-  { key: "astrbot", label: "AstrBot", note: "插件 / 部署 / Bot 工具" }
+  { key: "cpp", label: "C++", note: "语法 / STL / 调试" },
+  { key: "cloud", label: "点云", note: "三维数据 / 处理与观察" },
+  { key: "algorithms", label: "算法", note: "数据结构 / 解题思路" },
+  { key: "cmake", label: "工具链", note: "CMake / Git / 环境配置" },
+  { key: "notes", label: "学习笔记", note: "课堂 / 踩坑 / 日常" }
 ] as const;
 
+// These are notebook topics and learning plans; add real repositories as they become available.
 export const projectEntries = [
   {
-    id: "astrbot-lab",
-    title: "AstrBot 插件实验台",
-    type: "Bot Plugin",
-    line: "astrbot",
-    status: "常驻折腾",
-    summary: "把插件开发、角色提示词、部署踩坑和小型自动化整理成可以复用的工具箱。",
-    details: ["插件结构拆解", "部署流程记录", "Prompt 与人设调试"]
+    id: "cpp-notes",
+    title: "C++ 学习草稿本",
+    type: "Learning Notes",
+    line: "cpp",
+    status: "笔记待整理",
+    summary: "从一个能跑的小例子开始，把语法、STL 和编译器的碎碎念整理成自己看得懂的笔记。",
+    details: ["基础语法", "STL 小例子", "调试思路"]
   },
   {
-    id: "unity-toys",
-    title: "Unity 小机关工坊",
-    type: "Interactive Toy",
-    line: "unity",
-    status: "原型收集中",
-    summary: "用 Unity 做一些轻量互动原型，偏小游戏、角色展示和可点击的小玩具。",
-    details: ["2D 交互原型", "角色状态机", "小游戏手感测试"]
+    id: "cloud-lab",
+    title: "点云观察日记",
+    type: "Point Cloud Notes",
+    line: "cloud",
+    status: "学习方向",
+    summary: "一团点乍看很乱，换个角度就有了轮廓。这里准备记录三维数据的读取、观察和处理思路。",
+    details: ["数据读取", "点云可视化", "处理流程"]
   },
   {
-    id: "blender-props",
-    title: "Blender 手账道具箱",
-    type: "3D Assets",
-    line: "blender",
-    status: "素材修炼",
-    summary: "练习建模、材质、灯光和小场景，把 3D 做成能放进博客的可爱摆件。",
-    details: ["低模小物", "透明材质", "柔光场景"]
+    id: "algorithm-notes",
+    title: "算法慢慢想",
+    type: "Problem Solving",
+    line: "algorithms",
+    status: "练习清单",
+    summary: "题目不一定一次想通，但每次卡住的地方都值得记下来。给思路留草稿，也给自己留一点耐心。",
+    details: ["数据结构", "思路拆解", "边界检查"]
   },
   {
-    id: "ue5-room",
-    title: "UE5 电影感房间",
-    type: "Learning Log",
-    line: "ue5",
-    status: "正在学习",
-    summary: "从场景搭建、蓝图、材质开始，慢慢把脑内的二次元房间做成可漫游空间。",
-    details: ["蓝图入门", "场景光照", "材质节点"]
+    id: "build-notes",
+    title: "环境折腾备忘录",
+    type: "Toolchain Notes",
+    line: "cmake",
+    status: "待补充",
+    summary: "代码还没跑，环境先出了题。把构建、依赖和版本管理的过程记下来，下次少走一点回头路。",
+    details: ["CMake 构建", "Git 记录", "环境配置"]
   },
   {
-    id: "mmd-camera",
-    title: "MMD 镜头练习册",
-    type: "Motion Stage",
-    line: "mmd",
-    status: "灵感排队",
-    summary: "记录动作、镜头、舞台和角色表现的练习，让喜欢的角色在画面里更有呼吸感。",
-    details: ["镜头节奏", "舞台布光", "动作修正"]
+    id: "campus-notes",
+    title: "下课后的随手记",
+    type: "Campus Journal",
+    line: "notes",
+    status: "课后归档",
+    summary: "课程作业、课间的灵感、和她一起走过的路，都夹进课后的手账里，留给以后慢慢翻。",
+    details: ["课程作业", "零碎想法", "和她的普通日子"]
   },
   {
-    id: "yuimi-web-lab",
-    title: "Yuimi Lab 页面机关",
-    type: "Web Lab",
-    line: "astrbot",
-    status: "持续追加",
-    summary: "把博客里的导航、樱花、音乐、看板娘、右键菜单都做成有一点玩具感的体验。",
-    details: ["Astro 页面", "轻交互组件", "可爱动效"]
+    id: "blog-lab",
+    title: "这个博客的小实验",
+    type: "Personal Blog",
+    line: "notes",
+    status: "持续整理",
+    summary: "给学习笔记找一个住处，也给生活留一点位置。页面慢慢改，故事慢慢写。",
+    details: ["文章归档", "阅读体验", "个人记录"]
   }
 ] as const;
-

@@ -33,21 +33,34 @@ python3 -c 'import secrets; print(secrets.token_urlsafe(32))'
 
 ## API
 
-管理接口要求 `Authorization: Bearer <BLOG_ADMIN_TOKEN>`。公开接口不需要令牌；草稿文章及其附件返回 404。错误 JSON 为 `{"error":{"message":"错误说明"}}`，框架级无效请求可能返回普通文本。
+管理接口要求 `Authorization: Bearer <令牌>`，可使用 `BLOG_ADMIN_TOKEN` 或登录返回的会话令牌。公开接口不需要令牌；草稿文章及其附件返回 404。错误 JSON 为 `{"error":{"message":"错误说明"}}`，框架级无效请求可能返回普通文本。
 
 | 方法 | 路径 | 用途 |
 | --- | --- | --- |
 | GET | `/api/health` | 健康状态及上传上限 |
+| POST | `/api/auth/login` | 用户名、密码登录，返回 30 天会话令牌 |
+| POST | `/api/admin/account` | 首次初始化唯一管理员账号，已有账号返回 409 |
+| GET | `/api/admin/session` | 验证管理员会话 |
+| POST | `/api/admin/logout` | 撤销当前登录会话 |
+| GET | `/api/page-content` | 公开 ME、WORKS、LINKS 和纪念日内容 |
+| GET / PUT | `/api/admin/page-content` | 读取或保存页面内容，需鉴权，最大 64 KB |
+| GET | `/api/avatar` | 读取头像，支持 ETag；未设置时返回 404 |
+| POST | `/api/admin/avatar` | 原始请求体上传头像，PNG/JPEG/WebP，最大 2 MB |
 | GET | `/api/articles` | 已发布文章列表 |
 | GET | `/api/articles/{slug}` | 文章详情和附件列表 |
 | GET / HEAD | `/api/attachments/{id}/download` | 公开附件下载，支持 Range |
 | GET | `/api/admin/articles` | 包括草稿的文章列表 |
 | POST | `/api/admin/articles` | 创建文章 |
 | GET / PUT / DELETE | `/api/admin/articles/{id}` | 读取、完整更新、删除文章 |
+| GET | `/api/admin/articles/by-slug/{slug}` | 按地址读取文章，包括草稿，仅管理员可用 |
 | POST | `/api/admin/articles/{id}/attachments` | 上传附件，multipart 字段名为 `file` |
 | DELETE | `/api/admin/attachments/{id}` | 删除附件 |
 | GET / HEAD | `/api/admin/attachments/{id}/download` | 包括草稿附件的鉴权下载 |
 | POST | `/api/admin/preview` | 预览 Markdown，返回清理后的 HTML |
+
+账号初始化和登录均使用 JSON `{"username":"jokerbai","password":"你设置的密码"}`。用户名允许 3–40 位英文字母、数字、下划线或连字符，密码为 6–128 字节。密码使用 Argon2 存储；数据库只保存会话令牌哈希。登录限制为全局每分钟最多 10 次尝试。首次初始化应从受信任环境携带配置的管理令牌执行。
+
+配套前端 `/admin/` 提供可视化写作和头像管理。本机生成的 `admin-credentials.txt` 只供本地读取，权限为 0600，不纳入版本控制。页面内容、网站收藏、头像、账号和会话随 `data/blog.sqlite3` 一起持久化；数据库文件与附件目录应一起备份。
 
 列表参数：`page`（默认 1）、`per_page`（默认 20，上限 100）、`q`（标题/摘要/标签）、`category`（`tech`、`anime`、`life`）。返回 `{items,total,page,per_page}`；列表不返回正文，包含估算字数 `word_count`。
 
@@ -65,7 +78,7 @@ python3 -c 'import secrets; print(secrets.token_urlsafe(32))'
 }
 ```
 
-`slug` 最长 120 位，使用小写字母、数字和连字符，不以连字符开头或结尾，重复时返回 409。正文最多 1 MB，标题最多 200 个字符，摘要最多 1000 个字符，标签最多 20 个且每个不超过 40 个字符。`published` 默认 `false`，时间由服务生成。
+`slug` 可省略或留空：创建时自动生成唯一地址，更新时保留原地址。自定义 `slug` 最长 120 位，使用小写字母、数字和连字符，不以连字符开头或结尾，重复时返回 409。正文最多 1 MB，标题最多 200 个字符，摘要最多 1000 个字符，标签最多 20 个且每个不超过 40 个字符。`published` 默认 `false`，时间由服务生成。
 
 详情另外返回 `id`、`created_at`、`updated_at`、`published_at`、`word_count`、`content_html` 和 `attachments`。附件包含 `id`、`article_id`、`filename`、`size`（字节）、`created_at`、`download_url`。
 
@@ -102,3 +115,5 @@ cargo test
 ```
 
 测试使用临时数据库和目录，覆盖草稿隔离、鉴权、文章生命周期、输入校验、并发地址冲突、搜索分页、上传限额及失败清理、附件 Range/HEAD 下载、删除级联和数据重新打开，并确认已删除的独立页面不再提供。
+
+配套前端将登录令牌放入 30 天 HttpOnly Cookie，页面刷新和前台编辑跳转会自动恢复登录。公开代理不转发 Cookie 或管理凭证；后台代理逐次交由 Rust 校验，并拒绝跨站写入。前台通过入站面板提供站长登录和旅人浏览；游客不会显示组件编辑入口。

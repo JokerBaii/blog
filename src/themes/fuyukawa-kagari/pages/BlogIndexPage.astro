@@ -1,4 +1,5 @@
 ---
+import "../styles/blog-notebook.css";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getPublishedPosts } from "@/core/content/blog";
 import { getCoverSources } from "@/core/content/coverSources";
@@ -6,16 +7,17 @@ import { getCoverStyle } from "../data/coverFocus";
 import { categoryLabel } from "@/lib/site";
 import { Icon } from "astro-icon/components";
 import { getThemePath } from "@/core/themes/registry";
-import { kagariAssets } from "../assets";
 import MangaArt from "../components/MangaArt.astro";
+import PageIntro from "../components/PageIntro.astro";
 
+const notebookCovers = ["afternoon-cover", "together-cover", "festival-cover", "letter-page", "notebook-page", "fireworks-page"];
 const posts = (await getPublishedPosts())
-  .map((post) => {
+  .map((post, index) => {
     return {
       ...post,
       wordCount: post.wordCount,
       updatedAt: post.data.updatedDate ?? post.data.pubDate,
-      cover: post.data.cover ?? kagariAssets.heroWallpaper
+      cover: post.data.cover ?? `/themes/fuyukawa-kagari/assets/manga/${notebookCovers[index % notebookCovers.length]}.webp`
     };
   });
 
@@ -28,33 +30,21 @@ const formatter = new Intl.DateTimeFormat("zh-CN", {
 const themeRoutePrefix = getThemePath("fuyukawa-kagari", "/").replace(/\/$/, "");
 ---
 
-<BaseLayout title="Blog | Yuimi Lab" description="技术笔记、二次元随笔与个人记录。">
+<BaseLayout title="Blog | Jokerbai Lab" description="技术笔记、二次元随笔与个人记录。">
   <div class="manga-archive" data-manga-archive>
-  <section class="page-title blog-hero-card">
-    <div class="blog-title-copy">
-      <p class="section-kicker">01 / The notebook</p>
-      <h1>笔记存档<span class="page-title-en">Blog</span></h1>
-      <p>一些认真折腾的记录，<br />一些舍不得忘掉的瞬间。</p>
-      <span class="manga-handwritten">Dear ordinary days.</span>
-    </div>
-    <div class="blog-title-art" aria-hidden="true">
-      <MangaArt image="reading-strip" class="blog-opening-panel" eager />
-      <MangaArt image="kagari-tea" class="blog-opening-character" eager />
-      <span class="manga-page-stamp">NOTE<br />BOOK</span>
-    </div>
-  </section>
+  <PageIntro image="blog" title="笔记存档" subtitle={`${posts.length} 篇记录 · Dear ordinary days.`} page />
 
   <section class="blog-search-card" data-pagefind-ignore data-theme-route-prefix={themeRoutePrefix}>
     <div class="blog-search-heading">
       <Icon name="tabler:search" aria-hidden="true" />
       <div>
-        <p class="section-kicker">Search</p>
+        <p class="section-kicker">FIND A LITTLE STORY</p>
         <h2>翻找笔记</h2>
       </div>
     </div>
     <label class="blog-search-box">
       <span>关键词</span>
-      <input type="search" data-blog-search placeholder="输入 AstrBot、插件、部署..." autocomplete="off" />
+      <input type="search" data-blog-search placeholder="搜索 C++、点云、日常..." autocomplete="off" />
     </label>
     <div class="blog-search-results" data-blog-search-results aria-live="polite"></div>
   </section>
@@ -73,11 +63,11 @@ const themeRoutePrefix = getThemePath("fuyukawa-kagari", "/").replace(/\/$/, "")
   <section class="blog-timeline" aria-label="Blog timeline">
     {posts.length === 0 && <p class="blog-search-empty">暂无文章。</p>}
     {
-      posts.map((post) => (
+      posts.map((post, index) => (
         <article class="blog-timeline-item" data-entry-category={post.data.category}>
           <div class="timeline-date">
             <time datetime={post.updatedAt.toISOString()}>{formatter.format(post.updatedAt)}</time>
-            <span>updated</span>
+            <span>PAGE {String(index + 1).padStart(2, "0")}</span>
           </div>
           <a class="post-row blog-post-row" href={getThemePath("fuyukawa-kagari", `/blog/${post.id}/`)}>
             <div class="post-cover-frame" style={getCoverStyle(post.cover)}>
@@ -94,7 +84,7 @@ const themeRoutePrefix = getThemePath("fuyukawa-kagari", "/").replace(/\/$/, "")
               <p>{post.data.description}</p>
               <div class="tag-row">
                 {post.data.tags.map((tag) => <span>#{tag}</span>)}
-              </div>
+              </div><span class="archive-read">翻开这一页 <span aria-hidden="true">↗</span></span>
             </div>
           </a>
         </article>

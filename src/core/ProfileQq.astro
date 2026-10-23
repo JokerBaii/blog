@@ -1,0 +1,18 @@
+---
+import { getPageContent } from "./data/page-content";
+const { identity: profileIdentity } = await getPageContent();
+---
+<span class="profile-qq" aria-label={`QQ 联系号码 ${profileIdentity.qq}`}>QQ {profileIdentity.qq}</span>
+<style>
+  .profile-qq {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35em 0;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    user-select: text;
+    -webkit-user-select: text;
+  }
+</style>

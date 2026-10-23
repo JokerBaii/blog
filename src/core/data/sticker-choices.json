@@ -1,0 +1,216 @@
+[
+  {
+    "src": "/links/ba-sticker-01.png",
+    "name": "Q 版贴纸 01",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/ba-sticker-02.png",
+    "name": "Q 版贴纸 02",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/ba-sticker-03.png",
+    "name": "Q 版贴纸 03",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/ba-sticker-04.png",
+    "name": "Q 版贴纸 04",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/ba-sticker-05.png",
+    "name": "Q 版贴纸 05",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/ba-sticker-06.png",
+    "name": "Q 版贴纸 06",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/work-sticker-01.png",
+    "name": "Q 版贴纸 07",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/work-sticker-02.png",
+    "name": "Q 版贴纸 08",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/work-sticker-03.png",
+    "name": "Q 版贴纸 09",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/work-sticker-04.png",
+    "name": "Q 版贴纸 10",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/work-sticker-05.png",
+    "name": "Q 版贴纸 11",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/work-sticker-06.png",
+    "name": "Q 版贴纸 12",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/extra-sticker-01.png",
+    "name": "Q 版贴纸 13",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/extra-sticker-02.png",
+    "name": "Q 版贴纸 14",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/extra-sticker-03.png",
+    "name": "Q 版贴纸 15",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/extra-sticker-04.png",
+    "name": "Q 版贴纸 16",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/extra-sticker-05.png",
+    "name": "Q 版贴纸 17",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/extra-sticker-06.png",
+    "name": "Q 版贴纸 18",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/extra-sticker-07.png",
+    "name": "Q 版贴纸 19",
+    "group": "chibi"
+  },
+  {
+    "src": "/links/extra-sticker-08.png",
+    "name": "Q 版贴纸 20",
+    "group": "chibi"
+  },
+  {
+    "src": "/illustrations/portraits/portrait-01.webp",
+    "name": "原图 · 糖葫芦 · 粉发兔耳",
+    "group": "portrait",
+    "thumbnail": "/illustrations/thumbnails/portrait-01.webp"
+  },
+  {
+    "src": "/illustrations/portraits/portrait-02.webp",
+    "name": "原图 · 糖葫芦 · 银发蝴蝶结",
+    "group": "portrait",
+    "thumbnail": "/illustrations/thumbnails/portrait-02.webp"
+  },
+  {
+    "src": "/illustrations/portraits/portrait-03.webp",
+    "name": "原图 · 糖葫芦 · 薄荷双马尾",
+    "group": "portrait",
+    "thumbnail": "/illustrations/thumbnails/portrait-03.webp"
+  },
+  {
+    "src": "/illustrations/portraits/portrait-04.webp",
+    "name": "原图 · 糖葫芦 · 淡紫长发",
+    "group": "portrait",
+    "thumbnail": "/illustrations/thumbnails/portrait-04.webp"
+  },
+  {
+    "src": "/illustrations/portraits/portrait-05.webp",
+    "name": "原图 · 糖葫芦 · 粉发异色瞳",
+    "group": "portrait",
+    "thumbnail": "/illustrations/thumbnails/portrait-05.webp"
+  },
+  {
+    "src": "/illustrations/portraits/portrait-06.webp",
+    "name": "原图 · 樱花下 · 金发双角",
+    "group": "portrait",
+    "thumbnail": "/illustrations/thumbnails/portrait-06.webp"
+  },
+  {
+    "src": "/illustrations/portraits/portrait-07.webp",
+    "name": "原图 · 夏日 · 银发蝴蝶结",
+    "group": "portrait",
+    "thumbnail": "/illustrations/thumbnails/portrait-07.webp"
+  },
+  {
+    "src": "/illustrations/portraits/portrait-08.webp",
+    "name": "原图 · 夏日 · 金发长发",
+    "group": "portrait",
+    "thumbnail": "/illustrations/thumbnails/portrait-08.webp"
+  },
+  {
+    "src": "/illustrations/portraits/portrait-09.webp",
+    "name": "原图 · 夏日 · 粉发短发",
+    "group": "portrait",
+    "thumbnail": "/illustrations/thumbnails/portrait-09.webp"
+  },
+  {
+    "src": "/illustrations/portraits/portrait-10.webp",
+    "name": "原图 · 夏日 · 蓝发侧身",
+    "group": "portrait",
+    "thumbnail": "/illustrations/thumbnails/portrait-10.webp"
+  },
+  {
+    "src": "/illustrations/cutouts/portrait-01.webp",
+    "name": "透明 · 糖葫芦 · 粉发兔耳",
+    "group": "cutout",
+    "thumbnail": "/illustrations/thumbnails/cutout-01.webp"
+  },
+  {
+    "src": "/illustrations/cutouts/portrait-02.webp",
+    "name": "透明 · 糖葫芦 · 银发蝴蝶结",
+    "group": "cutout",
+    "thumbnail": "/illustrations/thumbnails/cutout-02.webp"
+  },
+  {
+    "src": "/illustrations/cutouts/portrait-03.webp",
+    "name": "透明 · 糖葫芦 · 薄荷双马尾",
+    "group": "cutout",
+    "thumbnail": "/illustrations/thumbnails/cutout-03.webp"
+  },
+  {
+    "src": "/illustrations/cutouts/portrait-05.webp",
+    "name": "透明 · 糖葫芦 · 粉发异色瞳",
+    "group": "cutout",
+    "thumbnail": "/illustrations/thumbnails/cutout-05.webp"
+  },
+  {
+    "src": "/illustrations/cutouts/portrait-06.webp",
+    "name": "透明 · 樱花下 · 金发双角",
+    "group": "cutout",
+    "thumbnail": "/illustrations/thumbnails/cutout-06.webp"
+  },
+  {
+    "src": "/illustrations/cutouts/portrait-07.webp",
+    "name": "透明 · 夏日 · 银发蝴蝶结",
+    "group": "cutout",
+    "thumbnail": "/illustrations/thumbnails/cutout-07.webp"
+  },
+  {
+    "src": "/illustrations/cutouts/portrait-08.webp",
+    "name": "透明 · 夏日 · 金发长发",
+    "group": "cutout",
+    "thumbnail": "/illustrations/thumbnails/cutout-08.webp"
+  },
+  {
+    "src": "/illustrations/cutouts/portrait-09.webp",
+    "name": "透明 · 夏日 · 粉发短发",
+    "group": "cutout",
+    "thumbnail": "/illustrations/thumbnails/cutout-09.webp"
+  },
+  {
+    "src": "/illustrations/cutouts/portrait-10.webp",
+    "name": "透明 · 夏日 · 蓝发侧身",
+    "group": "cutout",
+    "thumbnail": "/illustrations/thumbnails/cutout-10.webp"
+  }
+]

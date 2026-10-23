@@ -2,9 +2,11 @@
 import { Icon } from "astro-icon/components";
 import BlankLayout from "../layouts/BlankLayout.astro";
 import PageHead from "../components/PageHead.astro";
-import { projectEntries, projectTechLines } from "@/core/data/projects";
+import { projectTechLines } from "@/core/data/projects";
+import { getPageContent } from "@/core/data/page-content";
+const { projects: projectEntries } = await getPageContent();
 ---
-<BlankLayout title="Works | Yuimi Lab Blank" description="游戏、建模、插件与网页。一些持续进行的小实验。">
+<BlankLayout title="Works | Jokerbai Lab Blank" description="C++、点云、算法与工具链的学习笔记和计划。">
   <PageHead index="02" title="Works" label="实践与项目" description="把兴趣落到实处。在反复试验里，慢慢接近想象中的样子。" count={String(projectEntries.length).padStart(2, "0")} unit="个项目" />
   <section class="blank-projects" data-blank-collection data-unit="个项目" aria-label="项目目录">
     <form class="blank-filter-form" data-blank-filter-form hidden>

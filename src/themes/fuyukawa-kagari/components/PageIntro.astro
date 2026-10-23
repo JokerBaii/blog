@@ -1,0 +1,18 @@
+---
+import backgrounds from "../../../../public/illustrations/manga-backgrounds/sources.json";
+interface Props { image: string; title: string; subtitle?: string; page?: boolean; titleId?: string; }
+const { image, title, subtitle, page = false, titleId } = Astro.props;
+const source = backgrounds.find(item => item.page === image);
+---
+<header class:list={["manga-page-intro", { "manga-page-intro--page": page }]}>
+  <div><h1 id={titleId}>{title}</h1>{subtitle && <p>{subtitle}</p>}</div>
+  {source && <a href={source.images[0].source} target="_blank" rel="noopener noreferrer">原作：{source.author} ↗</a>}
+</header>
+<style>
+  .manga-page-intro { position: relative; display: flex; justify-content: space-between; align-items: end; gap: 20px; margin: 0 0 28px; padding: 15px 0 22px; border-bottom: 1px solid #cbbad4; text-shadow: 0 1px 8px #fff,0 0 20px #fff; }
+  .manga-page-intro--page { width: min(1144px,calc(100% - 80px)); margin: 108px auto 28px; }
+  .manga-page-intro h1 { margin: 0; color: #485574; font-size: clamp(24px,3.2vw,38px); line-height: 1.5; }
+  .manga-page-intro p { margin: 7px 0 0; color: #8c7490; font-size: 11px; line-height: 1.8; }
+  .manga-page-intro a { flex-shrink: 0; color: #947b96; font-size: 9px; text-decoration: none; }
+  @media(max-width:600px) { .manga-page-intro--page { width: calc(100% - 32px); margin-top: 96px; }.manga-page-intro { align-items: start; gap: 10px; }.manga-page-intro a { font-size: 8px; } }
+</style>

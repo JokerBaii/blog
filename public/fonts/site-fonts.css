@@ -1,0 +1,58 @@
+@font-face {
+  font-family: "HarmonyOS Sans SC";
+  src: url("/fonts/HarmonyOS_SansSC_Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "HarmonyOS Sans SC";
+  src: url("/fonts/HarmonyOS_SansSC_Bold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Maple Mono";
+  src: url("/fonts/MapleMono-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Maple Mono";
+  src: url("/fonts/MapleMono-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Maple Mono";
+  src: url("/fonts/MapleMono-Italic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+:root {
+  --site-sans: "HarmonyOS Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+  --site-mono: "Maple Mono", "HarmonyOS Sans SC", Consolas, monospace;
+}
+html[data-theme="blank"] {
+  --blank-sans: var(--site-sans);
+  --blank-mono: var(--site-mono);
+  --blank-serif: var(--site-sans);
+}
+html body,
+html body[data-fuyukawa],
+html body[data-blank] {
+  font-family: var(--site-sans);
+}
+body :is(code, pre, kbd, samp, #content, #slug),
+body[data-fuyukawa] :is(.section-kicker, .about-kicker, .about-mini-title, .about-section-heading p, .works-card-head p, .works-collection-heading p, .works-page-number, .about-note-number, .profile-terminal, .identity-path, .identity-command, .terminal-title, .terminal-path, .terminal-prompt, .game-machine-label),
+.daily-links :is(.links-kicker, .links-category, .links-domain, .links-number) {
+  font-family: var(--site-mono);
+}
+body .expressive-code {
+  --ec-codeFontFml: var(--site-mono);
+  --ec-uiFontFml: var(--site-mono);
+}

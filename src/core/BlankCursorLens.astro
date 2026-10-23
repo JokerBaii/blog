@@ -1,0 +1,22 @@
+<script>
+  import "./blank-cursor-lens";
+</script>
+<style is:global>
+  .blank-cursor-lens {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2147483001;
+    width: 124px;
+    height: 124px;
+    border-radius: 50%;
+    background: white;
+    mix-blend-mode: difference;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    will-change: left, top;
+  }
+  @media (hover: none), (pointer: coarse) {
+    .blank-cursor-lens { display: none; }
+  }
+</style>

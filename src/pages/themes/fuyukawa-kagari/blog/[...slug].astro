@@ -2,7 +2,8 @@
 export const prerender = false;
 import { getPublishedPost, renderPost } from "@/core/content/blog";
 import ArticleAttachments from "@/core/content/ArticleAttachments.astro";
-import { ArticlePage, NotFoundPage } from "@/themes/fuyukawa-kagari";
+import ArticlePage from "@/themes/fuyukawa-kagari/pages/ArticlePage.astro";
+import NotFoundPage from "@/themes/fuyukawa-kagari/pages/NotFoundPage.astro";
 
 const post = await getPublishedPost(Astro.params.slug ?? "");
 if (!post) Astro.response.status = 404;
@@ -13,6 +14,6 @@ const rendered = post ? await renderPost(post) : null;
 {post && rendered ? (
   <ArticlePage frontmatter={post.data} headings={rendered.metadata.headings}>
     <Fragment set:html={rendered.code} />
-    <ArticleAttachments attachments={post.attachments} />
+    <ArticleAttachments attachments={post.attachments} contentHtml={rendered.code} />
   </ArticlePage>
 ) : <NotFoundPage />}

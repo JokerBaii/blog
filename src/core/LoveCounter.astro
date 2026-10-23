@@ -1,0 +1,21 @@
+---
+import { getPageContent } from "./data/page-content";
+const { identity } = await getPageContent();
+const since = identity.loveSince;
+const today = new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString().slice(0, 10);
+const days = since ? Math.max(0, Math.floor((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${since}T00:00:00Z`)) / 86400000) + 1) : 0;
+---
+{since && <p class="love-counter">💕 喜欢女朋友已经：<time datetime={since} data-love-since={since}>{days} 天</time>，往后也一起走。</p>}
+<script>
+  const refreshLoveCounter = () => {
+    const today = new Date(Date.now() + 8 * 3600000).toISOString().slice(0, 10);
+    document.querySelectorAll<HTMLTimeElement>("[data-love-since]").forEach(node => {
+      const since = node.dataset.loveSince!;
+      const days = Math.max(0, Math.floor((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${since}T00:00:00Z`)) / 86400000) + 1);
+      node.textContent = `${days} 天`;
+    });
+  };
+  refreshLoveCounter();
+  document.addEventListener("astro:page-load", refreshLoveCounter);
+  setInterval(refreshLoveCounter, 60000);
+</script>

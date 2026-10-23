@@ -1,5 +1,5 @@
 export const THEME_STORAGE_KEY = "yuimi-theme-id-v2";
-export const DEFAULT_THEME_ID = "kisara";
+export const DEFAULT_THEME_ID = "fuyukawa-kagari";
 
 export const themes = [
   {
@@ -13,12 +13,6 @@ export const themes = [
     label: "Blank",
     description: "独立、轻量的空白主题骨架",
     routePrefix: "/themes/blank"
-  },
-  {
-    id: "kisara",
-    label: "Kisara",
-    description: "以木更为角色核心的视觉交互实验主题",
-    routePrefix: "/themes/kisara"
   }
 ] as const;
 

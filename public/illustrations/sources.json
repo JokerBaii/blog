@@ -1,0 +1,85 @@
+{
+  "origin": "用户提供的本地插画；原图来源及原有作者标记继续适用。",
+  "derivatives": "WebP 为网站优化版本；透明立绘由 imagegen 从对应原图去背景，非重新创作的版权授权。",
+  "images": [
+    {
+      "id": "01",
+      "sourceFile": "1792690684669.png",
+      "sourceSha256": "90f5cc831e8fd65fa1e70477b33df359edf181ddc1846038e606ef20e5334895",
+      "portrait": "/illustrations/portraits/portrait-01.webp",
+      "cutout": "/illustrations/cutouts/portrait-01.webp",
+      "cutoutSha256": "f2570a612c31f7204bd41cdc2fe990131d2131284be126ffdd534cca9ea69d28"
+    },
+    {
+      "id": "02",
+      "sourceFile": "1792690687736.png",
+      "sourceSha256": "5249a6619e47ca5a22e124e8d50990816f115b3a657ed8c1de93065e20b6d30d",
+      "portrait": "/illustrations/portraits/portrait-02.webp",
+      "cutout": "/illustrations/cutouts/portrait-02.webp",
+      "cutoutSha256": "34705b1faa2ac48d930a45d83cab40f54f08f5eaa89248bb5a9059d48e4f7cb3"
+    },
+    {
+      "id": "03",
+      "sourceFile": "1792690690678.png",
+      "sourceSha256": "0c8ce83edb6fd14131b59aa2913df586033d5feb522c4674bd20d8f1a958f271",
+      "portrait": "/illustrations/portraits/portrait-03.webp",
+      "cutout": "/illustrations/cutouts/portrait-03.webp",
+      "cutoutSha256": "5aa72593add50f1d52bb4c59b5fbe5fe3709c16a89105d824e8feab72fe00ec9"
+    },
+    {
+      "id": "04",
+      "sourceFile": "1792690693673.png",
+      "sourceSha256": "b92203d405648ced4ffb58206f14548252fd9df9f59293bfe892bb59e517f917",
+      "portrait": "/illustrations/portraits/portrait-04.webp",
+      "variantNote": "保留原图；图像工具拒绝生成透明版本。"
+    },
+    {
+      "id": "05",
+      "sourceFile": "1792690697008.png",
+      "sourceSha256": "3fffe0570a8b2d2c9a4b363a44ed28fdde99aaa56ff738b019b9ba3dc274aef4",
+      "portrait": "/illustrations/portraits/portrait-05.webp",
+      "cutout": "/illustrations/cutouts/portrait-05.webp",
+      "cutoutSha256": "aace6ae42381f1e868324a6083110fdbf300017535684e25ce1fc52f1141dbd2"
+    },
+    {
+      "id": "06",
+      "sourceFile": "1792690700947.png",
+      "sourceSha256": "9e223724901eb4f65fae0b0a00c0079e5b2ee7447fb00899af516f174cbe1e0a",
+      "portrait": "/illustrations/portraits/portrait-06.webp",
+      "cutout": "/illustrations/cutouts/portrait-06.webp",
+      "cutoutSha256": "245201988928f560c1d72e1d0af7a4a2ca1a5e3d7419a357d65ac24f61170bd9"
+    },
+    {
+      "id": "07",
+      "sourceFile": "1792691558880.png",
+      "sourceSha256": "cb11c4d44947bd8d8bc1318e391802014876abb422f25f68e067cf9d80d29472",
+      "portrait": "/illustrations/portraits/portrait-07.webp",
+      "cutout": "/illustrations/cutouts/portrait-07.webp",
+      "cutoutSha256": "21ea09a0dfc56a11c31ce0bd8581160ad73612eed1c0264e74792effa274904a"
+    },
+    {
+      "id": "08",
+      "sourceFile": "1792691562339.png",
+      "sourceSha256": "bbbf3b2842c1788193c06cbea896c091b38a24a6ddc036dbd76c3588690aa260",
+      "portrait": "/illustrations/portraits/portrait-08.webp",
+      "cutout": "/illustrations/cutouts/portrait-08.webp",
+      "cutoutSha256": "239c8b74ebefc1ce1e46f2edfacbb80808f83e905434e74c226a605b4017d381"
+    },
+    {
+      "id": "09",
+      "sourceFile": "1792691565664.png",
+      "sourceSha256": "2b50c684cbe6c9dc96a373199fec931e4c9ef610cb2197b3674ba81bb4c53cc0",
+      "portrait": "/illustrations/portraits/portrait-09.webp",
+      "cutout": "/illustrations/cutouts/portrait-09.webp",
+      "cutoutSha256": "6700f1a84c5642b55f4c651cb96378ce72b90e39e9a74f37531a35a212d0a262"
+    },
+    {
+      "id": "10",
+      "sourceFile": "1792691568775.png",
+      "sourceSha256": "72c85691b8eb118871cf05c3e71ca7afb40005360bfd960d8a3145de9627fadd",
+      "portrait": "/illustrations/portraits/portrait-10.webp",
+      "cutout": "/illustrations/cutouts/portrait-10.webp",
+      "cutoutSha256": "caa34f06cab68fc8bea3280a82d3578a8a7e83c65a738a080933566c9d638537"
+    }
+  ]
+}

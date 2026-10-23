@@ -1,0 +1,30 @@
+---
+import { Icon } from "astro-icon/components";
+import { getPageContent } from "./data/page-content";
+import PageIntro from "@/themes/fuyukawa-kagari/components/PageIntro.astro";
+import PageHead from "@/themes/blank/components/PageHead.astro";
+import "./daily-links.css";
+interface Props { theme: "manga" | "blank"; }
+const { theme } = Astro.props;
+const { links: dailyLinks } = await getPageContent();
+---
+<section class="daily-links" data-links-theme={theme} aria-labelledby="daily-links-title">
+  {theme === "blank" ? <PageHead index="03" title="Daily Links" label="网站收藏" description="学习、阅读，以及日常会用到的网站。" count={String(dailyLinks.length).padStart(2, "0")} unit="个站点" /> : <PageIntro image="links" title="Daily Links" subtitle={`${dailyLinks.length} 个常去的小地方 · A little window to the world.`} />}
+  <div class="links-grid">
+    {dailyLinks.map((site, index) => (
+      <a class="links-card" href={site.href} target="_blank" rel="noopener noreferrer"
+        style={`--link-accent:${site.color};--link-wash:${site.wash};--link-line:${site.line}`}
+        aria-label={`访问 ${site.name}（新窗口）`}>
+        <span class="links-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+        <div class="links-card-copy">
+          <p class="links-category">{site.category}</p>
+          <h2>{site.name}</h2>
+          <p class="links-description">{site.description}</p>
+        </div>
+        <img class="links-sticker" src={site.art} alt="" width="160" height="160" loading="lazy" decoding="async" />
+        <footer><span class="links-domain">{site.domain}</span><span class="links-open">Visit site <Icon name="tabler:arrow-up-right" aria-hidden="true" /></span></footer>
+      </a>
+    ))}
+  </div>
+  {theme === "manga" && <footer class="links-footnote"><span>Little links, everyday discoveries.</span></footer>}
+</section>

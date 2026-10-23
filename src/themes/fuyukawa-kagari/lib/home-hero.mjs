@@ -19,12 +19,12 @@ export function mountHomeHero() {
     const scrollRoot = document.documentElement;
     const scrollLockClass = "is-fuyukawa-hero-locked";
     const terminalLines = [
-      "pin --dev-notes --anime-diary",
-      "collect \"blue moments\" && write",
-      "npm run scrapbook",
+      "learn --cpp --point-cloud",
+      "collect \"little moments\" && write",
+      "write --campus-notes",
       "echo \"做自己想做，想自己所想\""
     ];
-    const nameLines = ["喝益胃", "Yuimi-chaya"];
+    const nameLines = ["jokerbai", "一个路过的大学生"];
 
     let pull = 0;
     let reversePull = 0;
@@ -168,6 +168,7 @@ export function mountHomeHero() {
 
     const handleHeroWheel = (event) => {
       if (!stage || !hero) return;
+      if (event.target?.closest?.("[data-entry-gate], #entry-gate")) return;
       if (document.documentElement.classList.contains("is-notice-open")) return;
 
       const stageRect = stage.getBoundingClientRect();
@@ -300,7 +301,7 @@ export function mountHomeHero() {
     };
     const handleContentFocus = (event) => {
       if (scrollRoot.classList.contains(scrollLockClass)
-        && event.target?.closest?.("#page-content")
+        && event.target?.closest?.("#page-content, .site-footer")
         && !stage?.contains?.(event.target)) skipHeroGate();
     };
     const skipLinks = [hero?.querySelector(".scroll-cue"), document.querySelector(".skip-to-content")].filter(Boolean);

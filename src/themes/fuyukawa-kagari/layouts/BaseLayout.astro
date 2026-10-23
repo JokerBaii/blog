@@ -1,4 +1,13 @@
 ---
+import ScrollStart from "@/core/ScrollStart.astro";
+import pageBackgroundHref from "../styles/page-background.css?url";
+import MangaBackdrop from "../components/MangaBackdrop.astro";
+import BlueArchiveClick from "@/core/BlueArchiveClick.astro";
+import EntryGate from "@/core/EntryGate.astro";
+import SiteFonts from "@/core/SiteFonts.astro";
+import FontCredits from "@/core/FontCredits.astro";
+import LoveCounter from "@/core/LoveCounter.astro";
+import ContextEdit from "@/core/ContextEdit.astro";
 import "../styles/theme.css";
 import "@/themes/fuyukawa-kagari/styles/refresh.css";
 import "@/themes/fuyukawa-kagari/styles/manga.css";
@@ -37,6 +46,7 @@ const {
 } = Astro.props;
 const canonicalPath = getCanonicalPath(Astro.url.pathname);
 const canonical = new URL(canonicalPath, Astro.site ?? Astro.url);
+const mangaBackground = canonicalPath.startsWith("/blog/") ? "blog" : canonicalPath.startsWith("/projects") ? "projects" : canonicalPath.startsWith("/games") ? "links" : canonicalPath.startsWith("/about") ? "about" : undefined;
 const themeHomePath = getThemePath("fuyukawa-kagari", "/");
 const navItems = site.nav.map((item) => ({
   ...item,
@@ -44,7 +54,7 @@ const navItems = site.nav.map((item) => ({
 }));
 const isAlternateThemeRoute = Astro.url.pathname.startsWith("/themes/");
 const themedNotFoundRedirectScript = `(() => {
-  const themeMatch = window.location.pathname.match(/^\\/themes\\/(blank|kisara|fuyukawa-kagari)(?:\\/|$)/);
+  const themeMatch = window.location.pathname.match(/^\\/themes\\/(blank|fuyukawa-kagari)(?:\\/|$)/);
   if (!themeMatch) return;
   const themeId = themeMatch[1];
   const notFoundPath = "/themes/" + themeId + "/404/";
@@ -59,6 +69,7 @@ const themedNotFoundRedirectScript = `(() => {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <ScrollStart />
     <PerformanceProfile />
     <SeoMeta title={title} description={description} canonical={canonical} isArticlePage={isArticlePage} article={article} />
     <meta name="theme-color" content="#f6fbfa" />
@@ -75,15 +86,20 @@ const themedNotFoundRedirectScript = `(() => {
     <title>{title}</title>
     {canonicalPath !== "/" && <link rel="stylesheet" href={refreshPagesHref} />}
     {canonicalPath !== "/" && <link rel="stylesheet" href={mangaPagesHref} />}
+    {mangaBackground && <link rel="stylesheet" href={pageBackgroundHref} />}
+    <SiteFonts />
     <ClientRouter />
     <ConsoleEasterEgg />
   </head>
   <body
     data-fuyukawa
+    data-manga-background={mangaBackground}
     data-pagefind-ignore={isAlternateThemeRoute ? true : undefined}
     data-yuimi-selection-lock={isArticlePage ? undefined : "true"}
     data-yuimi-article-page={isArticlePage ? "true" : undefined}
   >
+    {mangaBackground && <MangaBackdrop section={mangaBackground} />}
+    <EntryGate theme="manga" />
     <a class="skip-to-content" href="#page-content">跳至正文</a>
     <SakuraRain />
     <div class="pig-scrollbar" data-pig-scrollbar aria-hidden="true">
@@ -95,7 +111,7 @@ const themedNotFoundRedirectScript = `(() => {
         <img src={kagariAssets.scrollPig} alt="" width="56" height="48" />
       </div>
     </div>
-    <aside class="toy-dock" aria-label="Yuimi Lab toy dock" transition:persist="yuimi-toy-dock">
+    <aside class="toy-dock" aria-label="Jokerbai Lab toy dock" transition:persist="yuimi-toy-dock">
       <button class="toy-dock-handle" type="button" aria-label="打开音乐与看板娘工具" title="音乐与看板娘" aria-expanded="false" aria-controls="toy-dock-panel">
         <Icon name="tabler:sparkles" aria-hidden="true" />
       </button>
@@ -115,7 +131,7 @@ const themedNotFoundRedirectScript = `(() => {
         <section class="toy-widget music-widget" aria-label="音乐播放器">
           <div class="toy-widget-title">
             <span>♫</span>
-            <strong>Yuimi Radio</strong>
+            <strong>jokerbai Radio</strong>
           </div>
           <div class="music-player-shell">
             <div class="music-cover-area">
@@ -130,7 +146,7 @@ const themedNotFoundRedirectScript = `(() => {
               <span class="music-cover-caption" data-music-status>待播放</span>
             </div>
             <div class="music-info-area">
-              <span class="music-meta">Yuimi playlist</span>
+              <span class="music-meta">jokerbai playlist</span>
               <p class="music-track">lofi sakura loop</p>
               <p class="music-note" data-music-note>正在读取歌单...</p>
             </div>
@@ -183,18 +199,14 @@ const themedNotFoundRedirectScript = `(() => {
           <span class="context-theme-mark" aria-hidden="true">○</span>
           Blank
         </button>
-        <button type="button" data-theme-select="kisara" aria-pressed="false">
-          <span class="context-theme-mark" aria-hidden="true">○</span>
-          Kisara
-        </button>
       </div>
     </nav>
     <button
       class="theme-quick-switch"
       type="button"
-      data-theme-select="kisara"
-      aria-label="切换到 Kisara 主题"
-      title="切换到 Kisara 主题"
+      data-theme-select="blank"
+      aria-label="切换到 Blank 主题"
+      title="切换到 Blank 主题"
     >
       <Icon name="tabler:palette" aria-hidden="true" />
     </button>
@@ -221,21 +233,24 @@ const themedNotFoundRedirectScript = `(() => {
       </main>
       <footer class="site-footer" data-footer-timers>
         <div class="footer-inner">
-          <p class="footer-signature-line">© 2026 BY 喝益胃 / Yuimi Lab</p>
+          <p class="footer-signature-line">© 2026 BY jokerbai / Jokerbai Lab</p>
           <p>二次元手账、开发记录、还有一点点宇宙回声。</p>
           <p>🛰️ 旅行者一号：<time data-elapsed-from="1977-09-05T12:56:00Z" data-elapsed-mode="minute">计算中...</time> 仍在远航</p>
           <p>🛰️ 旅行者二号：<time data-elapsed-from="1977-08-20T14:29:00Z" data-elapsed-mode="minute">计算中...</time> 仍在远航</p>
-          <p>🌸 Yuimi Lab 已落地：<time data-elapsed-from="2026-05-18T00:00:00+08:00" data-elapsed-mode="second">计算中...</time></p>
+          <p>🌸 Jokerbai Lab 已落地：<time data-elapsed-from="2026-05-18T00:00:00+08:00" data-elapsed-mode="second">计算中...</time></p>
           <p>💍 契约之吻：<time data-elapsed-from="2022-09-24T00:00:00+08:00" data-elapsed-mode="days">计算中...</time>，第二季仍未响应</p>
-          <p class="footer-status-line">sakura: falling / pig: on duty / tea: warm</p>
-          <p class="manga-art-credit">插画与漫画：葉佐乃《儚いキミは猛攻をはじめる》 · 冬川篝主题手帖</p>
+          <LoveCounter />
+          <button type="button" data-entry-open>入站入口</button>
+          <FontCredits />
         </div>
       </footer>
     </div>
     <ThemeLongPressMenu />
     <MangaRuntime />
+    <ContextEdit />
 
-    <script>
+  <script>
+      import { copyText } from "@/core/clipboard";
       import { createLive2dReactions } from "../lib/live2d-input.mjs";
       import { mountWaifuAnchor } from "../lib/waifu-anchor.mjs";
 
@@ -560,11 +575,11 @@ const themedNotFoundRedirectScript = `(() => {
         if (document.querySelector(".waifu-local-fallback")) return;
         const fallback = document.createElement("div");
         fallback.className = "waifu-local-fallback";
-        fallback.setAttribute("aria-label", "Yuimi Lab fallback 看板娘");
+        fallback.setAttribute("aria-label", "Jokerbai Lab fallback 看板娘");
         fallback.innerHTML = `
           <div class="waifu-local-bubble">Live2D 加载有点害羞，先由我值班。</div>
           <div class="waifu-local-character">
-            <img src="/themes/fuyukawa-kagari/assets/profile.webp" alt="" width="128" height="128" />
+            <img src="/api/avatar" alt="" width="128" height="128" />
           </div>
         `;
         document.body.appendChild(fallback);
@@ -655,7 +670,7 @@ const themedNotFoundRedirectScript = `(() => {
             waifu.classList.remove("waifu-hidden");
             waifu.classList.add("waifu-active");
             anchorWaifu(waifu);
-            window.setTimeout(() => showWaifuMessage("欢迎来到 Yuimi Lab，今天也要开心写代码。"), 900);
+            window.setTimeout(() => showWaifuMessage("欢迎来到 Jokerbai Lab，今天也要开心写代码。"), 900);
             window.setTimeout(reconcileWaifuFallback, 4200);
             window.setTimeout(activateWaifuFallbackIfBlank, 12000);
           });
@@ -848,7 +863,7 @@ const themedNotFoundRedirectScript = `(() => {
           queryElements();
           const { toggle, volume, seek, track, current, duration, note, status, volumeLabel } = player.elements;
           const currentTrack = player.tracks[player.index];
-          if (track) track.textContent = currentTrack?.title ?? "Yuimi Radio";
+          if (track) track.textContent = currentTrack?.title ?? "jokerbai Radio";
           if (current) current.textContent = formatAudioTime(audio.currentTime);
           if (duration) duration.textContent = formatAudioTime(audio.duration);
           if (seek && !player.seeking) {
@@ -1122,7 +1137,7 @@ const themedNotFoundRedirectScript = `(() => {
         contextMenu.style.setProperty("--menu-x", `${Math.max(12, x)}px`);
         contextMenu.style.setProperty("--menu-y", `${Math.max(12, y)}px`);
         contextMenu.classList.add("is-open");
-        if (focusFirst) contextMenu.querySelector("button")?.focus({ preventScroll: true });
+        if (focusFirst) contextMenu.querySelector("button:not([hidden])")?.focus({ preventScroll: true });
         return true;
       };
 
@@ -1174,14 +1189,16 @@ const themedNotFoundRedirectScript = `(() => {
         if (action === "back") history.back();
         if (action === "forward") history.forward();
         if (action === "copy") {
-          await navigator.clipboard?.writeText(window.location.href);
+          try { await copyText(window.location.href); }
+          catch { button.textContent = "复制失败，请重试"; return; }
           button.textContent = "\u2713 \u94fe\u63a5\u5df2\u590d\u5236";
           window.setTimeout(() => {
             button.textContent = "\u29c9 \u590d\u5236\u94fe\u63a5";
           }, 1200);
         }
         if (action === "title") {
-          await navigator.clipboard?.writeText(document.title);
+          try { await copyText(document.title); }
+          catch { button.textContent = "复制失败，请重试"; return; }
           button.textContent = "\u2713 \u6807\u9898\u5df2\u590d\u5236";
           window.setTimeout(() => {
             button.textContent = "T \u590d\u5236\u6807\u9898";
@@ -1233,5 +1250,6 @@ const themedNotFoundRedirectScript = `(() => {
       window.addEventListener("load", enhanceCodeBlocks);
       document.addEventListener("astro:page-load", enhanceCodeBlocks);
     </script>
+    <BlueArchiveClick />
   </body>
 </html>

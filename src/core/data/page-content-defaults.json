@@ -1,0 +1,296 @@
+{
+  "identity": {
+    "displayName": "jokerbai",
+    "handle": "Jokerbaii",
+    "siteName": "Jokerbai Lab",
+    "bio": "一个路过的大学生。和 C++、点云慢慢较劲，也认真喜欢着女朋友。这里放学习笔记、折腾记录，以及普通日子里的小开心。",
+    "github": "https://github.com/Jokerbaii",
+    "qq": "150925418",
+    "intro": "这里是一个路过的大学生给自己留的小房间，装着日常里零零碎碎的想法，也收藏着和她有关的小开心。日子慢慢过，喜欢的人好好陪。下课之后，最想做的事是和女朋友一起走走，把晚风和今天的故事都讲给她听。",
+    "loveSince": "2026-05-01"
+  },
+  "status": [
+    "在 C++ 的报错里慢慢升级",
+    "把散落的点，拼成看得懂的世界",
+    "最近最喜欢的事：和女朋友待在一起"
+  ],
+  "tech": [
+    {
+      "key": "cpp",
+      "name": "C++",
+      "note": "语法 / STL / 调试笔记"
+    },
+    {
+      "key": "cloud",
+      "name": "点云",
+      "note": "三维数据 / 处理思路 / 可视化"
+    },
+    {
+      "key": "algorithms",
+      "name": "算法练习",
+      "note": "数据结构 / 一点一点想明白"
+    },
+    {
+      "key": "cmake",
+      "name": "构建与工具",
+      "note": "CMake / Git / 环境折腾"
+    },
+    {
+      "key": "notes",
+      "name": "学习记录",
+      "note": "踩坑整理 / 随手笔记"
+    }
+  ],
+  "anime": [
+    {
+      "key": "engage-kiss",
+      "title": "契约之吻",
+      "subtitle": "给日常加一点心动",
+      "image": "/themes/fuyukawa-kagari/assets/about/engage-kiss.webp"
+    },
+    {
+      "key": "aobuta",
+      "title": "青春猪头少年系列",
+      "subtitle": "青春里那些说不清的心事",
+      "image": "/themes/fuyukawa-kagari/assets/about/aobuta.webp"
+    },
+    {
+      "key": "charlotte",
+      "title": "夏洛特",
+      "subtitle": "下课之后的另一个世界",
+      "image": "/themes/fuyukawa-kagari/assets/about/charlotte.webp"
+    },
+    {
+      "key": "summer-pockets",
+      "title": "Summer Pockets",
+      "subtitle": "把夏天留在存档里",
+      "image": "/themes/fuyukawa-kagari/assets/about/summer-pockets.webp"
+    }
+  ],
+  "favorites": [
+    {
+      "key": "catgirl",
+      "title": "女朋友",
+      "subtitle": "my favorite person",
+      "image": "/themes/fuyukawa-kagari/assets/about/xp-catgirl.webp"
+    },
+    {
+      "key": "pink-hair",
+      "title": "一起散步",
+      "subtitle": "one more walk together",
+      "image": "/themes/fuyukawa-kagari/assets/about/xp-pink-hair.webp"
+    },
+    {
+      "key": "yandere",
+      "title": "认真回消息",
+      "subtitle": "always happy to hear from you",
+      "image": "/themes/fuyukawa-kagari/assets/about/xp-yandere.webp"
+    },
+    {
+      "key": "heavy-love",
+      "title": "普通日子",
+      "subtitle": "little things, good days",
+      "image": "/themes/fuyukawa-kagari/assets/about/xp-heavy-love.webp"
+    }
+  ],
+  "relaxation": [
+    {
+      "key": "cyberpunk-2077",
+      "title": "课间小游戏",
+      "subtitle": "下课了，脑袋也休息一下",
+      "image": "/themes/fuyukawa-kagari/assets/about/cyberpunk-2077.webp"
+    },
+    {
+      "key": "the-finals",
+      "title": "双人合作",
+      "subtitle": "通关很开心，一起玩更开心",
+      "image": "/themes/fuyukawa-kagari/assets/about/the-finals.webp"
+    },
+    {
+      "key": "kovaaks",
+      "title": "周末存档",
+      "subtitle": "给忙碌的一周按个暂停",
+      "image": "/themes/fuyukawa-kagari/assets/about/kovaaks.webp"
+    },
+    {
+      "key": "aimlabs",
+      "title": "和她一起玩",
+      "subtitle": "输赢随意，队友固定",
+      "image": "/themes/fuyukawa-kagari/assets/about/aimlabs.webp"
+    }
+  ],
+  "signals": [
+    {
+      "label": "正在学习",
+      "text": "C++ 和点云。先把一个报错解决，再让一团点慢慢变得有头绪。"
+    },
+    {
+      "label": "最近在折腾",
+      "text": "把课堂笔记和踩坑过程搬进博客，给以后又忘了的自己留个路标。"
+    },
+    {
+      "label": "今日偏爱",
+      "text": "最近喜欢女朋友。代码可以明天再调，今天的晚风想和她一起吹。"
+    }
+  ],
+  "projects": [
+    {
+      "id": "cpp-notes",
+      "title": "C++ 学习草稿本",
+      "type": "Learning Notes",
+      "line": "cpp",
+      "status": "笔记待整理",
+      "summary": "从一个能跑的小例子开始，把语法、STL 和编译器的碎碎念整理成自己看得懂的笔记。",
+      "details": [
+        "基础语法",
+        "STL 小例子",
+        "调试思路"
+      ],
+      "sticker": "/illustrations/cutouts/portrait-01.webp"
+    },
+    {
+      "id": "cloud-lab",
+      "title": "点云观察日记",
+      "type": "Point Cloud Notes",
+      "line": "cloud",
+      "status": "学习方向",
+      "summary": "一团点乍看很乱，换个角度就有了轮廓。这里准备记录三维数据的读取、观察和处理思路。",
+      "details": [
+        "数据读取",
+        "点云可视化",
+        "处理流程"
+      ],
+      "sticker": "/illustrations/cutouts/portrait-02.webp"
+    },
+    {
+      "id": "algorithm-notes",
+      "title": "算法慢慢想",
+      "type": "Problem Solving",
+      "line": "algorithms",
+      "status": "练习清单",
+      "summary": "题目不一定一次想通，但每次卡住的地方都值得记下来。给思路留草稿，也给自己留一点耐心。",
+      "details": [
+        "数据结构",
+        "思路拆解",
+        "边界检查"
+      ],
+      "sticker": "/illustrations/cutouts/portrait-03.webp"
+    },
+    {
+      "id": "build-notes",
+      "title": "环境折腾备忘录",
+      "type": "Toolchain Notes",
+      "line": "cmake",
+      "status": "待补充",
+      "summary": "代码还没跑，环境先出了题。把构建、依赖和版本管理的过程记下来，下次少走一点回头路。",
+      "details": [
+        "CMake 构建",
+        "Git 记录",
+        "环境配置"
+      ],
+      "sticker": "/illustrations/cutouts/portrait-05.webp"
+    },
+    {
+      "id": "campus-notes",
+      "title": "下课后的随手记",
+      "type": "Campus Journal",
+      "line": "notes",
+      "status": "课后归档",
+      "summary": "课程作业、课间的灵感、和她一起走过的路，都夹进课后的手账里，留给以后慢慢翻。",
+      "details": [
+        "课程作业",
+        "零碎想法",
+        "和她的普通日子"
+      ],
+      "sticker": "/illustrations/cutouts/portrait-06.webp"
+    },
+    {
+      "id": "blog-lab",
+      "title": "这个博客的小实验",
+      "type": "Personal Blog",
+      "line": "notes",
+      "status": "持续整理",
+      "summary": "给学习笔记找一个住处，也给生活留一点位置。页面慢慢改，故事慢慢写。",
+      "details": [
+        "文章归档",
+        "阅读体验",
+        "个人记录"
+      ],
+      "sticker": "/illustrations/cutouts/portrait-08.webp"
+    }
+  ],
+  "links": [
+    {
+      "id": "bilibili",
+      "name": "Bilibili",
+      "href": "https://www.bilibili.com/",
+      "domain": "bilibili.com",
+      "category": "WATCH & RELAX",
+      "description": "看番、听歌，也收藏那些讲得明白的技术视频。",
+      "color": "#c490a8",
+      "wash": "#fcf0f5",
+      "line": "#eed9e3",
+      "art": "/links/ba-sticker-01.png"
+    },
+    {
+      "id": "acwing",
+      "name": "AcWing",
+      "href": "https://www.acwing.com/",
+      "domain": "acwing.com",
+      "category": "ALGORITHM NOTES",
+      "description": "一道一道慢慢想，把数据结构和算法的思路理清楚。",
+      "color": "#7da99a",
+      "wash": "#eff8f2",
+      "line": "#d8e9df",
+      "art": "/links/ba-sticker-02.png"
+    },
+    {
+      "id": "github",
+      "name": "GitHub",
+      "href": "https://github.com/",
+      "domain": "github.com",
+      "category": "CODE & DISCOVER",
+      "description": "放代码、翻仓库，偶尔发现一个想自己动手的小点子。",
+      "color": "#9b98bc",
+      "wash": "#f4f1fa",
+      "line": "#e2ddef",
+      "art": "/links/ba-sticker-03.png"
+    },
+    {
+      "id": "cppreference",
+      "name": "cppreference",
+      "href": "https://en.cppreference.com/w/",
+      "domain": "cppreference.com",
+      "category": "C++ REFERENCE",
+      "description": "语法、容器和标准库记不清时，回来翻一翻。",
+      "color": "#819fc3",
+      "wash": "#eff5fc",
+      "line": "#d8e5f3",
+      "art": "/links/ba-sticker-04.png"
+    },
+    {
+      "id": "leetcode",
+      "name": "LeetCode",
+      "href": "https://leetcode.cn/",
+      "domain": "leetcode.cn",
+      "category": "A LITTLE PRACTICE",
+      "description": "给脑袋热个身。写出答案以后，再想想能不能更清楚。",
+      "color": "#bd9b73",
+      "wash": "#fff7ed",
+      "line": "#eee1ce",
+      "art": "/links/ba-sticker-05.png"
+    },
+    {
+      "id": "pcl",
+      "name": "Point Cloud Library",
+      "href": "https://pointclouds.org/documentation/",
+      "domain": "pointclouds.org",
+      "category": "EXPLORE IN 3D",
+      "description": "点云相关的文档入口，把接口和处理流程慢慢串起来。",
+      "color": "#91aaa9",
+      "wash": "#eff7f7",
+      "line": "#dce9e9",
+      "art": "/links/ba-sticker-06.png"
+    }
+  ]
+}

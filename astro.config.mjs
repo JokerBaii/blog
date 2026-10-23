@@ -54,7 +54,7 @@ const pagefindIntegration = () => ({
 });
 
 export default defineConfig({
-  site: "https://yuimi-chaya.github.io",
+  site: process.env.SITE_URL || "http://localhost:4321",
   output: "static",
   adapter: node({ mode: "standalone" }),
   prefetch: {
@@ -64,7 +64,7 @@ export default defineConfig({
   integrations: [
     expressiveCode(expressiveCodeOptions),
     sitemap({
-      filter: (page) => !new URL(page).pathname.startsWith("/themes/")
+      filter: (page) => !new URL(page).pathname.startsWith("/themes/") && !new URL(page).pathname.startsWith("/admin/")
     }),
     icon({
       include: {
@@ -108,6 +108,7 @@ export default defineConfig({
           "chevron-left",
           "chevron-right",
           "external-link",
+          "arrow-up-right",
           "blade",
           "blender",
           "chef-hat",
@@ -118,6 +119,7 @@ export default defineConfig({
           "trash"
         ],
         "simple-icons": [
+          "cplusplus",
           "unity",
           "blender",
           "unrealengine",

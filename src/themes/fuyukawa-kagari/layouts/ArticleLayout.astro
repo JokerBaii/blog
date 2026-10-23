@@ -6,7 +6,7 @@ import { Icon } from "astro-icon/components";
 import MangaArt from "../components/MangaArt.astro";
 
 const { frontmatter } = Astro.props;
-const title = `${frontmatter.seoTitle ?? frontmatter.title} | Yuimi Lab`;
+const title = `${frontmatter.seoTitle ?? frontmatter.title} | Jokerbai Lab`;
 const description = frontmatter.seoDescription ?? frontmatter.description;
 const date = new Intl.DateTimeFormat("zh-CN", {
   year: "numeric",

@@ -1,0 +1,302 @@
+/* Project notes as small paper keepsakes. Scope every rule to this page. */
+body[data-fuyukawa] .works-scrapbook .works-art-credit { color: #aaa0b6; font-size: 10px; line-height: 1.8; }
+body[data-fuyukawa] .works-scrapbook .works-art-credit a { color: inherit; }
+body[data-fuyukawa] .works-scrapbook .works-note-links {
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  margin: 14px 0 0;
+  list-style: none;
+}
+body[data-fuyukawa] .works-scrapbook .works-note-links a {
+  color: #9f708c;
+  font-size: 12px;
+  line-height: 1.8;
+  text-decoration: underline;
+  text-decoration-color: #dbc5d4;
+  text-underline-offset: 4px;
+}
+body[data-fuyukawa] .works-scrapbook .works-note-links a:hover {
+  color: #795d91;
+}
+body[data-fuyukawa] .works-scrapbook .works-collection-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 10px 0 0;
+  padding: 0 4px;
+}
+body[data-fuyukawa] .works-scrapbook .works-collection-heading p {
+  margin: 0 0 9px;
+  color: #b99aaf;
+  font: 10px/1.5 Consolas, monospace;
+  letter-spacing: 0.18em;
+}
+body[data-fuyukawa] .works-scrapbook .works-collection-heading h2 {
+  margin: 0;
+  color: #697690;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+body[data-fuyukawa] .works-scrapbook .works-collection-heading h2 span {
+  color: #d4a4b7;
+}
+body[data-fuyukawa] .works-scrapbook .works-collection-count {
+  flex-shrink: 0;
+  padding: 9px 15px;
+  border: 1px dashed #d9cbdc;
+  border-radius: 20px;
+  color: #9e8ca7;
+  background: #fffafd;
+  font-size: 11px;
+  transform: rotate(3deg);
+}
+body[data-fuyukawa] .works-scrapbook .works-grid {
+  gap: 32px 28px;
+  padding: 10px 4px 12px;
+  align-items: stretch;
+}
+body[data-fuyukawa] .works-scrapbook .works-card {
+  --note-color: #819fc3;
+  --note-wash: #eef5fc;
+  --note-line: #d8e6f2;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  grid-column: auto;
+  gap: 16px;
+  min-height: 0;
+  padding: 30px 26px 20px;
+  border: 1px solid var(--note-line);
+  border-radius: 18px 8px 18px 8px;
+  background:
+    radial-gradient(ellipse at 100% 0, var(--note-wash), transparent 65%),
+    repeating-linear-gradient(0deg, transparent 0 27px, #c7c4da12 27px 28px),
+    #fffefd;
+  box-shadow: 0 5px 0 #f0edf645, 0 10px 25px #73638607;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+  isolation: isolate;
+}
+body[data-fuyukawa] .works-scrapbook .works-card--mint {
+  --note-color: #75a99a;
+  --note-wash: #edf7f1;
+  --note-line: #d5e9e0;
+}
+body[data-fuyukawa] .works-scrapbook .works-card--orange {
+  --note-color: #c2a078;
+  --note-wash: #fff6e9;
+  --note-line: #eee2cf;
+}
+body[data-fuyukawa] .works-scrapbook .works-card--ink {
+  --note-color: #9b9dc0;
+  --note-wash: #f1f0fa;
+  --note-line: #dfdeef;
+}
+body[data-fuyukawa] .works-scrapbook .works-card--pink {
+  --note-color: #c490a8;
+  --note-wash: #fdf0f4;
+  --note-line: #eed9e3;
+}
+body[data-fuyukawa] .works-scrapbook .works-card--lavender {
+  --note-color: #ac97c3;
+  --note-wash: #f7f0fc;
+  --note-line: #e8dcf0;
+}
+body[data-fuyukawa] .works-scrapbook .works-card::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -9px;
+  left: 25px;
+  width: 78px;
+  height: 21px;
+  border: 1px solid #ffffffa0;
+  border-radius: 1px;
+  background: repeating-linear-gradient(105deg, #ffffff45 0 4px, transparent 4px 8px), var(--note-line);
+  opacity: 0.8;
+  transform: rotate(-7deg);
+  box-shadow: 0 1px 2px #75628c0a;
+  pointer-events: none;
+}
+body[data-fuyukawa] .works-scrapbook .works-card:nth-child(even)::before {
+  left: auto;
+  right: 60px;
+  transform: rotate(6deg);
+}
+body[data-fuyukawa] .works-scrapbook .works-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--note-color);
+  box-shadow: 0 7px 0 var(--note-wash), 0 14px 28px #7363860a;
+}
+body[data-fuyukawa] .works-scrapbook .works-page-number {
+  display: grid;
+  place-items: center;
+  top: 18px;
+  right: 17px;
+  width: 32px;
+  height: 32px;
+  border: 1px dashed var(--note-line);
+  border-radius: 50%;
+  color: var(--note-color);
+  background: #ffffff90;
+  font: italic 13px/1 Georgia, serif;
+}
+body[data-fuyukawa] .works-scrapbook .works-card-head {
+  gap: 14px;
+  padding-right: 30px;
+}
+body[data-fuyukawa] .works-scrapbook .works-card-icon {
+  width: 45px;
+  height: 45px;
+  border: 2px solid white;
+  border-radius: 13px 9px 13px 9px;
+  background: var(--note-wash);
+  color: var(--note-color);
+  box-shadow: 0 0 0 1px var(--note-line);
+  transform: rotate(-5deg);
+}
+body[data-fuyukawa] .works-scrapbook .works-card-head p {
+  color: var(--note-color);
+  font-size: 9px;
+  letter-spacing: 0.09em;
+  line-height: 1.7;
+}
+body[data-fuyukawa] .works-scrapbook .works-card h2 {
+  margin-top: 4px;
+  color: #5f6b84;
+  font-size: 1.1rem;
+  font-weight: 650;
+  line-height: 1.6;
+  letter-spacing: 0.025em;
+}
+body[data-fuyukawa] .works-scrapbook .works-card-summary {
+  color: #8590a4;
+  font-size: 0.82rem;
+  line-height: 1.95;
+}
+body[data-fuyukawa] .works-scrapbook .works-card-tags {
+  gap: 6px;
+}
+body[data-fuyukawa] .works-scrapbook .works-card-tags span {
+  padding: 4px 8px;
+  border: 1px solid var(--note-line);
+  border-radius: 5px;
+  background: #ffffffa6;
+  color: var(--note-color);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+body[data-fuyukawa] .works-scrapbook .works-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 49px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+body[data-fuyukawa] .works-scrapbook .works-card-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--note-line);
+  border-radius: 9px;
+  background: var(--note-wash);
+  color: var(--note-color);
+  box-shadow: 0 3px 0 var(--note-line);
+  font-size: 11px;
+}
+body[data-fuyukawa] .works-scrapbook .works-card-toggle:hover {
+  background: #fff;
+}
+body[data-fuyukawa] .works-scrapbook .works-card-toggle:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--note-line);
+}
+body[data-fuyukawa] .works-scrapbook .works-card-toggle svg:first-child {
+  width: 13px;
+  height: 13px;
+  transform: none;
+}
+body[data-fuyukawa] .works-scrapbook .works-card-toggle svg:last-child {
+  width: 11px;
+  height: 11px;
+}
+body[data-fuyukawa] .works-scrapbook .works-card.is-open .works-card-toggle svg:last-child {
+  transform: rotate(180deg);
+}
+body[data-fuyukawa] .works-scrapbook .works-card-handwriting {
+  flex: 1;
+  color: #b6a3b9;
+  font: italic 12px/1.5 Georgia, serif;
+  transform: rotate(-4deg);
+  text-align: right;
+}
+body[data-fuyukawa] .works-scrapbook .works-card-sticker {
+  flex: 0 0 57px;
+  width: 57px;
+  height: 72px;
+  margin: -17px -5px -9px 0;
+  object-fit: contain;
+  filter: drop-shadow(2px 3px 0 white) drop-shadow(-2px -2px 0 white);
+  pointer-events: none;
+}
+body[data-fuyukawa] .works-scrapbook .works-card-panel {
+  padding: 13px 14px;
+  border: 1px dashed var(--note-line);
+  border-radius: 8px;
+  background: #ffffff90;
+  font-size: 12px;
+}
+body[data-fuyukawa] .works-scrapbook .works-card-panel strong {
+  color: var(--note-color);
+}
+@media (max-width: 720px) {
+  body[data-fuyukawa] .works-scrapbook .works-grid {
+    grid-template-columns: 1fr;
+    padding-inline: 0;
+    gap: 28px;
+  }
+  body[data-fuyukawa] .works-scrapbook .works-collection-heading {
+    align-items: start;
+    gap: 12px;
+  }
+  body[data-fuyukawa] .works-scrapbook .works-collection-heading h2 {
+    font-size: 1.04rem;
+  }
+  body[data-fuyukawa] .works-scrapbook .works-collection-count {
+    font-size: 9px;
+    padding: 7px 9px;
+  }
+  body[data-fuyukawa] .works-scrapbook .works-card {
+    padding: 28px 20px 18px;
+  }
+  body[data-fuyukawa] .works-scrapbook .works-card-handwriting {
+    font-size: 10px;
+  }
+  body[data-fuyukawa] .works-scrapbook .works-card-sticker {
+    flex-basis: 44px;
+    width: 44px;
+    height: 63px;
+  }
+  body[data-fuyukawa] .works-scrapbook .works-card-toggle {
+    padding-inline: 9px;
+    font-size: 10px;
+    gap: 5px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body[data-fuyukawa] .works-scrapbook .works-card,
+  body[data-fuyukawa] .works-scrapbook .works-card-toggle {
+    transition: none;
+    transform: none;
+  }
+}
+
+body[data-fuyukawa] .works-scrapbook .works-card-sticker[data-art-kind="portrait"] { flex-basis: 76px; width: 76px; height: 112px; margin-top: -42px; }
+@media (max-width: 720px) { body[data-fuyukawa] .works-scrapbook .works-card-sticker[data-art-kind="portrait"] { flex-basis: 54px; width: 54px; height: 92px; margin-top: -25px; } }

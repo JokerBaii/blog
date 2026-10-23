@@ -1,9 +1,13 @@
+mod account;
 mod articles;
 mod attachments;
 mod auth;
+mod avatar;
 mod config;
 pub mod error;
+mod migrations;
 mod models;
+mod page_content;
 
 use axum::{
     Json, Router,
@@ -24,6 +28,7 @@ pub struct AppState {
     pub(crate) uploads: Arc<PathBuf>,
     pub(crate) token_hash: [u8; 32],
     pub(crate) config: Arc<Config>,
+    render_slots: Arc<tokio::sync::Semaphore>,
 }
 
 impl AppState {
@@ -46,12 +51,41 @@ impl AppState {
         sqlx::raw_sql(include_str!("schema.sql"))
             .execute(&db)
             .await?;
+        migrations::word_counts(&db).await?;
         Ok(Self {
             db,
             uploads: Arc::new(uploads),
             token_hash: Sha256::digest(config.admin_token.as_bytes()).into(),
             config: Arc::new(config),
+            render_slots: Arc::new(tokio::sync::Semaphore::new(
+                std::thread::available_parallelism()
+                    .map_or(1, usize::from)
+                    .min(4),
+            )),
         })
+    }
+
+    pub(crate) async fn render_markdown(
+        &self,
+        markdown: String,
+        preview: bool,
+    ) -> error::ApiResult<String> {
+        let permit = self
+            .render_slots
+            .clone()
+            .acquire_owned()
+            .await
+            .map_err(error::ApiError::internal)?;
+        tokio::task::spawn_blocking(move || {
+            let _permit = permit;
+            if preview {
+                models::markdown_preview_html(&markdown)
+            } else {
+                models::markdown_html(&markdown)
+            }
+        })
+        .await
+        .map_err(error::ApiError::internal)
     }
 }
 
@@ -76,13 +110,30 @@ pub fn router(state: AppState) -> Router {
     let admin = Router::new()
         .route(
             "/articles",
-            get(articles::admin_list).post(articles::create),
+            get(articles::admin_list)
+                .post(articles::create)
+                .layer::<_, std::convert::Infallible>(DefaultBodyLimit::max(
+                    state.config.max_upload_bytes + 2_097_152,
+                ))
+                .layer(tower_http::limit::RequestBodyLimitLayer::new(
+                    state.config.max_upload_bytes + 2_097_152,
+                )),
         )
         .route(
             "/articles/{id}",
             get(articles::admin_detail)
                 .put(articles::update)
-                .delete(articles::delete),
+                .delete(articles::delete)
+                .layer::<_, std::convert::Infallible>(DefaultBodyLimit::max(
+                    state.config.max_upload_bytes + 2_097_152,
+                ))
+                .layer(tower_http::limit::RequestBodyLimitLayer::new(
+                    state.config.max_upload_bytes + 2_097_152,
+                )),
+        )
+        .route(
+            "/articles/by-slug/{slug}",
+            get(articles::admin_detail_by_slug),
         )
         .route("/articles/{id}/attachments", upload)
         .route(
@@ -93,6 +144,23 @@ pub fn router(state: AppState) -> Router {
             "/attachments/{id}/download",
             get(attachments::admin_download),
         )
+        .route(
+            "/avatar",
+            post(avatar::upload)
+                .layer::<_, std::convert::Infallible>(DefaultBodyLimit::max(2 * 1024 * 1024))
+                .layer(tower_http::limit::RequestBodyLimitLayer::new(
+                    2 * 1024 * 1024,
+                )),
+        )
+        .route("/account", post(account::create))
+        .route(
+            "/page-content",
+            get(page_content::get)
+                .put(page_content::save)
+                .layer::<_, std::convert::Infallible>(DefaultBodyLimit::max(65536)),
+        )
+        .route("/logout", post(account::logout))
+        .route("/session", get(account::session))
         .route("/preview", post(articles::preview))
         .route_layer(middleware::from_fn_with_state(
             state.clone(),
@@ -100,6 +168,12 @@ pub fn router(state: AppState) -> Router {
         ));
     let api = Router::new()
         .route("/health", get(health))
+        .route(
+            "/auth/login",
+            post(account::login).layer::<_, std::convert::Infallible>(DefaultBodyLimit::max(4096)),
+        )
+        .route("/avatar", get(avatar::get))
+        .route("/page-content", get(page_content::get))
         .route("/articles", get(articles::public_list))
         .route("/articles/{slug}", get(articles::public_detail))
         .route(

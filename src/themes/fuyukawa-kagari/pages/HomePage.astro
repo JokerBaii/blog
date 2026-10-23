@@ -1,5 +1,8 @@
 ---
+import ProfileQq from "@/core/ProfileQq.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { getPageContent } from "@/core/data/page-content";
+const { identity: profileIdentity } = await getPageContent();
 import { noticeContent } from "../data/noticeContent";
 import { kagariAssets } from "../assets";
 import { Icon } from "astro-icon/components";
@@ -15,32 +18,7 @@ import HomeHeroRuntime from "../components/HomeHeroRuntime.astro";
 const noticeContentPayload = JSON.stringify(noticeContent);
 const recentPosts = (await getPublishedPosts()).slice(0, 3);
 
-const fallingTags = [
-  "Unity3D",
-  "Blender",
-  "UE5",
-  "MMD",
-  "AstrBot",
-  "猫娘",
-  "粉毛",
-  "病娇",
-  "重女",
-  "契约之吻",
-  "青春猪头少年",
-  "无职转生",
-  "夏洛特",
-  "Summer Pockets",
-  "埃罗芒阿老师",
-  "游戏人生",
-  "超电磁炮",
-  "Cyberpunk 2077",
-  "THE FINALS",
-  "KovaaK's",
-  "Aimlabs",
-  "Yuimi Radio",
-  "Live2D",
-  "小游戏"
-];
+const fallingTags = ["C++", "点云", "算法练习", "CMake", "Git", "课堂笔记", "校园日常", "女朋友", "一起散步", "晚风", "认真生活", "慢慢学习", "jokerbai", "Daily Links"];
 ---
 
 <BaseLayout>
@@ -54,8 +32,8 @@ const fallingTags = [
       </button>
       <div class="hero-copy" data-hero-copy>
         <p class="eyebrow">Fuyukawa Kagari · Personal diary</p>
-        <h1><img src="/themes/fuyukawa-kagari/assets/hero-title.svg" alt="Yuimi Lab" /></h1>
-        <p class="hero-diary-line">把喜欢的事，写进每一个平凡日子。</p>
+        <h1><img src="/themes/fuyukawa-kagari/assets/hero-title-jokerbai.svg" alt="Jokerbai Lab" width="478.272" height="108" /></h1>
+        <p class="hero-diary-line">日子慢慢过，喜欢的人好好陪。</p>
         <p class="hero-text terminal-line" aria-label="typing subtitle">
           <span class="hero-terminal-badge" aria-hidden="true"></span>
           <span class="hero-terminal-stack">
@@ -78,38 +56,33 @@ const fallingTags = [
           <span class="avatar-flower" data-avatar-flower aria-hidden="true">
             <span class="avatar-flower__bloom"></span>
           </span>
-          <img src={kagariAssets.profile} alt="Yuimi Lab avatar" width="168" height="168" />
+          <img src={kagariAssets.profile} alt="Jokerbai Lab avatar" width="168" height="168" />
           <span class="avatar-poke-bubble" data-poke-bubble>&#x64CD;&#x4F5C;&#x592A;&#x5FEB;&#x5566;&#xFF0C;&#x4F11;&#x606F;&#x4E00;&#x4E0B;&#x5427;</span>
         </div>
-        <div class="identity-terminal" aria-label="identity terminal card">
+        <div class="identity-terminal" aria-label="Linux 终端个人资料">
           <div class="identity-terminal-bar">
             <div class="terminal-dots" aria-hidden="true">
               <span></span>
               <span></span>
               <span></span>
             </div>
-            <span class="terminal-title">yuimi-profile.exe</span>
+            <span class="terminal-title">jokerbai@linux: ~ — bash</span>
           </div>
-          <p class="identity-path">C:\Users\Yuimi\profile</p>
+          <p class="identity-path">/home/jokerbai/profile.txt</p>
           <p class="identity-command">
-            <span class="terminal-prefix">profile@yuimi:~$</span>
-            <span data-name-typing></span>
+            <span class="terminal-prefix">jokerbai@linux:~$</span>
+            <span>cat profile.txt</span>
             <span class="terminal-cursor" aria-hidden="true"></span>
           </p>
-          <p class="identity-caption">喝益胃 / Yuimi-chaya</p>
+          <p class="identity-caption"><span data-name-typing>jokerbai</span></p>
           <div class="social-links" aria-label="Social links">
-            <a href="https://github.com/Yuimi-chaya" target="_blank" rel="noreferrer" aria-label="GitHub profile">
+            {profileIdentity.github && (<a href={profileIdentity.github} target="_blank" rel="noreferrer" aria-label="GitHub profile">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.1 3.29 9.4 7.86 10.93.58.1.79-.25.79-.56v-2.16c-3.2.7-3.87-1.38-3.87-1.38-.52-1.33-1.27-1.68-1.27-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.24 3.34.95.1-.74.4-1.24.72-1.53-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.47.11-3.06 0 0 .97-.31 3.16 1.18A10.9 10.9 0 0 1 12 5.98c.98 0 1.96.13 2.88.39 2.19-1.49 3.15-1.18 3.15-1.18.63 1.59.24 2.77.12 3.06.74.81 1.18 1.84 1.18 3.1 0 4.43-2.7 5.41-5.27 5.7.41.36.77 1.06.77 2.14v3.18c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z" />
               </svg>
               GitHub
-            </a>
-            <a href="https://space.bilibili.com/494350222" target="_blank" rel="noreferrer" aria-label="Bilibili profile">
-              <svg viewBox="0 0 32 32" aria-hidden="true">
-                <path d="M11.1 6.4 8.5 3.8a1.4 1.4 0 0 0-2 2l2.7 2.7h-.7A5.5 5.5 0 0 0 3 14v7.2A5.5 5.5 0 0 0 8.5 26h15A5.5 5.5 0 0 0 29 21.2V14a5.5 5.5 0 0 0-5.5-5.5h-.7l2.7-2.7a1.4 1.4 0 0 0-2-2l-2.6 2.6H11.1Zm-2.6 5h15A2.6 2.6 0 0 1 26.1 14v7.2a2.6 2.6 0 0 1-2.6 2.6h-15a2.6 2.6 0 0 1-2.6-2.6V14a2.6 2.6 0 0 1 2.6-2.6Zm2.7 5.1a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2Zm9.6 0a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2Z" />
-              </svg>
-              Bilibili
-            </a>
+            </a>)}
+          <ProfileQq />
           </div>
         </div>
       </div>
@@ -133,7 +106,7 @@ const fallingTags = [
           <span class="home-notice-icon" data-notice-icon aria-hidden="true">💗</span>
           <div>
             <p data-notice-date>Today</p>
-            <h2 id="home-notice-title" data-notice-title>Yuimi Lab 今日公告</h2>
+            <h2 id="home-notice-title" data-notice-title>Jokerbai Lab 今日公告</h2>
           </div>
         </div>
         <div class="home-notice-body" data-notice-body></div>
@@ -166,9 +139,9 @@ const fallingTags = [
   <ChapterRail />
 
   <div class="home-content-bg">
-    <section class="tag-rain-stage" id="main-content" data-tag-rain data-tags={JSON.stringify(fallingTags)} aria-label="Yuimi tag rain">
-      <div class="home-art-word" aria-label="Yuimi Lab">
-        <span>Yuimi Lab</span>
+    <section class="tag-rain-stage" id="main-content" data-tag-rain data-tags={JSON.stringify(fallingTags)} aria-label="jokerbai tag rain">
+      <div class="home-art-word" aria-label="Jokerbai Lab">
+        <span>Jokerbai Lab</span>
         <small>anime notes / tiny toys / dev memo</small>
       </div>
       <div class="home-signal-card" aria-label="Local signal">
@@ -241,7 +214,6 @@ const fallingTags = [
       const noticeData = JSON.parse(document.getElementById("notice-content-data")?.textContent || "{}");
       const formatKey = (date) => `${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
       const formatStorageKey = (date) => `${date.getFullYear()}-${formatKey(date)}`;
-      const pickFrom = (items, index) => items[index % items.length];
       const today = new Date();
       const todayKey = formatKey(today);
       const storageKey = `yuimi-notice-hidden-${formatStorageKey(today)}`;
@@ -249,7 +221,6 @@ const fallingTags = [
       let lockedScrollY = 0;
 
       const dayOfYear = Math.floor((today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) / 86400000);
-      const weekSeed = Math.floor(dayOfYear / 7) + today.getFullYear() * 53;
       const solarTermEntries = (noticeData.solarTerms2026 || []).map(([date, title, text]) => ({
         date,
         icon: "🌿",
@@ -273,22 +244,7 @@ const fallingTags = [
           title: `第 ${dayOfYear} 号历史趣味胶囊`,
           tone: "history",
           lines: [theme[2], `今天的随机行动：${actions[(dayOfYear - 1) % actions.length]}`],
-          footnote: "没有撞上固定节日时，Yuimi Lab 会按日期投递不同的冷知识胶囊。"
-        };
-      };
-      const createThursdayV50Entry = () => {
-        const pool = noticeData.v50;
-        if (!pool || today.getDay() !== 4) return null;
-        const opener = pickFrom(pool.openers, weekSeed);
-        const plot = pickFrom(pool.plots, weekSeed * 3 + dayOfYear);
-        const ask = pickFrom(pool.asks, weekSeed * 5 + today.getMonth());
-        const ending = pickFrom(pool.endings, weekSeed * 7 + today.getDate());
-        return {
-          icon: "🍗",
-          title: "星期四 V50 电波",
-          tone: "fun",
-          lines: [`${opener}${plot}。${ask}`, ending],
-          footnote: "V50 文案由素材池按周组合生成，版本数很多，但钱包仍有最终解释权。"
+          footnote: "没有撞上固定节日时，Jokerbai Lab 会按日期投递不同的冷知识胶囊。"
         };
       };
 
@@ -297,8 +253,6 @@ const fallingTags = [
         ...solarTermEntries.filter((item) => item.date === todayKey),
         ...historyEntries.filter((item) => item.date === todayKey)
       ];
-      const thursdayV50 = createThursdayV50Entry();
-      if (thursdayV50) todayEntries.push(thursdayV50);
 
       const entries = todayEntries.length > 0 ? todayEntries : [createFallbackEntry()];
 
@@ -423,7 +377,7 @@ const fallingTags = [
         hiddenToday = false;
       }
 
-      if (!hiddenToday) {
+      if (!hiddenToday && !document.getElementById("entry-gate")) {
         const autoOpenTimer = window.setTimeout(openNoticeAutomatically, 520);
         noticeCleanupTasks.push(() => window.clearTimeout(autoOpenTimer));
       }

@@ -16,11 +16,11 @@ body[data-fuyukawa] .manga-rail-controls button { display: grid; place-items: ce
 body[data-fuyukawa] .manga-rail-controls svg { width: 18px; height: 18px; }
 body[data-fuyukawa] .manga-rail-controls button:disabled { opacity: .32; cursor: default; }
 
-/* The original composite remains available until both independent layers decode. */
-body[data-fuyukawa] .hero-stage { height: calc(100svh - 82px); }
-body[data-fuyukawa] .hero { isolation: isolate; justify-content: flex-start; padding-inline: max(48px, calc((100% - 1240px) / 2)); }
+/* Use one geometry from the first paint; swapping a composite after decoding caused a visible jump. */
+body[data-fuyukawa] .hero-stage { height: 100svh; min-height: 100svh; }
+body[data-fuyukawa] .hero { height: 100%; min-height: 100%; background-image: none; isolation: isolate; justify-content: flex-start; padding-inline: max(48px, calc((100% - 1240px) / 2)); }
 body[data-fuyukawa] .hero:has(.manga-scene[data-ready="true"]) { background-image: none; }
-body[data-fuyukawa] .manga-scene { position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: 0; }
+body[data-fuyukawa] .manga-scene { position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: 1; }
 body[data-fuyukawa] .manga-scene[data-ready="true"] { opacity: 1; }
 body[data-fuyukawa] .manga-scene-camera { position: absolute; inset: -24px; }
 body[data-fuyukawa] .manga-scene-camera img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; pointer-events: none; backface-visibility: hidden; }

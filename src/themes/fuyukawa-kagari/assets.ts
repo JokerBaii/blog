@@ -9,7 +9,7 @@ export const kagariAssets = {
   appleTouchIcon: kagariAsset("pig-apple-touch.png"),
   brand: kagariAsset("pig-brand.webp"),
   scrollPig: kagariAsset("mini-pig-scroll.webp"),
-  profile: kagariAsset("profile.webp"),
+  profile: "/api/avatar",
   heroWallpaper: kagariAsset("hero-wallpaper.webp"),
   pageBackground: kagariAsset("fuyukawa-kagari-bg.webp"),
   notFound: kagariAsset("legacy/404.webp"),

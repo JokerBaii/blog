@@ -1,5 +1,6 @@
 ---
-import { profileIdentity } from "@/core/data/profile";
+import { getPageContent } from "@/core/data/page-content";
+const { identity: profileIdentity } = await getPageContent();
 import type { BlogPost } from "@/core/content/blog";
 import { site } from "@/lib/site";
 
@@ -20,7 +21,7 @@ const personUrl = new URL("/about/", siteRoot).toString();
 const personId = new URL("/#person", siteRoot).toString();
 const websiteId = new URL("/#website", siteRoot).toString();
 const pageId = `${canonicalUrl}#webpage`;
-const profileImage = new URL("/themes/kisara/assets/profile.webp", siteRoot).toString();
+const profileImage = new URL("/api/avatar", siteRoot).toString();
 const isHome = canonicalPath === "/";
 const isProfile = canonicalPath === "/about";
 const openGraphType = isArticlePage ? "article" : isProfile ? "profile" : "website";
@@ -39,7 +40,7 @@ const personNode = {
   url: personUrl,
   image: profileImage,
   description: profileIdentity.bio,
-  sameAs: [profileIdentity.github, profileIdentity.bilibili]
+  sameAs: [profileIdentity.github].filter(Boolean)
 };
 
 const pageNode = isProfile

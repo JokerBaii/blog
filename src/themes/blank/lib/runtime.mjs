@@ -23,7 +23,7 @@ export function mountMenu(doc, win) {
     listeners.push(() => node.removeEventListener(event, handler, options));
   };
   let returnFocus = trigger;
-  const items = () => [...menu.querySelectorAll("button, a[href]")];
+  const items = () => [...menu.querySelectorAll("button, a[href]")].filter(item => !item.hidden);
   const close = (restoreFocus = false) => {
     if (menu.hidden) return;
     const focusedInside = menu.contains(doc.activeElement);

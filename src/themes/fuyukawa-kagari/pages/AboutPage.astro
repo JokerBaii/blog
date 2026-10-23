@@ -1,56 +1,42 @@
 ---
+import ProfileQq from "@/core/ProfileQq.astro";
+import TechIcon from "@/core/TechIcon.astro";
+import PageIntro from "../components/PageIntro.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { Icon } from "astro-icon/components";
-import { kagariAsset, kagariAssets } from "../assets";
+import { kagariAssets } from "../assets";
 import MangaArt from "../components/MangaArt.astro";
 import MemoryAlbum from "../components/MemoryAlbum.astro";
-import {
-  animeFavorites,
-  currentSignals,
-  favoriteGames,
-  profileIdentity,
-  profileStatus,
-  profileTech,
-  xpFavorites
-} from "@/core/data/profile";
+import "../styles/about-scrapbook.css";
+import { getPageContent } from "@/core/data/page-content";
+const { identity: profileIdentity, status: statusItems, tech: profileTech, anime: animeShelf, favorites: xpTags, relaxation: favoriteGames, signals: nowDoing } = await getPageContent();
 
-const statusItems = profileStatus;
 const techPresentation = {
-  unity: { icon: "simple-icons:unity", tone: "blue" },
-  blender: { icon: "simple-icons:blender", tone: "orange" },
-  ue5: { icon: "simple-icons:unrealengine", tone: "ink" },
-  mmd: { icon: "tabler:sparkles", tone: "pink" },
-  astrbot: { icon: "tabler:terminal-2", tone: "mint" }
+  cloud: { tone: "blue" },
+  algorithms: { tone: "orange" },
+  cmake: { tone: "ink" },
+  notes: { tone: "pink" },
+  cpp: { tone: "mint" }
 } as const;
 const techStack = profileTech.map((tech) => ({ ...tech, ...techPresentation[tech.key] }));
-const animeShelf = animeFavorites.map((item) => ({
-  ...item,
-  image: kagariAsset(`about/${item.key}.webp`)
-}));
-const xpTags = xpFavorites.map((item) => ({
-  ...item,
-  image: kagariAsset(`about/xp-${item.key}.webp`)
-}));
 const gameIcons = {
-  "cyberpunk-2077": "simple-icons:steam",
-  "the-finals": "simple-icons:thefinals",
+  "cyberpunk-2077": "tabler:device-gamepad",
+  "the-finals": "tabler:heart",
   kovaaks: "tabler:device-gamepad",
   aimlabs: "tabler:device-gamepad"
 } as const;
 const gameShelf = favoriteGames.map((item) => ({
   ...item,
-  image: kagariAsset(`about/${item.key}.webp`),
   icon: gameIcons[item.key]
 }));
-const nowDoing = currentSignals;
 ---
 
-<BaseLayout title="About | Yuimi Lab" description="关于喝益胃 / Yuimi-chaya 的技术线、二次元兴趣与个人资料。">
-  <section class="about-profile-shell" aria-labelledby="about-title">
-    <aside class="about-sidebar" aria-label="Yuimi profile card">
+<BaseLayout title="About | Jokerbai Lab" description="关于 jokerbai：C++、点云、大学日常，还有喜欢的她。">
+  <section class="about-profile-shell about-scrapbook" aria-labelledby="about-title">
+    <aside class="about-sidebar" aria-label="jokerbai profile card">
       <div class="about-avatar-card">
         <span class="about-tape about-tape--left" aria-hidden="true"></span>
-        <img src={kagariAssets.profile} alt="喝益胃 / Yuimi-chaya 的头像" width="220" height="220" />
+        <img src={kagariAssets.profile} alt="jokerbai 的头像" width="220" height="220" />
         <span class="about-avatar-flower" aria-hidden="true">✦</span>
       </div>
 
@@ -61,14 +47,11 @@ const nowDoing = currentSignals;
         <p class="about-bio">{profileIdentity.bio}</p>
 
         <div class="about-link-row" aria-label="profile links">
-          <a href={profileIdentity.github} target="_blank" rel="noreferrer">
+          {profileIdentity.github && (<a href={profileIdentity.github} target="_blank" rel="noreferrer">
             <Icon name="simple-icons:github" aria-hidden="true" />
             GitHub
-          </a>
-          <a href={profileIdentity.bilibili} target="_blank" rel="noreferrer">
-            <Icon name="simple-icons:bilibili" aria-hidden="true" />
-            Bilibili
-          </a>
+          </a>)}
+          <ProfileQq />
         </div>
       </div>
 
@@ -83,21 +66,11 @@ const nowDoing = currentSignals;
           ))}
         </ul>
       </div>
-      <MangaArt image="kagari-tea" class="about-side-character" />
+      <img src="/illustrations/cutouts/portrait-10.webp" class="manga-art about-side-character" alt="" width="753" height="1100" loading="lazy" decoding="async" />
     </aside>
 
-    <section class="about-readme" aria-label="Yuimi README">
-      <div class="about-readme-hero">
-        <div>
-          <p class="section-kicker">04 / Dear reader</p>
-          <h2>很高兴，在这里遇见你。</h2>
-          <p>
-            这里是一间把技术笔记、二次元兴趣、小游戏和看板娘机关放在一起的小房间。
-            我会记录 AstrBot、插件开发、部署踩坑，也会把喜欢的番剧、游戏和角色审美认真摆上架。
-          </p>
-        </div>
-        <MangaArt image="letter-page" class="about-letter-art" eager />
-      </div>
+    <section class="about-readme" aria-label="jokerbai README">
+      <PageIntro image="about" title="很高兴，在这里遇见你。" subtitle={profileIdentity.intro} />
 
       <nav class="about-bookmarks" aria-label="个人手帐章节">
         <a href="#memory-album-title"><Icon name="tabler:heart" aria-hidden="true" />片刻</a>
@@ -117,10 +90,11 @@ const nowDoing = currentSignals;
         </div>
 
         <div class="about-tech-grid">
-          {techStack.map((tech) => (
+          {techStack.map((tech, index) => (
             <article class={`about-tech-card about-tech-card--${tech.tone}`}>
+              <span class="about-note-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
               <span class="about-tech-icon" aria-hidden="true">
-                <Icon name={tech.icon} />
+                <TechIcon tech={tech.key} />
               </span>
               <div>
                 <h3>{tech.name}</h3>
@@ -153,13 +127,13 @@ const nowDoing = currentSignals;
         </div>
       </section>
 
-      <section class="about-section about-section--split" aria-label="XP and games">
+      <section class="about-section about-section--split" aria-label="日常偏爱和课后放松">
         <div>
           <div class="about-section-heading">
             <Icon name="tabler:heart" aria-hidden="true" />
             <div>
-              <p>XP tags</p>
-              <h2>XP</h2>
+              <p>Little favorites</p>
+              <h2>日常偏爱</h2>
             </div>
           </div>
 
@@ -181,7 +155,7 @@ const nowDoing = currentSignals;
             <Icon name="tabler:device-gamepad" aria-hidden="true" />
             <div>
               <p>Game shelf</p>
-              <h2>喜欢的游戏</h2>
+              <h2>放松的方式</h2>
             </div>
           </div>
 
@@ -259,7 +233,6 @@ const nowDoing = currentSignals;
     .about-avatar-card,
 .about-id-card,
 .about-status-card,
-.about-readme-hero,
 .about-section {
       position: relative;
       isolation: isolate;
@@ -298,7 +271,6 @@ const nowDoing = currentSignals;
     }
 
     .about-id-card h1,
-    .about-readme-hero h2,
     .about-section-heading h2 {
       margin: 6px 0 0;
       color: var(--ink);
@@ -310,7 +282,6 @@ const nowDoing = currentSignals;
     }
 
     .about-bio,
-    .about-readme-hero p,
     .about-activity-grid p {
       color: var(--ink-soft);
       line-height: 1.85;
@@ -368,26 +339,6 @@ const nowDoing = currentSignals;
 
     .about-readme {
       display: grid;
-    }
-
-    .about-readme-hero {
-      display: grid;
-      align-items: center;
-    }
-
-    .about-readme-badge {
-      display: grid;
-      place-items: center;
-      align-content: center;
-      color: var(--ink);
-      text-align: center;
-    }
-
-    .about-readme-badge span {
-      margin-top: 8px;
-      font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
-      font-weight: 800;
-      line-height: 1.3;
     }
 
     .about-section {
@@ -630,14 +581,6 @@ const nowDoing = currentSignals;
 .about-status-card ul,
 .about-activity-grid {
         grid-template-columns: 1fr;
-      }
-
-      .about-readme-badge {
-        justify-self: start;
-      }
-
-      .about-readme-hero h2 {
-        overflow-wrap: anywhere;
       }
     }
 

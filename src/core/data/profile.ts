@@ -1,54 +1,49 @@
 export const profileIdentity = {
-  displayName: "喝益胃",
-  handle: "Yuimi-chaya",
-  siteName: "Yuimi Lab",
-  bio: "二次元技术宅 / 兴趣驱动型折腾人，喜欢研究有意思的小东西，也喜欢把开发记录做得清透一点。",
-  github: "https://github.com/Yuimi-chaya",
-  bilibili: "https://space.bilibili.com/494350222"
+  displayName: "jokerbai",
+  handle: "Jokerbaii",
+  siteName: "Jokerbai Lab",
+  bio: "一个路过的大学生。和 C++、点云慢慢较劲，也认真喜欢着女朋友。这里放学习笔记、折腾记录，以及普通日子里的小开心。",
+  github: "https://github.com/Jokerbaii",
+  qq: "150925418"
 } as const;
 
 export const profileStatus = [
-  "正在学习 UE5",
-  "在折腾 AstrBot / MMD / 小游戏",
-  "喜欢把技术做得有点可爱"
+  "在 C++ 的报错里慢慢升级",
+  "把散落的点，拼成看得懂的世界",
+  "最近最喜欢的事：和女朋友待在一起"
 ] as const;
 
 export const profileTech = [
-  { key: "unity", name: "Unity3D", note: "游戏逻辑 / 互动实验" },
-  { key: "blender", name: "Blender", note: "建模 / 场景 / 小道具" },
-  { key: "ue5", name: "UE5", note: "正在学习中" },
-  { key: "mmd", name: "MMD 制作", note: "动作 / 镜头 / 舞台感" },
-  { key: "astrbot", name: "AstrBot", note: "插件开发 / 部署记录" }
+  { key: "cpp", name: "C++", note: "语法 / STL / 调试笔记" },
+  { key: "cloud", name: "点云", note: "三维数据 / 处理思路 / 可视化" },
+  { key: "algorithms", name: "算法练习", note: "数据结构 / 一点一点想明白" },
+  { key: "cmake", name: "构建与工具", note: "CMake / Git / 环境折腾" },
+  { key: "notes", name: "学习记录", note: "踩坑整理 / 随手笔记" }
 ] as const;
 
 export const animeFavorites = [
-  { key: "engage-kiss", title: "契约之吻", subtitle: "Engage Kiss" },
-  { key: "aobuta", title: "青春猪头少年系列", subtitle: "Rascal Does Not Dream" },
-  { key: "mushoku-tensei", title: "无职转生", subtitle: "Mushoku Tensei" },
-  { key: "charlotte", title: "夏洛特", subtitle: "Charlotte" },
-  { key: "summer-pockets", title: "Summer Pockets", subtitle: "夏日口袋" },
-  { key: "eromanga-sensei", title: "埃罗芒阿老师", subtitle: "Eromanga Sensei" },
-  { key: "no-game-no-life", title: "游戏人生", subtitle: "No Game No Life" },
-  { key: "railgun", title: "某科学的超电磁炮", subtitle: "A Certain Scientific Railgun" }
+  { key: "engage-kiss", title: "契约之吻", subtitle: "给日常加一点心动" },
+  { key: "aobuta", title: "青春猪头少年系列", subtitle: "青春里那些说不清的心事" },
+  { key: "charlotte", title: "夏洛特", subtitle: "下课之后的另一个世界" },
+  { key: "summer-pockets", title: "Summer Pockets", subtitle: "把夏天留在存档里" }
 ] as const;
 
 export const xpFavorites = [
-  { key: "catgirl", title: "猫娘", subtitle: "catgirl signal" },
-  { key: "pink-hair", title: "粉毛", subtitle: "pink hair bias" },
-  { key: "yandere", title: "病娇", subtitle: "sweet danger" },
-  { key: "heavy-love", title: "重女", subtitle: "heavy love" }
+  { key: "catgirl", title: "女朋友", subtitle: "my favorite person" },
+  { key: "pink-hair", title: "一起散步", subtitle: "one more walk together" },
+  { key: "yandere", title: "认真回消息", subtitle: "always happy to hear from you" },
+  { key: "heavy-love", title: "普通日子", subtitle: "little things, good days" }
 ] as const;
 
 export const favoriteGames = [
-  { key: "cyberpunk-2077", title: "赛博朋克 2077", subtitle: "Cyberpunk 2077" },
-  { key: "the-finals", title: "终极角逐", subtitle: "THE FINALS" },
-  { key: "kovaaks", title: "KovaaK's", subtitle: "aim trainer" },
-  { key: "aimlabs", title: "Aimlabs", subtitle: "aim routine" }
+  { key: "cyberpunk-2077", title: "课间小游戏", subtitle: "下课了，脑袋也休息一下" },
+  { key: "the-finals", title: "双人合作", subtitle: "通关很开心，一起玩更开心" },
+  { key: "kovaaks", title: "周末存档", subtitle: "给忙碌的一周按个暂停" },
+  { key: "aimlabs", title: "和她一起玩", subtitle: "输赢随意，队友固定" }
 ] as const;
 
 export const currentSignals = [
-  { label: "正在学习", text: "UE5 的场景、材质和蓝图，把脑内小房间慢慢搭出来。" },
-  { label: "最近在折腾", text: "AstrBot 插件、部署教程、以及能让博客动起来的小机关。" },
-  { label: "今日电波", text: "技术可以严谨一点，呈现方式可以更像玩具一点。" }
+  { label: "正在学习", text: "C++ 和点云。先把一个报错解决，再让一团点慢慢变得有头绪。" },
+  { label: "最近在折腾", text: "把课堂笔记和踩坑过程搬进博客，给以后又忘了的自己留个路标。" },
+  { label: "今日偏爱", text: "最近喜欢女朋友。代码可以明天再调，今天的晚风想和她一起吹。" }
 ] as const;
-

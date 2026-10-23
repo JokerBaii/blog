@@ -5,7 +5,7 @@ import { categoryLabel } from "@/lib/site";
 import { getThemePath } from "@/core/themes/registry";
 const { frontmatter } = Astro.props;
 const headings = (Astro.props.headings ?? []).filter((heading) => heading.depth >= 2 && heading.depth <= 3);
-const title = `${frontmatter.seoTitle ?? frontmatter.title} | Yuimi Lab Blank`;
+const title = `${frontmatter.seoTitle ?? frontmatter.title} | Jokerbai Lab Blank`;
 const description = frontmatter.seoDescription ?? frontmatter.description;
 const date = frontmatter.updatedDate ?? frontmatter.pubDate;
 const dateLabel = new Intl.DateTimeFormat("zh-CN", { year: "numeric", month: "2-digit", day: "2-digit" }).format(date).replaceAll("/", ".");

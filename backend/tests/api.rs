@@ -10,6 +10,69 @@ use tower::ServiceExt;
 use yuimi_blog_server::{AppState, Config, router};
 
 const TOKEN: &str = "test-only-secret-token-with-at-least-32-bytes";
+#[tokio::test]
+async fn page_content_is_authenticated_validated_and_persistent() {
+    let app = App::new(1024).await;
+    let (status, mut content) = app.send("GET", "/api/page-content", None, false).await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(content["identity"]["loveSince"], "2026-05-01");
+    content["identity"]["bio"] = json!("Updated profile");
+    let mut link = content["links"][0].clone();
+    link["id"] = json!("new-site");
+    link["name"] = json!("New bookmark");
+    content["links"].as_array_mut().unwrap().push(link);
+    assert_eq!(
+        app.send(
+            "PUT",
+            "/api/admin/page-content",
+            Some(content.clone()),
+            false
+        )
+        .await
+        .0,
+        StatusCode::UNAUTHORIZED
+    );
+    assert_eq!(
+        app.send(
+            "PUT",
+            "/api/admin/page-content",
+            Some(content.clone()),
+            true
+        )
+        .await
+        .0,
+        StatusCode::OK
+    );
+    let mut invalid = content.clone();
+    invalid["links"][0]["href"] = json!("javascript:alert(1)");
+    assert_eq!(
+        app.send("PUT", "/api/admin/page-content", Some(invalid), true)
+            .await
+            .0,
+        StatusCode::BAD_REQUEST
+    );
+    let mut invalid = content.clone();
+    invalid["projects"][0]["id"] = json!("unknown-project");
+    assert_eq!(
+        app.send("PUT", "/api/admin/page-content", Some(invalid), true)
+            .await
+            .0,
+        StatusCode::BAD_REQUEST
+    );
+    let state = AppState::open(app.config.clone()).await.unwrap();
+    let response = router(state)
+        .oneshot(
+            Request::builder()
+                .uri("/api/page-content")
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    let saved: Value =
+        serde_json::from_slice(&response.into_body().collect().await.unwrap().to_bytes()).unwrap();
+    assert_eq!(saved, content);
+}
 struct App {
     router: Router,
     config: Config,
@@ -186,7 +249,7 @@ async fn duplicate_slugs_input_validation_and_markdown_sanitization() {
             .0,
         StatusCode::CONFLICT
     );
-    for slug in ["../escape", "upperCase", "", "a/b", "-begin", "end-"] {
+    for slug in ["../escape", "upperCase", "a/b", "-begin", "end-"] {
         let mut payload = article(true);
         payload["slug"] = json!(slug);
         assert_eq!(
@@ -211,6 +274,90 @@ async fn duplicate_slugs_input_validation_and_markdown_sanitization() {
         .await
         .0,
         StatusCode::BAD_REQUEST
+    );
+}
+
+#[tokio::test]
+async fn article_addresses_are_generated_unique_and_stable() {
+    let app = App::new(1024).await;
+    let mut payload = article(true);
+    payload.as_object_mut().unwrap().remove("slug");
+    let (status, first) = app
+        .send("POST", "/api/admin/articles", Some(payload.clone()), true)
+        .await;
+    assert_eq!(status, StatusCode::CREATED);
+    let (status, second) = app
+        .send("POST", "/api/admin/articles", Some(payload.clone()), true)
+        .await;
+    assert_eq!(status, StatusCode::CREATED);
+    assert_ne!(first["slug"], second["slug"]);
+    payload["title"] = json!("重命名的文章");
+    let uri = format!("/api/admin/articles/{}", first["id"].as_str().unwrap());
+    let (status, updated) = app.send("PUT", &uri, Some(payload.clone()), true).await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(updated["slug"], first["slug"]);
+    payload["slug"] = json!("");
+    let (status, updated) = app.send("PUT", &uri, Some(payload.clone()), true).await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(updated["slug"], first["slug"]);
+    assert_eq!(
+        app.send("POST", "/api/admin/articles", Some(payload), true)
+            .await
+            .0,
+        StatusCode::CREATED
+    );
+    assert_eq!(
+        app.send(
+            "GET",
+            &format!("/api/articles/{}", first["slug"].as_str().unwrap()),
+            None,
+            false
+        )
+        .await
+        .0,
+        StatusCode::OK
+    );
+}
+
+#[tokio::test]
+async fn guests_cannot_mutate_site_content_or_use_admin_tools() {
+    let app = App::new(1024).await;
+    let created = app.create(true).await;
+    let id = created["id"].as_str().unwrap();
+    for (method, path, body) in [
+        (
+            "POST",
+            "/api/admin/articles".to_string(),
+            Some(article(true)),
+        ),
+        (
+            "PUT",
+            format!("/api/admin/articles/{id}"),
+            Some(article(true)),
+        ),
+        ("DELETE", format!("/api/admin/articles/{id}"), None),
+        (
+            "PUT",
+            "/api/admin/page-content".to_string(),
+            Some(json!({})),
+        ),
+        (
+            "POST",
+            "/api/admin/preview".to_string(),
+            Some(json!({"content_markdown":"hello"})),
+        ),
+        ("GET", "/api/admin/session".to_string(), None),
+    ] {
+        assert_eq!(
+            app.send(method, &path, body, false).await.0,
+            StatusCode::UNAUTHORIZED
+        );
+    }
+    assert_eq!(
+        app.send("GET", "/api/articles/hello-rust", None, false)
+            .await
+            .0,
+        StatusCode::OK
     );
 }
 
@@ -373,6 +520,193 @@ async fn attachment_permissions_unicode_filename_ranges_head_and_unpublishing() 
         StatusCode::NO_CONTENT
     );
     assert_eq!(app.file_count(), 0);
+}
+
+#[tokio::test]
+async fn legacy_word_counts_are_backfilled_in_batches_and_lists_use_the_cache() {
+    let directory = tempfile::tempdir().unwrap();
+    let data_dir = directory.path().join("data");
+    std::fs::create_dir_all(&data_dir).unwrap();
+    let config = Config {
+        bind: "127.0.0.1:0".parse().unwrap(),
+        data_dir: data_dir.clone(),
+        admin_token: TOKEN.into(),
+        max_upload_bytes: 1024,
+    };
+    let db = sqlx::SqlitePool::connect_with(
+        sqlx::sqlite::SqliteConnectOptions::new()
+            .filename(data_dir.join("blog.sqlite3"))
+            .create_if_missing(true),
+    )
+    .await
+    .unwrap();
+    let legacy = include_str!("../src/schema.sql").replace(
+        "    word_count INTEGER NOT NULL DEFAULT 0 CHECK (word_count >= 0),\n",
+        "",
+    );
+    sqlx::raw_sql(&legacy).execute(&db).await.unwrap();
+    for index in 0..65 {
+        sqlx::query("INSERT INTO articles(id,slug,title,content_markdown,category,published,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)")
+            .bind(uuid::Uuid::new_v4().to_string()).bind(format!("legacy-{index}")).bind("原有文章")
+            .bind("你好 Rust world").bind("tech").bind(true).bind("2020-01-01T00:00:00Z").bind("2020-01-01T00:00:00Z")
+            .execute(&db).await.unwrap();
+    }
+    let app = App {
+        router: router(AppState::open(config.clone()).await.unwrap()),
+        config,
+        _directory: directory,
+    };
+    let (status, list) = app
+        .send("GET", "/api/articles?per_page=100", None, false)
+        .await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(list["items"].as_array().unwrap().len(), 65);
+    for item in list["items"].as_array().unwrap() {
+        assert_eq!(item["word_count"], 4);
+        assert_eq!(item["updated_at"], "2020-01-01T00:00:00Z");
+        assert!(item.get("content_markdown").is_none());
+    }
+    sqlx::query("UPDATE articles SET word_count = 99 WHERE slug = 'legacy-0'")
+        .execute(&db)
+        .await
+        .unwrap();
+    // Old Markdown must not be reparsed per request.
+    let (_, list) = app
+        .send("GET", "/api/articles?per_page=100", None, false)
+        .await;
+    let cached = list["items"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|item| item["slug"] == "legacy-0")
+        .unwrap();
+    assert_eq!(cached["word_count"], 99);
+    let mut input = article(true);
+    input["slug"] = json!("legacy-0");
+    input["content_markdown"] = json!("hello");
+    let (status, updated) = app
+        .send(
+            "PUT",
+            &format!("/api/admin/articles/{}", cached["id"].as_str().unwrap()),
+            Some(input),
+            true,
+        )
+        .await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(updated["word_count"], 1);
+}
+
+#[tokio::test]
+async fn administrators_can_reopen_drafts_by_slug_without_exposing_them_publicly() {
+    let app = App::new(1024).await;
+    let saved = app.create(false).await;
+    let path = "/api/admin/articles/by-slug/hello-rust";
+    assert_eq!(
+        app.send("GET", path, None, false).await.0,
+        StatusCode::UNAUTHORIZED
+    );
+    let (status, draft) = app.send("GET", path, None, true).await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(draft, saved);
+    assert_eq!(
+        app.send("GET", "/api/articles/hello-rust", None, false)
+            .await
+            .0,
+        StatusCode::NOT_FOUND
+    );
+    assert_eq!(
+        app.send("GET", "/api/admin/articles/by-slug/missing", None, true)
+            .await
+            .0,
+        StatusCode::NOT_FOUND
+    );
+    assert_eq!(
+        app.send("GET", "/api/admin/articles/by-slug/-invalid", None, true)
+            .await
+            .0,
+        StatusCode::BAD_REQUEST
+    );
+}
+
+#[tokio::test]
+async fn attachment_deletion_cleans_markdown_atomically_without_touching_other_content() {
+    let app = App::new(1024).await;
+    let saved = app.create(true).await;
+    let article_id = saved["id"].as_str().unwrap();
+    let (_, removed) = app.upload(article_id, multipart(b"one", "one.txt")).await;
+    let (_, kept) = app.upload(article_id, multipart(b"two", "two.txt")).await;
+    let href = removed["download_url"].as_str().unwrap();
+    let other_href = kept["download_url"].as_str().unwrap();
+    let markdown = format!(
+        "正文保留\n\n- [已改过名字]({href})\n- [其他附件]({other_href})\n\n![图片]({href}?raw=1)\n\n[引用][file]\n\n[file]: {href}\n\n`[代码示例]({href})`\n\n```md\n[示例]({href})\n```\n"
+    );
+    let mut input = article(true);
+    input["content_markdown"] = json!(markdown);
+    let (_, before) = app
+        .send(
+            "PUT",
+            &format!("/api/admin/articles/{article_id}"),
+            Some(input),
+            true,
+        )
+        .await;
+    let endpoint = format!("/api/admin/attachments/{}", removed["id"].as_str().unwrap());
+    assert_eq!(
+        app.send("DELETE", &endpoint, None, false).await.0,
+        StatusCode::UNAUTHORIZED
+    );
+    let db = sqlx::SqlitePool::connect_with(
+        sqlx::sqlite::SqliteConnectOptions::new()
+            .filename(app.config.data_dir.join("blog.sqlite3")),
+    )
+    .await
+    .unwrap();
+    sqlx::query("CREATE TRIGGER fail_attachment_delete BEFORE DELETE ON attachments BEGIN SELECT RAISE(ABORT, 'test rollback'); END").execute(&db).await.unwrap();
+    assert_eq!(
+        app.send("DELETE", &endpoint, None, true).await.0,
+        StatusCode::INTERNAL_SERVER_ERROR
+    );
+    let (_, unchanged) = app
+        .send("GET", "/api/articles/hello-rust", None, false)
+        .await;
+    assert_eq!(unchanged, before);
+    assert_eq!(app.file_count(), 2);
+    sqlx::query("DROP TRIGGER fail_attachment_delete")
+        .execute(&db)
+        .await
+        .unwrap();
+    assert_eq!(
+        app.send("DELETE", &endpoint, None, true).await.0,
+        StatusCode::NO_CONTENT
+    );
+    let (_, after) = app
+        .send("GET", "/api/articles/hello-rust", None, false)
+        .await;
+    let content = after["content_markdown"].as_str().unwrap();
+    assert!(content.contains("正文保留"));
+    assert!(content.contains(&format!("[其他附件]({other_href})")));
+    assert!(!content.contains("已改过名字"));
+    assert!(!content.contains("![图片]"));
+    assert!(!content.contains("[引用]"));
+    assert!(!content.contains("[file]:"));
+    assert!(content.contains(&format!("`[代码示例]({href})`")));
+    assert!(content.contains(&format!("```md\n[示例]({href})\n```")));
+    assert_eq!(after["published"], true);
+    assert_eq!(after["title"], before["title"]);
+    assert_eq!(after["attachments"].as_array().unwrap().len(), 1);
+    assert_eq!(
+        app.send("GET", href, None, false).await.0,
+        StatusCode::NOT_FOUND
+    );
+    assert_eq!(
+        app.send("GET", other_href, None, false).await.0,
+        StatusCode::OK
+    );
+    assert_eq!(app.file_count(), 1);
+    assert_eq!(
+        app.send("DELETE", &endpoint, None, true).await.0,
+        StatusCode::NOT_FOUND
+    );
 }
 
 #[tokio::test]
@@ -546,4 +880,269 @@ async fn placeholder_admin_tokens_are_rejected() {
     assert!(config.validate().is_err());
     config.admin_token = "short".into();
     assert!(config.validate().is_err());
+}
+
+async fn avatar_upload(app: &App, bytes: &[u8], authorized: bool) -> axum::response::Response {
+    let mut request = Request::builder().method("POST").uri("/api/admin/avatar");
+    if authorized {
+        request = request.header("authorization", format!("Bearer {TOKEN}"));
+    }
+    app.router
+        .clone()
+        .oneshot(request.body(Body::from(bytes.to_vec())).unwrap())
+        .await
+        .unwrap()
+}
+
+#[tokio::test]
+async fn avatar_requires_auth_validates_type_and_persists() {
+    let app = App::new(1024).await;
+    let png = b"\x89PNG\r\n\x1a\n\0\0\0\rIHDR\0\0\0\x01\0\0\0\x01";
+    assert_eq!(
+        avatar_upload(&app, png, false).await.status(),
+        StatusCode::UNAUTHORIZED
+    );
+    assert_eq!(
+        avatar_upload(&app, b"<svg onload='alert(1)'></svg>", true)
+            .await
+            .status(),
+        StatusCode::BAD_REQUEST
+    );
+    assert_eq!(
+        avatar_upload(&app, png, true).await.status(),
+        StatusCode::OK
+    );
+    let reopened = router(AppState::open(app.config.clone()).await.unwrap());
+    let response = reopened
+        .clone()
+        .oneshot(
+            Request::builder()
+                .uri("/api/avatar")
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::OK);
+    assert_eq!(response.headers()["content-type"], "image/png");
+    assert_eq!(response.headers()["x-content-type-options"], "nosniff");
+    let etag = response.headers()["etag"].clone();
+    assert_eq!(
+        &response.into_body().collect().await.unwrap().to_bytes()[..],
+        png
+    );
+    let response = reopened
+        .oneshot(
+            Request::builder()
+                .uri("/api/avatar")
+                .header("if-none-match", etag)
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::NOT_MODIFIED);
+    assert_eq!(
+        avatar_upload(&app, &vec![0; 2 * 1024 * 1024 + 1], true)
+            .await
+            .status(),
+        StatusCode::PAYLOAD_TOO_LARGE
+    );
+}
+
+#[tokio::test]
+async fn admin_account_login_and_session_logout() {
+    let app = App::new(1024).await;
+    let credentials = json!({"username":"jokerbai", "password":"test42"});
+    let (code, _) = app
+        .send(
+            "POST",
+            "/api/admin/account",
+            Some(credentials.clone()),
+            false,
+        )
+        .await;
+    assert_eq!(code, StatusCode::UNAUTHORIZED);
+    let (code, _) = app
+        .send(
+            "POST",
+            "/api/admin/account",
+            Some(credentials.clone()),
+            true,
+        )
+        .await;
+    assert_eq!(code, StatusCode::OK);
+    let (code, _) = app
+        .send(
+            "POST",
+            "/api/admin/account",
+            Some(credentials.clone()),
+            true,
+        )
+        .await;
+    assert_eq!(code, StatusCode::CONFLICT);
+    let (code, _) = app
+        .send(
+            "POST",
+            "/api/auth/login",
+            Some(json!({"username":"jokerbai","password":"an-incorrect-password"})),
+            false,
+        )
+        .await;
+    assert_eq!(code, StatusCode::UNAUTHORIZED);
+    let (code, login) = app
+        .send("POST", "/api/auth/login", Some(credentials), false)
+        .await;
+    assert_eq!(code, StatusCode::OK);
+    let session = login["token"].as_str().unwrap();
+    assert_ne!(session, TOKEN);
+    assert_eq!(login["expires_in"], 2592000);
+    // Sessions survive reopening the persisted database, not just page refreshes.
+    let reopened = router(AppState::open(app.config.clone()).await.unwrap());
+    let response = reopened
+        .oneshot(
+            Request::builder()
+                .uri("/api/admin/session")
+                .header("authorization", format!("Bearer {session}"))
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::OK);
+    for (method, uri, expected) in [
+        ("GET", "/api/admin/session", StatusCode::OK),
+        ("GET", "/api/admin/articles", StatusCode::OK),
+        ("POST", "/api/admin/logout", StatusCode::NO_CONTENT),
+        ("GET", "/api/admin/session", StatusCode::UNAUTHORIZED),
+        ("GET", "/api/admin/articles", StatusCode::UNAUTHORIZED),
+    ] {
+        let response = app
+            .router
+            .clone()
+            .oneshot(
+                Request::builder()
+                    .method(method)
+                    .uri(uri)
+                    .header("authorization", format!("Bearer {session}"))
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(response.status(), expected);
+    }
+
+    let (_, login) = app
+        .send(
+            "POST",
+            "/api/auth/login",
+            Some(json!({"username":"jokerbai", "password":"test42"})),
+            false,
+        )
+        .await;
+    let db = sqlx::SqlitePool::connect_with(
+        sqlx::sqlite::SqliteConnectOptions::new()
+            .filename(app.config.data_dir.join("blog.sqlite3")),
+    )
+    .await
+    .unwrap();
+    sqlx::query("UPDATE admin_sessions SET expires_at = unixepoch() - 1")
+        .execute(&db)
+        .await
+        .unwrap();
+    let response = app
+        .router
+        .clone()
+        .oneshot(
+            Request::builder()
+                .uri("/api/admin/session")
+                .header(
+                    "authorization",
+                    format!("Bearer {}", login["token"].as_str().unwrap()),
+                )
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+}
+
+#[tokio::test]
+async fn combined_article_submission_commits_files_together_and_rolls_back_failure() {
+    async fn submit(app: &App, input: Value, files: &[(&str, &[u8])]) -> (StatusCode, Value) {
+        let mut body = format!(
+            "--combined\r\nContent-Disposition: form-data; name=\"article\"\r\n\r\n{input}\r\n"
+        )
+        .into_bytes();
+        for (key, content) in files {
+            body.extend_from_slice(format!("--combined\r\nContent-Disposition: form-data; name=\"file-{key}\"; filename=\"homework.txt\"\r\nContent-Type: text/plain\r\n\r\n").as_bytes());
+            body.extend_from_slice(content);
+            body.extend_from_slice(b"\r\n");
+        }
+        body.extend_from_slice(b"--combined--\r\n");
+        let response = app
+            .router
+            .clone()
+            .oneshot(
+                Request::builder()
+                    .method("POST")
+                    .uri("/api/admin/articles")
+                    .header("authorization", format!("Bearer {TOKEN}"))
+                    .header("content-type", "multipart/form-data; boundary=combined")
+                    .body(Body::from(body))
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        let status = response.status();
+        let bytes = response.into_body().collect().await.unwrap().to_bytes();
+        (
+            status,
+            serde_json::from_slice(&bytes).unwrap_or(Value::Null),
+        )
+    }
+    let app = App::new(32).await;
+    let a = "00000000-0000-4000-8000-000000000001";
+    let b = "00000000-0000-4000-8000-000000000002";
+    let mut input = article(true);
+    input["content_markdown"] = json!(format!("[作业](attachment:pending-{a})"));
+    let (status, saved) = submit(&app, input.clone(), &[(a, b"one"), (b, b"two")]).await;
+    assert_eq!(status, StatusCode::CREATED, "{saved}");
+    assert_eq!(saved["attachments"].as_array().unwrap().len(), 2);
+    assert!(
+        !saved["content_markdown"]
+            .as_str()
+            .unwrap()
+            .contains("attachment:pending-")
+    );
+    assert_eq!(
+        app.send("GET", "/api/articles", None, false).await.1["total"],
+        1
+    );
+    let count = std::fs::read_dir(app.config.data_dir.join("uploads"))
+        .unwrap()
+        .count();
+    let (status, _) = submit(&app, input.clone(), &[(a, b"another")]).await;
+    assert_eq!(status, StatusCode::CONFLICT);
+    assert_eq!(
+        std::fs::read_dir(app.config.data_dir.join("uploads"))
+            .unwrap()
+            .count(),
+        count
+    );
+    input["slug"] = json!("failed-batch");
+    let (status, _) = submit(&app, input, &[(a, b"ok"), (b, &[7; 33])]).await;
+    assert_eq!(status, StatusCode::PAYLOAD_TOO_LARGE);
+    assert_eq!(
+        app.send("GET", "/api/admin/articles", None, true).await.1["total"],
+        1
+    );
+    assert_eq!(
+        std::fs::read_dir(app.config.data_dir.join("uploads"))
+            .unwrap()
+            .count(),
+        count
+    );
 }

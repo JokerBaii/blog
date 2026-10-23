@@ -6,7 +6,7 @@ use crate::{
 };
 use axum::{
     Json,
-    extract::{Path, Query, State, rejection::JsonRejection},
+    extract::{FromRequest, Multipart, Path, Query, Request, State, rejection::JsonRejection},
     http::StatusCode,
 };
 use serde::Deserialize;
@@ -37,10 +37,12 @@ async fn list(state: &AppState, query: ListQuery, admin: bool) -> ApiResult<Arti
         return Err(ApiError::bad("分页、关键词或分类参数无效"));
     }
     // instr gives literal substring search: user input never becomes SQL or a LIKE pattern.
-    let clause = "WHERE (? OR published = 1) AND (? = '' OR category = ?) AND (? = '' OR instr(lower(title || ' ' || description || ' ' || tags), lower(?)) > 0)";
+    let visibility = if admin { "" } else { "published = 1 AND " };
+    let clause = format!(
+        "WHERE {visibility}(? = '' OR category = ?) AND (? = '' OR instr(lower(title || ' ' || description || ' ' || tags), lower(?)) > 0)"
+    );
     let count_sql = format!("SELECT COUNT(*) FROM articles {clause}");
     let total: i64 = sqlx::query_scalar(&count_sql)
-        .bind(admin)
         .bind(&category)
         .bind(&category)
         .bind(&q)
@@ -48,10 +50,9 @@ async fn list(state: &AppState, query: ListQuery, admin: bool) -> ApiResult<Arti
         .fetch_one(&state.db)
         .await?;
     let select = format!(
-        "SELECT id, slug, title, description, tags, category, published, created_at, updated_at, published_at, content_markdown FROM articles {clause} ORDER BY updated_at DESC, id DESC LIMIT ? OFFSET ?"
+        "SELECT id, slug, title, description, tags, category, published, created_at, updated_at, published_at, word_count FROM articles {clause} ORDER BY updated_at DESC, id DESC LIMIT ? OFFSET ?"
     );
     let rows = sqlx::query(&select)
-        .bind(admin)
         .bind(&category)
         .bind(&category)
         .bind(&q)
@@ -76,12 +77,27 @@ pub async fn public_detail(
     State(state): State<AppState>,
     Path(slug): Path<String>,
 ) -> ApiResult<Json<ArticleDetail>> {
-    let row = sqlx::query("SELECT * FROM articles WHERE slug = ? AND published = 1")
+    detail_by_slug(&state, slug, false).await
+}
+pub async fn admin_detail_by_slug(
+    State(state): State<AppState>,
+    Path(slug): Path<String>,
+) -> ApiResult<Json<ArticleDetail>> {
+    validate_slug(&slug)?;
+    detail_by_slug(&state, slug, true).await
+}
+async fn detail_by_slug(
+    state: &AppState,
+    slug: String,
+    admin: bool,
+) -> ApiResult<Json<ArticleDetail>> {
+    let row = sqlx::query("SELECT * FROM articles WHERE slug = ? AND (? OR published = 1)")
         .bind(slug)
+        .bind(admin)
         .fetch_optional(&state.db)
         .await?
         .ok_or_else(ApiError::missing)?;
-    detail(&state, row).await.map(Json)
+    detail(state, row).await.map(Json)
 }
 pub async fn admin_detail(
     State(state): State<AppState>,
@@ -104,7 +120,9 @@ async fn detail(state: &AppState, row: sqlx::sqlite::SqliteRow) -> ApiResult<Art
             .fetch_all(&state.db)
             .await?;
     Ok(ArticleDetail {
-        content_html: markdown_html(&content_markdown),
+        content_html: state
+            .render_markdown(content_markdown.clone(), false)
+            .await?,
         content_markdown,
         summary,
         attachments: rows
@@ -115,42 +133,113 @@ async fn detail(state: &AppState, row: sqlx::sqlite::SqliteRow) -> ApiResult<Art
 }
 pub async fn create(
     State(state): State<AppState>,
-    body: Result<Json<ArticleInput>, JsonRejection>,
+    request: Request,
 ) -> ApiResult<(StatusCode, Json<ArticleDetail>)> {
-    let input = body
-        .map_err(|_| ApiError::bad("请求 JSON 格式不正确"))?
-        .0
-        .validate()?;
-    let id = uuid::Uuid::new_v4().to_string();
-    let timestamp = now();
-    sqlx::query("INSERT INTO articles (id, slug, title, description, content_markdown, tags, category, published, created_at, updated_at, published_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-        .bind(&id).bind(&input.slug).bind(&input.title).bind(&input.description).bind(&input.content_markdown)
-        .bind(serde_json::to_string(&input.tags).map_err(ApiError::internal)?).bind(&input.category).bind(input.published)
-        .bind(&timestamp).bind(&timestamp).bind(if input.published { Some(&timestamp) } else { None }).execute(&state.db).await?;
+    let (input, files) = read_submission(request, &state).await?;
     Ok((
         StatusCode::CREATED,
-        admin_detail(State(state), Path(id)).await?,
+        Json(persist_submission(state, None, input, files).await?),
     ))
 }
 pub async fn update(
     State(state): State<AppState>,
     Path(id): Path<String>,
-    body: Result<Json<ArticleInput>, JsonRejection>,
+    request: Request,
 ) -> ApiResult<Json<ArticleDetail>> {
     valid_id(&id)?;
-    let input = body
-        .map_err(|_| ApiError::bad("请求 JSON 格式不正确"))?
-        .0
-        .validate()?;
-    let timestamp = now();
-    let result = sqlx::query("UPDATE articles SET slug = ?, title = ?, description = ?, content_markdown = ?, tags = ?, category = ?, published = ?, updated_at = ?, published_at = CASE WHEN ? THEN COALESCE(published_at, ?) ELSE published_at END WHERE id = ?")
-        .bind(&input.slug).bind(&input.title).bind(&input.description).bind(&input.content_markdown)
-        .bind(serde_json::to_string(&input.tags).map_err(ApiError::internal)?).bind(&input.category).bind(input.published)
-        .bind(&timestamp).bind(input.published).bind(&timestamp).bind(&id).execute(&state.db).await?;
-    if result.rows_affected() == 0 {
-        return Err(ApiError::missing());
+    let (input, files) = read_submission(request, &state).await?;
+    Ok(Json(
+        persist_submission(state, Some(id), input, files).await?,
+    ))
+}
+type SubmissionFiles = Vec<(String, crate::attachments::StagedAttachment)>;
+async fn read_submission(
+    request: Request,
+    state: &AppState,
+) -> ApiResult<(ArticleInput, SubmissionFiles)> {
+    if !request
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .is_some_and(|v| v.starts_with("multipart/form-data"))
+    {
+        return Ok((
+            Json::<ArticleInput>::from_request(request, state)
+                .await
+                .map_err(|_| ApiError::bad("请求 JSON 格式不正确"))?
+                .0,
+            vec![],
+        ));
     }
-    admin_detail(State(state), Path(id)).await
+    let mut multipart = Multipart::from_request(request, state)
+        .await
+        .map_err(|_| ApiError::bad("附件表单格式不正确"))?;
+    let mut input = None;
+    let mut files = Vec::new();
+    while let Some(field) = multipart
+        .next_field()
+        .await
+        .map_err(crate::attachments::multipart_error)?
+    {
+        let name = field.name().unwrap_or_default().to_owned();
+        if name == "article" && input.is_none() {
+            let bytes = field
+                .bytes()
+                .await
+                .map_err(crate::attachments::multipart_error)?;
+            if bytes.len() > 2_097_152 {
+                return Err(ApiError::bad("文章数据过大"));
+            }
+            input = Some(
+                serde_json::from_slice(&bytes).map_err(|_| ApiError::bad("文章数据格式不正确"))?,
+            );
+        } else if let Some(key) = name.strip_prefix("file-") {
+            valid_id(key).map_err(|_| ApiError::bad("附件标识无效"))?;
+            if files.iter().any(|(other, _)| other == key) {
+                return Err(ApiError::bad("附件标识重复"));
+            }
+            let staged = crate::attachments::stage_field(field, state).await?;
+            files.push((key.to_owned(), staged));
+        } else {
+            return Err(ApiError::bad("附件表单字段不正确"));
+        }
+    }
+    Ok((input.ok_or_else(|| ApiError::bad("缺少文章数据"))?, files))
+}
+async fn persist_submission(
+    state: AppState,
+    existing_id: Option<String>,
+    mut input: ArticleInput,
+    files: SubmissionFiles,
+) -> ApiResult<ArticleDetail> {
+    // The single transaction commits the article, publication state and all attachments together.
+    tokio::spawn(async move {
+        let mut transaction = state.db.begin().await?;
+        if let Some(id) = &existing_id {
+            let slug: String = sqlx::query_scalar("SELECT slug FROM articles WHERE id = ?").bind(id).fetch_optional(&mut *transaction).await?.ok_or_else(ApiError::missing)?;
+            if input.slug.trim().is_empty() { input.slug = slug; }
+        } else if input.slug.trim().is_empty() { input.slug = format!("note-{}", uuid::Uuid::new_v4().simple()); }
+        for (key, file) in &files {
+            input.content_markdown = input.content_markdown.replace(&format!("attachment:pending-{key}"), &format!("/api/attachments/{}/download", file.id));
+        }
+        if input.content_markdown.trim().is_empty() && !files.is_empty() {
+            input.content_markdown = files.iter().map(|(_, file)| format!("- [{}](/api/attachments/{}/download)", file.filename.replace('\\', "\\\\").replace('[', "\\[").replace(']', "\\]"), file.id)).collect::<Vec<_>>().join("\n");
+        }
+        if input.content_markdown.contains("attachment:pending-") { return Err(ApiError::bad("正文中有未提交的附件，请重新添加或移除对应链接")); }
+        let input = input.validate()?;
+        let id = existing_id.unwrap_or_else(|| uuid::Uuid::new_v4().to_string());
+        let timestamp = now();
+        sqlx::query("INSERT INTO articles (id, slug, title, description, content_markdown, word_count, tags, category, published, created_at, updated_at, published_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET slug=excluded.slug, title=excluded.title, description=excluded.description, content_markdown=excluded.content_markdown, word_count=excluded.word_count, tags=excluded.tags, category=excluded.category, published=excluded.published, updated_at=excluded.updated_at, published_at=CASE WHEN excluded.published THEN COALESCE(articles.published_at, excluded.published_at) ELSE articles.published_at END")
+            .bind(&id).bind(&input.slug).bind(&input.title).bind(&input.description).bind(&input.content_markdown)
+            .bind(count_words(&input.content_markdown) as i64)
+            .bind(serde_json::to_string(&input.tags).map_err(ApiError::internal)?).bind(&input.category).bind(input.published)
+            .bind(&timestamp).bind(&timestamp).bind(if input.published { Some(&timestamp) } else { None }).execute(&mut *transaction).await?;
+        let mut files = files;
+        for (_, file) in &mut files { file.commit(&state, &id, &mut transaction).await?; }
+        transaction.commit().await?;
+        for (_, file) in files { file.finish(id.clone()); }
+        Ok(admin_detail(State(state), Path(id)).await?.0)
+    }).await.map_err(ApiError::internal)?
 }
 pub async fn delete(
     State(state): State<AppState>,
@@ -181,13 +270,13 @@ pub struct PreviewInput {
     content_markdown: String,
 }
 pub async fn preview(
+    State(state): State<AppState>,
     body: Result<Json<PreviewInput>, JsonRejection>,
 ) -> ApiResult<Json<serde_json::Value>> {
     let input = body.map_err(|_| ApiError::bad("请求 JSON 格式不正确"))?.0;
     if input.content_markdown.len() > 1_000_000 {
         return Err(ApiError::bad("正文不能超过 1 MB"));
     }
-    Ok(Json(
-        serde_json::json!({"content_html": markdown_html(&input.content_markdown)}),
-    ))
+    let content_html = state.render_markdown(input.content_markdown, true).await?;
+    Ok(Json(serde_json::json!({"content_html": content_html})))
 }

@@ -1,0 +1,12 @@
+<!-- Run before the router reads history.state, so reload cannot restore an old footer position. -->
+<script is:inline>
+  (() => {
+    const navigation = performance.getEntriesByType("navigation")[0];
+    if (navigation?.type === "back_forward") return;
+    const reload = navigation?.type === "reload";
+    if (location.hash && !reload) return;
+    history.scrollRestoration = "manual";
+    history.replaceState({ ...history.state, scrollX: 0, scrollY: 0 }, "", reload ? location.pathname + location.search : location.href);
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  })();
+</script>
